@@ -538,6 +538,99 @@
             transform: translateY(-50%);
         }
 
+                /* DOS Toolbar */
+        .dos-toolbar {
+            background: var(--win95-gray);
+            padding: 2px 4px;
+            border-bottom: 1px solid var(--win95-white);
+            display: flex;
+            gap: 2px;
+            align-items: center;
+        }
+
+        .dos-toolbar-btn {
+            width: 24px;
+            height: 22px;
+            background: var(--win95-gray);
+            border: 1px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .dos-toolbar-btn:active {
+            border-color: var(--win95-black) var(--win95-white) var(--win95-white) var(--win95-black);
+        }
+
+        .dos-toolbar-btn img {
+            width: 16px;
+            height: 16px;
+        }
+
+        .dos-toolbar-separator {
+            width: 2px;
+            height: 18px;
+            background: var(--win95-dark-gray);
+            border-left: 1px solid var(--win95-white);
+            margin: 0 2px;
+        }
+
+        /* MS-DOS Prompt Window */
+        .dos-content {
+            background: #000000;
+            color: #c0c0c0;
+            height: calc(100% - 65px);
+            overflow-y: auto;
+            padding: 8px;
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.3;
+            cursor: text;
+        }
+
+        .dos-content::-webkit-scrollbar {
+            width: 16px;
+        }
+
+        .dos-content::-webkit-scrollbar-track {
+            background: #000000;
+        }
+
+        .dos-content::-webkit-scrollbar-thumb {
+            background: var(--win95-gray);
+            border: 2px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+        }
+
+        .dos-line {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .dos-input-line {
+            display: flex;
+            gap: 4px;
+        }
+
+        .dos-prompt {
+            color: #c0c0c0;
+        }
+
+        .dos-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #c0c0c0;
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 14px;
+            flex: 1;
+            caret-color: #c0c0c0;
+        }
+
+
         /* Terminal Loading Screen */
         .loading-screen {
             position: fixed;
@@ -631,6 +724,12 @@
             <img src="network-icon.ico" alt="Network">
             <span>Network Neighborhood</span>
         </div>
+
+        <div class="desktop-icon" ondblclick="openDOSWindow()">
+            <img src="msdos-icon.ico" alt="MS-DOS">
+            <span>MS-DOS Prompt</span>
+        </div>
+
     </div>
 
     <!-- Resume Window -->
@@ -737,6 +836,50 @@ Os:              Linux(Debian), Windows<br>
 • Gaming<br>
 
 ═════════════════════════════════════════════════════════════════════════════<br>
+        </div>
+    </div>
+
+        <!-- MS-DOS Prompt Window -->
+    <div class="window" id="dosWindow" style="top: 60px; left: 80px; width: 640px; height: 400px;">
+        <div class="title-bar" onmousedown="startDrag(event, 'dosWindow')">
+            <div class="title-bar-text">
+                <img src="msdos-icon.ico" alt="">
+                MS-DOS Prompt
+            </div>
+            <div class="title-bar-controls">
+                <button class="title-bar-btn" onclick="minimizeWindow('dosWindow')">_</button>
+                <button class="title-bar-btn" onclick="maximizeWindow('dosWindow')">□</button>
+                <button class="title-bar-btn" onclick="closeWindow('dosWindow')">×</button>
+            </div>
+        </div>
+        <div class="dos-toolbar">
+            <button class="dos-toolbar-btn" title="Auto">
+                <span style="font-size: 10px; font-weight: bold;">Auto</span>
+            </button>
+            <div class="dos-toolbar-separator"></div>
+            <button class="dos-toolbar-btn">
+                <img src="dos-copy.ico" alt="Copy">
+            </button>
+            <button class="dos-toolbar-btn">
+                <img src="dos-paste.ico" alt="Paste">
+            </button>
+            <div class="dos-toolbar-separator"></div>
+            <button class="dos-toolbar-btn">
+                <img src="dos-mark.ico" alt="Mark">
+            </button>
+            <div class="dos-toolbar-separator"></div>
+            <button class="dos-toolbar-btn">
+                <span style="font-size: 16px;">A</span>
+            </button>
+        </div>
+        <div class="dos-content" id="dosContent" onclick="document.getElementById('dosInput').focus()">
+            <div class="dos-line">Microsoft(R) Windows 95</div>
+            <div class="dos-line">   (C)Copyright Microsoft Corp 1981-1996.</div>
+            <div class="dos-line"></div>
+            <div class="dos-input-line">
+                <span class="dos-prompt">C:\WINDOWS></span>
+                <input type="text" class="dos-input" id="dosInput" autocomplete="off" spellcheck="false">
+            </div>
         </div>
     </div>
 
@@ -1154,6 +1297,157 @@ Os:              Linux(Debian), Windows<br>
         function openAboutWindow() {
             openWindow('aboutWindow');
         }
+
+        // CORRECTED DOS COMMAND FUNCTIONS
+// Add these to your <script> section
+
+function openDOSWindow() {
+    openWindow('dosWindow');
+    setTimeout(() => {
+        document.getElementById('dosInput').focus();
+    }, 100);
+}
+
+// DOS Command Processing
+const dosCommands = {
+    'help': function() {
+        return 'Available commands:\n  DIR         - Lists files and directories\n  CD          - Changes directory\n  CLS         - Clears the screen\n  VER         - Shows Windows version\n  TIME        - Displays current time\n  DATE        - Displays current date\n  ECHO        - Displays a message\n  TYPE        - Displays file contents\n  MEM         - Displays memory information\n  TREE        - Shows directory structure\n  VOL         - Shows volume information\n  PATH        - Shows current path\n  SET         - Shows environment variables\n  IPCONFIG    - Shows network configuration\n  PING        - Tests network connection\n  HELP        - Shows this help message\n  EXIT        - Closes the DOS window\n\nType any command for more info.';
+    },
+
+    'dir': function() {
+        return ' Volume in drive C is PORTFOLIO\n Volume Serial Number is 1995-RETRO\n\n Directory of C:\\WINDOWS\n\n.              <DIR>        02-05-26  3:45p\n..             <DIR>        02-05-26  3:45p\nRESUME     TXT        12,486  02-05-26  2:30p\nPROJECTS   <DIR>        02-05-26  1:15p\nGITHUB     LNK           342  02-05-26 11:22a\nLINKEDIN   LNK           338  02-05-26 11:22a\n        4 File(s)     13,166 bytes\n        3 Dir(s)  524,288,000 bytes free';
+    },
+
+    'cls': function() {
+        return 'CLEAR';
+    },
+
+    'ver': function() {
+        return 'Microsoft Windows 95 Portfolio Edition\n(C)Copyright Kanchana Samarakoon 1995-2026';
+    },
+
+    'time': function() {
+        var now = new Date();
+        return 'Current time is: ' + now.toLocaleTimeString();
+    },
+
+    'date': function() {
+        var now = new Date();
+        return 'Current date is: ' + now.toLocaleDateString();
+    },
+
+    'mem': function() {
+        return 'Memory Type        Total       Used       Free\n------------  ----------  ---------  ---------\nConventional         640K       45K      595K\nUpper                384K      128K      256K\nReserved             384K      384K        0K\nExtended (XMS)    32,768K    8,192K   24,576K\n------------  ----------  ---------  ---------\nTotal memory     34,176K    8,749K   25,427K\n\nTotal under 1 MB       1,024K       173K      851K\nTotal Extended (XMS)  32,768K    8,192K   24,576K';
+    },
+
+    'tree': function() {
+        return 'Directory PATH listing\nVolume serial number is 1995-RETRO\n\nC:\\WINDOWS\n├───PROJECTS\n│   ├───webcrawler\n│   ├───skin-cancer-detection\n│   ├───Demo_DBMS\n│   └───encryption-tool\n├───DOCUMENTS\n│   └───Resume.txt\n└───SYSTEM\n    ├───DRIVERS\n    └───CONFIG';
+    },
+
+    'vol': function() {
+        return ' Volume in drive C is PORTFOLIO\n Volume Serial Number is 1995-RETRO';
+    },
+
+    'path': function() {
+        return 'PATH=C:\\WINDOWS;C:\\WINDOWS\\COMMAND;C:\\DOS';
+    },
+
+    'set': function() {
+        return 'COMSPEC=C:\\WINDOWS\\COMMAND.COM\nPATH=C:\\WINDOWS;C:\\WINDOWS\\COMMAND\nPROMPT=$P$G\nTEMP=C:\\WINDOWS\\TEMP\nUSER=Kanchana\nOS=Windows_95';
+    },
+
+    'ipconfig': function() {
+        return 'Windows 95 IP Configuration\n\nEthernet adapter Local Area Connection:\n\n   IP Address. . . . . . . . . : 192.168.1.95\n   Subnet Mask . . . . . . . . : 255.255.255.0\n   Default Gateway . . . . . . : 192.168.1.1\n   \n   DHCP Enabled. . . . . . . . : Yes\n   DHCP Server . . . . . . . . : 192.168.1.1';
+    },
+
+    'ping': function(args) {
+        var target = args || 'localhost';
+        return 'Pinging ' + target + ' with 32 bytes of data:\n\nReply from ' + target + ': bytes=32 time<10ms TTL=128\nReply from ' + target + ': bytes=32 time<10ms TTL=128\nReply from ' + target + ': bytes=32 time<10ms TTL=128\nReply from ' + target + ': bytes=32 time<10ms TTL=128\n\nPing statistics for ' + target + ':\n    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),\nApproximate round trip times in milli-seconds:\n    Minimum = 0ms, Maximum = 0ms, Average = 0ms';
+    },
+
+    'echo': function(args) {
+        return args || 'ECHO is on.';
+    },
+
+    'type': function(args) {
+        if (!args) return 'Required parameter missing';
+        if (args.toLowerCase() === 'resume.txt') {
+            return '=== KANCHANA SAMARAKOON ===\n\nEmail: smtkanchana66@gmail.com\nGitHub: github.com/smtkanchana66\nLinkedIn: linkedin.com/in/smtkanchana66\n\nICT Graduate | AWS Cloud | Ubuntu Server | AI Enthusiast\n\nType RESUME.TXT in Notepad for full resume';
+        }
+        return 'File not found - ' + args;
+    },
+
+    'cd': function(args) {
+        if (!args) return 'C:\\WINDOWS';
+        return 'C:\\WINDOWS\\' + args.toUpperCase();
+    },
+
+    'exit': function() {
+        return 'EXIT';
+    }
+};
+
+function processDOSCommand(input) {
+    var parts = input.trim().split(/\s+/);
+    var cmd = parts[0].toLowerCase();
+    var args = parts.slice(1).join(' ');
+
+    if (dosCommands[cmd]) {
+        return dosCommands[cmd](args);
+    } else {
+        return "Bad command or file name - '" + input + "'\nType HELP for list of commands.";
+    }
+}
+
+// DOS Input Handler
+document.addEventListener('DOMContentLoaded', function() {
+    var dosInput = document.getElementById('dosInput');
+    var dosContent = document.getElementById('dosContent');
+
+    if (dosInput) {
+        dosInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                var command = dosInput.value.trim();
+                
+                if (command) {
+                    // Show command
+                    var cmdLine = document.createElement('div');
+                    cmdLine.className = 'dos-line';
+                    cmdLine.textContent = 'C:\\WINDOWS>' + command;
+                    var currentInputLine = dosContent.querySelector('.dos-input-line');
+                    dosContent.insertBefore(cmdLine, currentInputLine);
+                    
+                    // Process command
+                    var result = processDOSCommand(command);
+                    
+                    if (result === 'CLEAR') {
+                        // Clear screen
+                        dosContent.innerHTML = '<div class="dos-line">Microsoft(R) Windows 95</div><div class="dos-line">   (C)Copyright Microsoft Corp 1981-1996.</div><div class="dos-line"></div><div class="dos-input-line"><span class="dos-prompt">C:\\WINDOWS></span><input type="text" class="dos-input" id="dosInput" autocomplete="off" spellcheck="false"></div>';
+                        document.getElementById('dosInput').focus();
+                    } else if (result === 'EXIT') {
+                        closeWindow('dosWindow');
+                    } else {
+                        // Show result
+                        var resultLine = document.createElement('div');
+                        resultLine.className = 'dos-line';
+                        resultLine.style.whiteSpace = 'pre-wrap';
+                        resultLine.textContent = result;
+                        dosContent.insertBefore(resultLine, currentInputLine);
+                        
+                        // Add blank line
+                        var blankLine = document.createElement('div');
+                        blankLine.className = 'dos-line';
+                        dosContent.insertBefore(blankLine, currentInputLine);
+                    }
+                    
+                    dosInput.value = '';
+                    dosContent.scrollTop = dosContent.scrollHeight;
+                }
+            }
+        });
+    }
+});
 
         function openGitHubLink(url) {
             window.open(url, '_blank');
