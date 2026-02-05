@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 95</title>
+    <link rel="icon" href="Windows.ico" type="image/x-icon">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif;
+            font-size: 11px;
+            overflow: hidden;
+            background: #008080;
+            background-image: url('/mnt/user-data/uploads/4__.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            cursor: default;
+            user-select: none;
+        }
+
+        /* Windows 95 UI Colors */
+        :root {
+            --win95-gray: #c0c0c0;
+            --win95-dark-gray: #808080;
+            --win95-light-gray: #dfdfdf;
+            --win95-white: #ffffff;
+            --win95-black: #000000;
+            --win95-blue: #000080;
+            --win95-active-title: linear-gradient(to right, #000080, #1084d0);
+            --win95-inactive-title: #808080;
+        }
+
+        /* Desktop */
+        .desktop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 32px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+
+        .desktop.loaded {
+            opacity: 1;
+        }
+
+        /* Desktop Icon */
+        .desktop-icon {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 4px;
+            color: white;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .desktop-icon:hover {
+            filter: brightness(1.2);
+        }
+
+        .desktop-icon.selected {
+            background: rgba(0, 0, 128, 0.3);
+            outline: 1px dotted rgba(255, 255, 255, 0.8);
+            outline-offset: -2px;
+        }
+
+        .desktop-icon img {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 4px;
+            image-rendering: pixelated;
+        }
+
+        .desktop-icon span {
+            font-size: 11px;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        /* Window */
+        .window {
+            position: absolute;
+            background: var(--win95-gray);
+            border: 2px solid;
+            border-color: var(--win95-light-gray) var(--win95-black) var(--win95-black) var(--win95-light-gray);
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+            min-width: 300px;
+            min-height: 200px;
+            display: none;
+        }
+
+        .window.active {
+            z-index: 1000;
+        }
+
+        .window.maximized {
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 28px !important;
+            width: 100% !important;
+            height: calc(100% - 28px) !important;
+        }
+
+        /* Title Bar */
+        .title-bar {
+            background: var(--win95-active-title);
+            color: white;
+            padding: 2px 3px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: bold;
+            cursor: move;
+            height: 20px;
+        }
+
+        .window:not(.active) .title-bar {
+            background: var(--win95-inactive-title);
+        }
+
+        .title-bar-text {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+        }
+
+        .title-bar-text img {
+            width: 16px;
+            height: 16px;
+        }
+
+        .title-bar-controls {
+            display: flex;
+            gap: 2px;
+        }
+
+        .title-bar-btn {
+            width: 16px;
+            height: 14px;
+            background: var(--win95-gray);
+            border: 1px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: bold;
+            cursor: pointer;
+            color: black;
+        }
+
+        .title-bar-btn:active {
+            border-color: var(--win95-black) var(--win95-white) var(--win95-white) var(--win95-black);
+            padding: 1px 0 0 1px;
+        }
+
+        /* Menu Bar */
+        .menu-bar {
+            background: var(--win95-gray);
+            padding: 2px 4px;
+            border-bottom: 1px solid var(--win95-white);
+            display: flex;
+            gap: 8px;
+        }
+
+        .menu-item {
+            padding: 2px 6px;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: var(--win95-blue);
+            color: white;
+        }
+
+        /* Window Content */
+        .window-content {
+            background: white;
+            height: calc(100% - 60px);
+            overflow: auto;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .file-explorer {
+            background: white;
+            height: calc(100% - 60px);
+            overflow: auto;
+        }
+
+        .toolbar {
+            background: var(--win95-gray);
+            padding: 3px 2px;
+            border-bottom: 1px solid var(--win95-white);
+            display: flex;
+            gap: 0px;
+            align-items: center;
+        }
+
+        .toolbar-btn {
+            width: 55px;
+            height: 50px;
+            padding: 3px;
+            background: var(--win95-gray);
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .toolbar-btn:hover {
+            border: 1px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+        }
+
+        .toolbar-btn:active {
+            border-color: var(--win95-black) var(--win95-white) var(--win95-white) var(--win95-black);
+        }
+
+        .toolbar-btn img {
+            width: 28px;
+            height: 28px;
+        }
+
+        .toolbar-separator {
+            width: 2px;
+            height: 50px;
+            background: var(--win95-dark-gray);
+            border-left: 1px solid var(--win95-white);
+            margin: 0 2px;
+        }
+
+        .address-bar {
+            display: flex;
+            align-items: center;
+            padding: 3px 4px;
+            background: var(--win95-gray);
+            gap: 4px;
+            font-size: 11px;
+        }
+
+        .address-label {
+            font-size: 11px;
+        }
+
+        .address-input {
+            flex: 1;
+            height: 22px;
+            border: 1px solid;
+            border-color: var(--win95-dark-gray) var(--win95-white) var(--win95-white) var(--win95-dark-gray);
+            padding: 2px 4px;
+            font-family: 'MS Sans Serif', Arial, sans-serif;
+            font-size: 11px;
+            background: white;
+        }
+
+        .address-dropdown {
+            width: 16px;
+            height: 22px;
+            background: var(--win95-gray);
+            border: 1px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+        }
+
+        .file-list {
+            padding: 4px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 4px;
+            cursor: pointer;
+            gap: 6px;
+        }
+
+        .file-item:hover {
+            background: var(--win95-blue);
+            color: white;
+        }
+
+        .file-item.selected {
+            background: var(--win95-blue);
+            color: white;
+        }
+
+        .file-item img {
+            width: 16px;
+            height: 16px;
+            image-rendering: pixelated;
+        }
+
+        /* Taskbar */
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 32px;
+            background: var(--win95-gray);
+            border-top: 2px solid var(--win95-white);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 2px;
+            gap: 2px;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+
+        .taskbar.loaded {
+            opacity: 1;
+        }
+        
+        #taskbarItems {
+            display: flex;
+            flex-direction: row;
+            gap: 2px;
+            flex: 1;
+        }
+
+        .start-button {
+            height: 26px;
+            padding: 0 8px;
+            background: var(--win95-gray);
+            border: 2px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+            font-weight: bold;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .start-button:active,
+        .start-button.active {
+            border-color: var(--win95-black) var(--win95-white) var(--win95-white) var(--win95-black);
+            padding: 2px 6px 0 8px;
+        }
+
+        .start-button img {
+            width: 18px;
+            height: 18px;
+        }
+
+        .taskbar-item {
+            height: 24px;
+            padding: 0 8px;
+            background: var(--win95-gray);
+            border: 1px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            max-width: 160px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .taskbar-item.active {
+            border-color: var(--win95-black) var(--win95-white) var(--win95-white) var(--win95-black);
+            padding: 1px 7px 0 8px;
+        }
+
+        .taskbar-item img {
+            width: 16px;
+            height: 16px;
+        }
+
+        .taskbar-clock {
+            height: 24px;
+            margin-left: auto;
+            padding: 0 8px;
+            border: 1px solid;
+            border-color: var(--win95-black) var(--win95-white) var(--win95-white) var(--win95-black);
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        /* Start Menu */
+        .start-menu {
+            position: fixed;
+            bottom: 34px;
+            left: 2px;
+            width: 250px;
+            background: var(--win95-gray);
+            border: 2px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+            display: none;
+            z-index: 10001;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .start-menu.show {
+            display: flex;
+        }
+
+        .start-menu-sidebar {
+            width: 28px;
+            background: linear-gradient(180deg, #000080 0%, #1084d0 100%);
+            writing-mode: vertical-rl;
+            display: flex;
+            align-items: flex-end;
+            padding: 8px 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .start-menu-content {
+            flex: 1;
+            background: var(--win95-gray);
+        }
+
+        .start-menu-items {
+            padding: 2px 0;
+        }
+
+        .start-menu-item {
+            padding: 4px 8px 4px 40px;
+            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+            font-size: 11px;
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+        }
+
+        .start-menu-item:hover {
+            background: var(--win95-blue);
+            color: white;
+        }
+
+        .start-menu-item.has-submenu::after {
+            content: '▶';
+            position: absolute;
+            right: 8px;
+            font-size: 8px;
+        }
+
+        .start-menu-item img {
+            position: absolute;
+            left: 8px;
+            width: 24px;
+            height: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .start-menu-separator {
+            height: 1px;
+            background: var(--win95-dark-gray);
+            margin: 2px 4px;
+            border-top: 1px solid var(--win95-white);
+        }
+
+        /* Submenu */
+        .submenu {
+            position: absolute;
+            left: 100%;
+            top: -2px;
+            width: 200px;
+            background: var(--win95-gray);
+            border: 2px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+            display: none;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            z-index: 10002;
+        }
+
+        .start-menu-item:hover .submenu {
+            display: block;
+        }
+
+        .submenu-item {
+            padding: 4px 8px 4px 40px;
+            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+            font-size: 11px;
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            color:#000000;
+        }
+
+        .submenu-item:hover {
+            background: var(--win95-blue);
+            color: white;
+        }
+
+        .submenu-item img {
+            position: absolute;
+            left: 8px;
+            width: 24px;
+            height: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Terminal Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 100000;
+            font-family: 'Courier New', 'Courier', monospace;
+            color: #c0c0c0;
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+
+        .loading-screen.hidden {
+            display: none;
+        }
+
+        .terminal-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .terminal-line {
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+            line-height: 1.3;
+            color: #c0c0c0;
+            white-space: pre;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 14px;
+            background-color: #c0c0c0;
+            margin-left: 2px;
+            animation: blink 1s step-end infinite;
+        }
+        pre {
+            font-family: "Courier New", Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.2;
+            white-space: pre; /* important */
+        }
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Terminal Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="terminal-container" id="terminalContainer">
+            <!-- Boot messages will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Desktop Icons -->
+    <div class="desktop" id="desktop">
+        <div class="desktop-icon" data-file="resume.txt" ondblclick="openResumeWindow()">
+            <img src="text-icon.ico" alt="Resume">
+            <span>Resume.txt</span>
+        </div>
+        
+        <div class="desktop-icon" data-file="projects" ondblclick="openProjectsWindow()">
+            <img src="folder-icon.ico" alt="Projects">
+            <span>Projects</span>
+        </div>
+        
+        <div class="desktop-icon" ondblclick="openAboutWindow()">
+            <img src="computer-icon.ico" alt="Computer">
+            <span>My Computer</span>
+        </div>
+        
+        <div class="desktop-icon" ondblclick="window.open('https://github.com/smtkanchana66', '_blank')">
+            <img src="trash-icon.ico" alt="Recycle Bin">
+            <span>Recycle Bin</span>
+        </div>
+        
+        <div class="desktop-icon" ondblclick="window.open('https://www.linkedin.com/in/smtkanchana66/', '_blank')">
+            <img src="network-icon.ico" alt="Network">
+            <span>Network Neighborhood</span>
+        </div>
+    </div>
+
+    <!-- Resume Window -->
+    <div class="window" id="resumeWindow" style="top: 80px; left: 100px; width: 600px; height: 450px;">
+        <div class="title-bar" onmousedown="startDrag(event, 'resumeWindow')">
+            <div class="title-bar-text">
+                <img src="text-icon.ico" alt="">
+                Resume.txt - Notepad
+            </div>
+            <div class="title-bar-controls">
+                <button class="title-bar-btn" onclick="minimizeWindow('resumeWindow')">_</button>
+                <button class="title-bar-btn" onclick="maximizeWindow('resumeWindow')">□</button>
+                <button class="title-bar-btn" onclick="closeWindow('resumeWindow')">×</button>
+            </div>
+        </div>
+        <div class="menu-bar" >
+            <div class="menu-item">File</div>
+            <div class="menu-item">Edit</div>
+            <div class="menu-item">Search</div>
+            <div class="menu-item">Help</div>
+        </div>
+        <div class="window-content" id="resumeContent">
+<pre>             
+┌─────────────────────────────────────────────────────┐                                                                                                                    
+|                  <b>K</b>anchana <b>S</b>amarakoon                |                                                                                                                                                                                                                                                                                                                                </pre>                                                       
+└──────────────────────────────────────────────────────────────┘<br>
+</pre> 
+<b>CONTACT INFORMATION</b>
+═════════════════════════════════════════════════════════════════════════════<br>
+
+📧 Email: <a href="mailto:smtkanchana66@gmail.com">
+  smtkanchana66[at]gmail[dot]com</a>
+<br>
+🌐 Portfolio: <a href="">smtkanchana66.github.io</a><br>
+💼 LinkedIn: <a href="https://www.linkedin.com/in/smtkanchana66/">linkedin.com/in/smtkanchana66</a><br>
+🐙 GitHub: <a href="https://github.com/smtkanchana66">github.com/smtkanchana66</a> <br>
+<br>
+<b>PROFESSIONAL SUMMARY</b>
+═════════════════════════════════════════════════════════════════════════════<br>
+
+Motivated ICT graduate with 6 months of hands-on internship experience in AWS cloud infrastructure, Ubuntu server administration, and WordPress deployment. Native Linux user with over 7 years of experience, strong interest in cybersecurity, and a solid academic foundation in AI and data-driven systems gained through a Business Intelligence specialization. Currently seeking an AI-focused role to contribute to intelligent, secure, and scalable solutions.<br>
+<br>
+<b>TECHNICAL SKILLS</b>
+═════════════════════════════════════════════════════════════════════════════<br>
+
+Languages:       Python, HTML5, CSS3, C, Java<br>
+<!--Frameworks:      React, Node.js, Express, Vue.js-->
+Tools:           Git, Docker, VS Code, Figma<br>
+Databases:       MongoDB, MySQL<br>
+Os:              Linux(Debian), Windows<br> 
+<br>
+<b>PROFESSIONAL EXPERIENCE</b>
+═════════════════════════════════════════════════════════════════════════════<br>
+
+[Software Plus Technologies] | [Software Engineer]<br>
+[2024 May] - [2024 Nov]<br>
+<br>
+• Deployed and managed AWS EC2 instances running Ubuntu Server for production workloads<br>
+• Installed, configured, and maintained WordPress websites tailored to client requirements<br>
+• Configured and managed server-level security, including custom firewall rules and access controls<br>
+• Performed regular Ubuntu server updates, patching, and monitoring to ensure stability and security<br>
+• Optimized server performance and availability through resource tuning and proactive maintenance<br>
+• Provided daily server administration, troubleshooting, and uptime management for live environments<br>
+<!--
+[Previous Company] | [Position Title]
+[Start Date] - [End Date]
+
+• Built RESTful APIs handling 1M+ requests per day
+• Mentored junior developers on best practices and code reviews
+• Integrated third-party services and payment gateways
+• Participated in agile ceremonies and sprint planning
+-->
+<br>
+<b>EDUCATION</b>
+═════════════════════════════════════════════════════════════════════════════<br>
+
+[Information and Communication Technology] in [Business intelligence(BI)]
+[Uva Wellassa University], [2021][2025]<br>
+<br>
+<b>CERTIFICATIONS</b>
+═════════════════════════════════════════════════════════════════════════════<br>
+
+• <a href="https://www.linkedin.com/in/smtkanchana66/details/certifications/">Python to Access Web Data]</a>  - [University of Michigan], [2026 jan]<br>
+• <a href="https://www.linkedin.com/in/smtkanchana66/details/certifications/">[Python Data Structures]</a>           - [University of Michigan], [2026 jan]<br>
+• <a href="https://www.linkedin.com/in/smtkanchana66/details/certifications/">[Programming for Everybody:python]</a> - [University of Michigan], [2025 Dec]<br>
+• <a href="https://www.linkedin.com/in/smtkanchana66/details/certifications/">[Ethical Hacking]</a>                  - [Udemy], [2024 Dec]<br>
+• <a href="https://www.linkedin.com/in/smtkanchana66/details/certifications/">[Custom Copilots with Azure]</a>       - [Styava], [2024 Nov]<br>
+• <a href="https://www.linkedin.com/in/smtkanchana66/details/certifications/">[Python Game Developmet]</a>           - [Udemy], [2024 Sep]<br>
+• <a href="https://www.linkedin.com/in/smtkanchana66/details/certifications/">[AI Python for Beginners]</a>          - [DeepLearing.AI], [2024 Aug]<br>
+• <a href="https://www.linkedin.com/in/smtkanchana66/details/certifications/">[Ubuntu Network Server]</a>            - [Udemy], [2024 Aug]<br>
+• <a href="https://www.linkedin.com/in/smtkanchana66/details/certifications/">[The Origins i: HTML]</a>              - [Codedex], [2024 Aug]<br>
+• <a href="https://www.linkedin.com/in/smtkanchana66/details/certifications/">[Linux Modules]</a>                    - [Udemy], [2024 Aug]<br>
+• <a href="https://www.linkedin.com/in/smtkanchana66/details/certifications/">[Linux Desktop Automation]</a>         - [Udemy], [2024 Aug]<br>
+• <a href="https://www.linkedin.com/in/smtkanchana66/details/certifications/">[Linux Terminal Productivity]</a>      - [Udemy], [2024 Aug]<br>
+• <a href="https://www.linkedin.com/in/smtkanchana66/details/certifications/">[The Legend of Python]</a>             - [codedex], [2024 jul]<br>
+• <a href="https://www.linkedin.com/in/smtkanchana66/details/certifications/">[Python Essentials 1]</a>              - [Cisco Networking Academy], [2024 jul]<br>
+
+<br>
+<b>INTERESTS & HOBBIES</b>
+═════════════════════════════════════════════════════════════════════════════<br>
+• Open Source Contribution<br>
+• Reading<br> 
+• <a href="https://www.youtube.com/@ST3R1XX">Music Producing</a><br>
+• Gaming<br>
+
+═════════════════════════════════════════════════════════════════════════════<br>
+        </div>
+    </div>
+
+    <!-- Projects Explorer Window -->
+    <div class="window" id="projectsWindow" style="top: 120px; left: 150px; width: 600px; height: 450px;">
+        <div class="title-bar" onmousedown="startDrag(event, 'projectsWindow')">
+            <div class="title-bar-text">
+                <img src="folder-icon.ico" alt="">
+                Projects
+            </div>
+            <div class="title-bar-controls">
+                <button class="title-bar-btn" onclick="minimizeWindow('projectsWindow')">_</button>
+                <button class="title-bar-btn" onclick="maximizeWindow('projectsWindow')">□</button>
+                <button class="title-bar-btn" onclick="closeWindow('projectsWindow')">×</button>
+            </div>
+        </div>
+        <div class="menu-bar">
+            <div class="menu-item">File</div>
+            <div class="menu-item">Edit</div>
+            <div class="menu-item">View</div>
+            <div class="menu-item">Go</div>
+            <div class="menu-item">Favorites</div>
+            <div class="menu-item">Help</div>
+        </div>
+        <div class="file-explorer">
+            <div class="toolbar">
+                <button class="toolbar-btn">
+                    <img src="toolbar-back.ico" alt="">
+                    <span>Back</span>
+                </button>
+                <button class="toolbar-btn">
+                    <img src="toolbar-forward.ico" alt="">
+                    <span>Forward</span>
+                </button>
+                <button class="toolbar-btn">
+                    <img src="toolbar-up.ico" alt="">
+                    <span>Up</span>
+                </button>
+                <div class="toolbar-separator"></div>
+                <button class="toolbar-btn">
+                    <img src="toolbar-cut.ico" alt="">
+                    <span>Cut</span>
+                </button>
+                <button class="toolbar-btn">
+                    <img src="toolbar-copy.ico" alt="">
+                    <span>Copy</span>
+                </button>
+                <button class="toolbar-btn">
+                    <img src="toolbar-paste.ico" alt="">
+                    <span>Paste</span>
+                </button>
+                <div class="toolbar-separator"></div>
+                <button class="toolbar-btn">
+                    <img src="toolbar-undo.ico" alt="">
+                    <span>Undo</span>
+                </button>
+                <div class="toolbar-separator"></div>
+                <button class="toolbar-btn">
+                    <img src="toolbar-delete.ico" alt="">
+                    <span>Delete</span>
+                </button>
+                <button class="toolbar-btn">
+                    <img src="toolbar-properties.ico" alt="">
+                    <span>Properties</span>
+                </button>
+                <div class="toolbar-separator"></div>
+                <button class="toolbar-btn">
+                    <img src="toolbar-views.ico" alt="">
+                    <span>Views</span>
+                </button>
+            </div>
+            <div class="address-bar">
+                <span class="address-label">Address</span>
+                <img src="directory_closed-4.ico" style="width: 16px; height: 16px;" alt="">
+                <input type="text" class="address-input" value="C:\Projects" readonly>
+                <button class="address-dropdown">▼</button>
+            </div>
+            <div class="file-list" id="projectsList">
+                <div class="file-item" onclick="openGitHubLink('https://github.com/smtkanchana66/webcrawler')">
+                    <img src="exe-icon.ico" alt="exe">
+                    <span>webcrawler.exe</span>
+                </div>
+                <div class="file-item" onclick="openGitHubLink('https://github.com/smtkanchana66/skin-cancer-detection-cnn')">
+                    <img src="exe-icon.ico" alt="exe">
+                    <span>skin-cancer-detection-cnn.exe</span>
+                </div>
+                <div class="file-item" onclick="openGitHubLink('https://github.com/smtkanchana66/Demo_DBMS')">
+                    <img src="exe-icon.ico" alt="exe">
+                    <span>Demo_DBMS.exe</span>
+                </div>
+                <div class="file-item" onclick="openGitHubLink('https://github.com/smtkanchana66/Roman-to-Integer')">
+                    <img src="exe-icon.ico" alt="exe">
+                    <span>Roman-to-Integer.exe</span>
+                </div>
+                <div class="file-item" onclick="openGitHubLink('https://github.com/smtkanchana66/Rock-Paper-Pyhton-')">
+                    <img src="exe-icon.ico" alt="exe">
+                    <span>Rock-Paper-Pyhton.exe</span>
+                </div>
+                <div class="file-item" onclick="openGitHubLink('https://github.com/smtkanchana66/encryption-decryption-tool')">
+                    <img src="exe-icon.ico" alt="exe">
+                    <span>encryption-decryption-tool.exe</span>
+                </div>
+                <div class="file-item" onclick="openGitHubLink('https://github.com/smtkanchana66/harry-potter-house-quiz')">
+                    <img src="exe-icon.ico" alt="exe">
+                    <span>harry-potter-house-quiz.exe</span>
+                </div>
+                <div class="file-item" onclick="openGitHubLink('https://github.com/smtkanchana66/Nmap-GUI')">
+                    <img src="exe-icon.ico" alt="exe">
+                    <span>Nmap-GUI.exe</span>
+                </div>
+                <div class="file-item" onclick="openGitHubLink('https://github.com/smtkanchana66/Linux-Bible')">
+                    <img src="paper-icon.ico" alt="exe">
+                    <span>Linux-Bible</span>
+                </div>
+                <div class="file-item" onclick="openGitHubLink('https://github.com/smtkanchana66/WinSecurityProject')">
+                    <img src="exe-icon1.ico" alt="exe">
+                    <span>WinSecurityProject.bat</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Window -->
+    <div class="window" id="aboutWindow" style="top: 160px; left: 200px; width: 620px; height: 480px;">
+        <div class="title-bar" onmousedown="startDrag(event, 'aboutWindow')">
+            <div class="title-bar-text">
+                <img src="computer-icon.ico" alt="">
+                My Computer
+            </div>
+            <div class="title-bar-controls">
+                <button class="title-bar-btn" onclick="minimizeWindow('aboutWindow')">_</button>
+                <button class="title-bar-btn" onclick="maximizeWindow('aboutWindow')">□</button>
+                <button class="title-bar-btn" onclick="closeWindow('aboutWindow')">×</button>
+            </div>
+        </div>
+        <div class="menu-bar">
+            <div class="menu-item">File</div>
+            <div class="menu-item">Edit</div>
+            <div class="menu-item">View</div>
+            <div class="menu-item">Go</div>
+            <div class="menu-item">Favorites</div>
+            <div class="menu-item">Help</div>
+        </div>
+        <div class="file-explorer">
+            <div class="toolbar">
+                <button class="toolbar-btn">
+                    <img src="toolbar-back.ico" alt="">
+                    <span>Back</span>
+                </button>
+                <button class="toolbar-btn">
+                    <img src="toolbar-forward.ico" alt="">
+                    <span>Forward</span>
+                </button>
+                <button class="toolbar-btn">
+                    <img src="toolbar-up.ico" alt="">
+                    <span>Up</span>
+                </button>
+                <div class="toolbar-separator"></div>
+                <button class="toolbar-btn">
+                    <img src="toolbar-cut.ico" alt="">
+                    <span>Cut</span>
+                </button>
+                <button class="toolbar-btn">
+                    <img src="toolbar-copy.ico" alt="">
+                    <span>Copy</span>
+                </button>
+                <button class="toolbar-btn">
+                    <img src="toolbar-paste.ico" alt="">
+                    <span>Paste</span>
+                </button>
+                <div class="toolbar-separator"></div>
+                <button class="toolbar-btn">
+                    <img src="toolbar-undo.ico" alt="">
+                    <span>Undo</span>
+                </button>
+                <div class="toolbar-separator"></div>
+                <button class="toolbar-btn">
+                    <img src="toolbar-delete.ico" alt="">
+                    <span>Delete</span>
+                </button>
+                <button class="toolbar-btn">
+                    <img src="toolbar-properties.ico" alt="">
+                    <span>Properties</span>
+                </button>
+                <div class="toolbar-separator"></div>
+                <button class="toolbar-btn">
+                    <img src="toolbar-views.ico" alt="">
+                    <span>Views</span>
+                </button>
+            </div>
+            <div class="address-bar">
+                <span class="address-label">Address</span>
+                <img src="computer-icon.ico" style="width: 16px; height: 16px;" alt="">
+                <input type="text" class="address-input" value="My Computer" readonly>
+                <button class="address-dropdown">▼</button>
+            </div>
+            <div style="padding: 15px; display: grid; grid-template-columns: repeat(auto-fill, 90px); gap: 20px; background: white;">
+                <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+                    <img src="floppy-icon.ico" style="width: 40px; height: 40px;" alt="">
+                    <span style="font-size: 11px; margin-top: 4px; text-align: center;">3½ Floppy (A:)</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+                    <img src="floppy-icon.ico" style="width: 40px; height: 40px;" alt="">
+                    <span style="font-size: 11px; margin-top: 4px; text-align: center;">5¼ Floppy (B:)</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+                    <img src="harddrive-icon.ico" style="width: 40px; height: 40px;" alt="">
+                    <span style="font-size: 11px; margin-top: 4px; text-align: center;">Local Disk (C:)</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+                    <img src="harddrive-icon.ico" style="width: 40px; height: 40px;" alt="">
+                    <span style="font-size: 11px; margin-top: 4px; text-align: center;">Local Disk (D:)</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+                    <img src="cdrom-icon.ico" style="width: 40px; height: 40px;" alt="">
+                    <span style="font-size: 11px; margin-top: 4px; text-align: center;">(E:)</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+                    <img src="cdrom-icon.ico" style="width: 40px; height: 40px;" alt="">
+                    <span style="font-size: 11px; margin-top: 4px; text-align: center;">(F:)</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer;" ondblclick="window.open('https://github.com/yourusername', '_blank')">
+                    <img src="network-drive-icon.ico" style="width: 40px; height: 40px;" alt="">
+                    <span style="font-size: 11px; margin-top: 4px; text-align: center;">WP (G:)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Taskbar -->
+    <div class="taskbar">
+        <button class="start-button" onclick="toggleStartMenu()">
+            <img src="start-icon.ico" alt="Start">
+            Start
+        </button>
+        <div id="taskbarItems"></div>
+        <div class="taskbar-clock" id="clock">12:00 PM</div>
+    </div>
+
+    <!-- Start Menu -->
+    <div class="start-menu" id="startMenu">
+        <div class="start-menu-sidebar">
+            <span>Windows<span style="font-weight: normal;"> 95</span></span>
+        </div>
+        <div class="start-menu-content">
+            <div class="start-menu-items">
+                <div class="start-menu-item has-submenu">
+                    <img src="programs-icon.ico" alt="">
+                    Programs
+                    <div class="submenu">
+                        <div class="submenu-item" onclick="openResumeWindow(); toggleStartMenu();">
+                            <img src="accessories-icon.ico" alt="">
+                            Accessories
+                        </div>
+                        <div class="submenu-item" onclick="openProjectsWindow(); toggleStartMenu();">
+                            <img src="folder-icon.ico" alt="">
+                            My Projects
+                        </div>
+                        <div class="submenu-item" onclick="window.open('https://github.com/smtkanchana66', '_blank'); toggleStartMenu();">
+                            <img src="msdos-icon.ico" alt="">
+                            MS-DOS Prompt
+                        </div>
+                        <div class="submenu-item" onclick="window.open('https://linkedin.com/in/smtkanchana66', '_blank'); toggleStartMenu();">
+                            <img src="network-icon.ico" alt="">
+                            The Microsoft Network
+                        </div>
+                        <div class="submenu-item" onclick="openAboutWindow(); toggleStartMenu();">
+                            <img src="explorer-icon.ico" alt="">
+                            Windows Explorer
+                        </div>
+                    </div>
+                </div>
+                <div class="start-menu-item has-submenu">
+                    <img src="documents-icon.ico" alt="">
+                    Documents
+                    <div class="submenu">
+                        <div class="submenu-item" onclick="openResumeWindow(); toggleStartMenu();">
+                            <img src="text-icon.ico" alt="">
+                            Resume.txt
+                        </div>
+                    </div>
+                </div>
+                <div class="start-menu-item has-submenu">
+                    <img src="settings-icon.ico" alt="">
+                    Settings
+                </div>
+                <div class="start-menu-item" onclick="toggleStartMenu();">
+                    <img src="find-icon.ico" alt="">
+                    Find
+                </div>
+                <div class="start-menu-item" onclick="toggleStartMenu();">
+                    <img src="help-icon.ico" alt="">
+                    Help
+                </div>
+                <div class="start-menu-item" onclick="toggleStartMenu();">
+                    <img src="run-icon.ico" alt="">
+                    Run...
+                </div>
+                <div class="start-menu-separator"></div>
+                <div class="start-menu-item" onclick="alert('Thanks for visiting my portfolio :)'); toggleStartMenu();">
+                    <img src="shutdown-icon.ico" alt="">
+                    Shut Down...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Terminal Boot Sequence
+        const terminalContainer = document.getElementById('terminalContainer');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const desktop = document.getElementById('desktop');
+        const taskbar = document.querySelector('.taskbar');
+        
+        const bootMessages = [
+            'Starting MS-DOS...',
+            '',
+            'HIMEM is testing extended memory...done.',
+            'EMM386 v4.48 loaded.',
+            '',
+            'Microsoft(R) MS-DOS(R) Version 6.22',
+            '     (C)Copyright Microsoft Corp 1981-1994.',
+            '',
+            'C:\\>win',
+            '',
+            'Starting Windows 95...',
+            '',
+            'Initializing system...',
+            'Loading device drivers...',
+            'Loading system resources...',
+            'Starting graphical user interface...',
+            ''
+        ];
+        
+        let messageIndex = 0;
+        
+        function displayMessage() {
+            if (messageIndex < bootMessages.length) {
+                const line = document.createElement('div');
+                line.className = 'terminal-line';
+                line.textContent = bootMessages[messageIndex];
+                terminalContainer.appendChild(line);
+                
+                messageIndex++;
+                
+                // Variable delay for realism
+                const delay = bootMessages[messageIndex - 1] === '' ? 50 : (Math.random() * 150 + 100);
+                setTimeout(displayMessage, delay);
+            } else {
+                // Boot complete, show desktop
+                setTimeout(() => {
+                    loadingScreen.classList.add('hidden');
+                    desktop.classList.add('loaded');
+                    taskbar.classList.add('loaded');
+                }, 400);
+            }
+        }
+        
+        // Start boot sequence immediately
+        displayMessage();
+
+        // Window Management
+        let activeWindow = null;
+        let draggedWindow = null;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+
+        function openWindow(windowId) {
+            const window = document.getElementById(windowId);
+            window.style.display = 'block';
+            setActiveWindow(windowId);
+            updateTaskbar();
+        }
+
+        function closeWindow(windowId) {
+            const window = document.getElementById(windowId);
+            window.style.display = 'none';
+            if (activeWindow === windowId) {
+                activeWindow = null;
+            }
+            updateTaskbar();
+        }
+
+        function minimizeWindow(windowId) {
+            const window = document.getElementById(windowId);
+            window.style.display = 'none';
+            updateTaskbar();
+        }
+
+        function maximizeWindow(windowId) {
+            const window = document.getElementById(windowId);
+            window.classList.toggle('maximized');
+        }
+
+        function setActiveWindow(windowId) {
+            document.querySelectorAll('.window').forEach(w => {
+                w.classList.remove('active');
+                w.style.zIndex = '999';
+            });
+            const window = document.getElementById(windowId);
+            window.classList.add('active');
+            window.style.zIndex = '1000';
+            activeWindow = windowId;
+            updateTaskbar();
+        }
+
+        function openResumeWindow() {
+            openWindow('resumeWindow');
+        }
+
+        function openProjectsWindow() {
+            openWindow('projectsWindow');
+        }
+
+        function openAboutWindow() {
+            openWindow('aboutWindow');
+        }
+
+        function openGitHubLink(url) {
+            window.open(url, '_blank');
+        }
+
+        // Drag functionality
+        function startDrag(event, windowId) {
+            if (event.target.classList.contains('title-bar-btn')) return;
+            
+            draggedWindow = document.getElementById(windowId);
+            if (draggedWindow.classList.contains('maximized')) return;
+            
+            setActiveWindow(windowId);
+            
+            const rect = draggedWindow.getBoundingClientRect();
+            dragOffsetX = event.clientX - rect.left;
+            dragOffsetY = event.clientY - rect.top;
+            
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDrag);
+            event.preventDefault();
+        }
+
+        function drag(event) {
+            if (!draggedWindow) return;
+            
+            let newX = event.clientX - dragOffsetX;
+            let newY = event.clientY - dragOffsetY;
+            
+            newX = Math.max(0, Math.min(newX, window.innerWidth - 100));
+            newY = Math.max(0, Math.min(newY, window.innerHeight - 100));
+            
+            draggedWindow.style.left = newX + 'px';
+            draggedWindow.style.top = newY + 'px';
+        }
+
+        function stopDrag() {
+            document.removeEventListener('mousemove', drag);
+            document.removeEventListener('mouseup', stopDrag);
+            draggedWindow = null;
+        }
+
+        // Taskbar
+        function updateTaskbar() {
+            const taskbarItems = document.getElementById('taskbarItems');
+            taskbarItems.innerHTML = '';
+            
+            const windows = ['resumeWindow', 'projectsWindow', 'aboutWindow'];
+            const titles = {
+                'resumeWindow': 'Resume.txt',
+                'projectsWindow': 'Projects',
+                'aboutWindow': 'My Computer'
+            };
+            const icons = {
+                'resumeWindow': 'text-icon.ico',
+                'projectsWindow': 'folder-icon.ico',
+                'aboutWindow': 'computer-icon.ico'
+            };
+            
+            windows.forEach(windowId => {
+                const window = document.getElementById(windowId);
+                // Only add to taskbar if window is currently visible (opened)
+                if (window.style.display === 'block') {
+                    const item = document.createElement('div');
+                    item.className = 'taskbar-item';
+                    if (window.classList.contains('active')) {
+                        item.classList.add('active');
+                    }
+                    
+                    const icon = document.createElement('img');
+                    icon.src = icons[windowId];
+                    icon.alt = '';
+                    
+                    const text = document.createElement('span');
+                    text.textContent = titles[windowId];
+                    
+                    item.appendChild(icon);
+                    item.appendChild(text);
+                    
+                    item.onclick = () => {
+                        if (window.style.display === 'none') {
+                            window.style.display = 'block';
+                        }
+                        setActiveWindow(windowId);
+                    };
+                    taskbarItems.appendChild(item);
+                }
+            });
+        }
+
+        // Start Menu
+        function toggleStartMenu() {
+            const startMenu = document.getElementById('startMenu');
+            const startButton = document.querySelector('.start-button');
+            
+            if (startMenu.classList.contains('show')) {
+                startMenu.classList.remove('show');
+                startButton.classList.remove('active');
+            } else {
+                startMenu.classList.add('show');
+                startButton.classList.add('active');
+            }
+        }
+
+        // Close start menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const startMenu = document.getElementById('startMenu');
+            const startButton = document.querySelector('.start-button');
+            
+            if (!startMenu.contains(e.target) && !startButton.contains(e.target)) {
+                startMenu.classList.remove('show');
+                startButton.classList.remove('active');
+            }
+        });
+
+        // Clock
+        function updateClock() {
+            const clock = document.getElementById('clock');
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+            clock.textContent = `${displayHours}:${minutes} ${ampm}`;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Desktop icon selection
+        document.querySelectorAll('.desktop-icon').forEach(icon => {
+            icon.addEventListener('click', (e) => {
+                if (!e.ctrlKey) {
+                    document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+                }
+                icon.classList.toggle('selected');
+            });
+        });
+
+        // Click on desktop to deselect
+        document.querySelector('.desktop').addEventListener('click', (e) => {
+            if (e.target.classList.contains('desktop')) {
+                document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+            }
+        });
+
+        // Make windows clickable to bring to front
+        document.querySelectorAll('.window').forEach(window => {
+            window.addEventListener('mousedown', () => {
+                setActiveWindow(window.id);
+            });
+        });
+    </script>
+</body>
+</html>
