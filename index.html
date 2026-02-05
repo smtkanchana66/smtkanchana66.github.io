@@ -633,6 +633,7 @@
 
 
         /* Terminal Loading Screen */
+        /* BIOS Boot Screen */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -641,8 +642,7 @@
             height: 100%;
             background: #000000;
             z-index: 100000;
-            font-family: 'Courier New', 'Courier', monospace;
-            color: #c0c0c0;
+            color: #aaaaaa;
             overflow: hidden;
             padding: 0;
             margin: 0;
@@ -652,40 +652,132 @@
             display: none;
         }
 
-        .terminal-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            padding: 10px;
+        .bios-container {
+            position: relative;
+            padding: 10px 12px;
+            max-width: 800px; /* Narrow width for authentic old-screen feel */
             width: 100%;
+            height: 100%;
+            font-size: 16px;
+            line-height: 1.35;
         }
 
-        .terminal-line {
+        .bios-line {
             margin: 0;
             padding: 0;
-            font-size: 14px;
-            line-height: 1.3;
-            color: #c0c0c0;
+            color: #aaaaaa;
             white-space: pre;
+            font-family: 'VT323', 'Courier New', monospace;
+            font-size: 20px;
+            line-height: 1.2;
         }
 
-        .cursor {
+        .bios-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .bios-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            max-width: 800px; /* Match container width */
+            width: 100%;
+            padding: 0 12px 8px 12px;
+            z-index: 10;
+            background: #000000;
+        }
+
+        .bios-bottom .bios-line {
+            font-size: 20px;
+        }
+
+        .cursor-blink {
             display: inline-block;
-            width: 8px;
-            height: 14px;
-            background-color: #c0c0c0;
+            width: 10px;
+            height: 16px;
+            background-color: #aaaaaa;
             margin-left: 2px;
-            animation: blink 1s step-end infinite;
+            animation: blink 530ms step-end infinite;
+            vertical-align: bottom;
         }
-        pre {
-            font-family: "Courier New", Consolas, monospace;
-            font-size: 14px;
-            line-height: 1.2;
-            white-space: pre; /* important */
-        }
+
         @keyframes blink {
-            50% {
+            0%, 50% {
+                opacity: 1;
+            }
+            50.1%, 100% {
                 opacity: 0;
+            }
+        }
+
+        .blue-text {
+            color: #5555ff;
+        }
+
+        .white-text {
+            color: #ffffff;
+        }
+
+        /* Logo Styles */
+        .header-with-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .award-logo {
+            width: 24px;
+            height: 24px;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            vertical-align: middle;
+        }
+
+        /* Energy Star logo container */
+        .bios-line-with-energystar {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            position: relative;
+            min-height: 60px; /* Give space for the logo */
+        }
+
+        .copyright-text {
+            color: #aaaaaa;
+            white-space: pre;
+            font-family: 'VT323', 'Courier New', monospace;
+            font-size: 20px;
+            line-height: 1.2;
+            flex: 1;
+        }
+
+        .energystar-logo {
+            width: 120px;
+            height: auto;
+            margin-left: 20px;
+            margin-top: -5px;
+            image-rendering: crisp-edges;
+        }
+
+        /* Responsive adjustments for very small screens */
+        @media (max-width: 600px) {
+            .bios-container {
+                max-width: 100%;
+                font-size: 14px;
+            }
+            
+            .bios-line {
+                font-size: 16px;
+            }
+            
+            .energystar-logo {
+                width: 80px;
+            }
+            
+            .award-logo {
+                width: 20px;
+                height: 20px;
             }
         }
     </style>
@@ -694,7 +786,7 @@
     
     <!-- Terminal Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
-        <div class="terminal-container" id="terminalContainer">
+        <div class="bios-container" id="biosContainer">
             <!-- Boot messages will be added here by JavaScript -->
         </div>
     </div>
@@ -1190,57 +1282,154 @@ Os:              Linux(Debian), Windows<br>
 
     <script>
         // Terminal Boot Sequence
-        const terminalContainer = document.getElementById('terminalContainer');
+// BIOS Boot Sequence
+        const biosContainer = document.getElementById('biosContainer');
         const loadingScreen = document.getElementById('loadingScreen');
         const desktop = document.getElementById('desktop');
         const taskbar = document.querySelector('.taskbar');
-        
-        const bootMessages = [
-            'Starting MS-DOS...',
-            '',
-            'HIMEM is testing extended memory...done.',
-            'EMM386 v4.48 loaded.',
-            '',
-            'Microsoft(R) MS-DOS(R) Version 6.22',
-            '     (C)Copyright Microsoft Corp 1981-1994.',
-            '',
-            'C:\\>win',
-            '',
-            'Starting Windows 95...',
-            '',
-            'Initializing system...',
-            'Loading device drivers...',
-            'Loading system resources...',
-            'Starting graphical user interface...',
-            ''
-        ];
-        
-        let messageIndex = 0;
-        
-        function displayMessage() {
-            if (messageIndex < bootMessages.length) {
-                const line = document.createElement('div');
-                line.className = 'terminal-line';
-                line.textContent = bootMessages[messageIndex];
-                terminalContainer.appendChild(line);
-                
-                messageIndex++;
-                
-                // Variable delay for realism
-                const delay = bootMessages[messageIndex - 1] === '' ? 50 : (Math.random() * 150 + 100);
-                setTimeout(displayMessage, delay);
-            } else {
-                // Boot complete, show desktop
-                setTimeout(() => {
-                    loadingScreen.classList.add('hidden');
-                    desktop.classList.add('loaded');
-                    taskbar.classList.add('loaded');
-                }, 400);
+
+        let memoryCounter = 0;
+        let memoryLine = null;
+
+        function createBiosScreen() {
+            if (!biosContainer) {
+                console.error('BIOS container not found!');
+                return;
             }
+            
+            biosContainer.innerHTML = '';
+            
+            // Create main content container
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'bios-content';
+            contentDiv.style.paddingTop = '10px';
+            biosContainer.appendChild(contentDiv);
+            
+            // Create bottom lines container
+            const bottomDiv = document.createElement('div');
+            bottomDiv.className = 'bios-bottom';
+            biosContainer.appendChild(bottomDiv);
+            
+            // Bottom two lines
+            const bottomLine1 = document.createElement('div');
+            bottomLine1.className = 'bios-line';
+            bottomLine1.innerHTML = 'Press <span class="white-text">DEL</span> to enter SETUP, <span class="white-text">ALT+F2</span> to enter AMDFLASH<span class="cursor-blink"></span>';
+            bottomDiv.appendChild(bottomLine1);
+            
+            const bottomLine2 = document.createElement('div');
+            bottomLine2.className = 'bios-line';
+            bottomLine2.textContent = '09/21/2000-iB10-W83627HF-6A69MPNAC-00';
+            bottomDiv.appendChild(bottomLine2);
+            
+            // Header section
+            setTimeout(() => {
+                // Create header with Award logo
+                const headerLine1 = document.createElement('div');
+                headerLine1.className = 'bios-line header-with-logo';
+                headerLine1.innerHTML = '<img src="award-logo.ico" alt="Award" class="award-logo"><span class="blue-text">Award</span> Modular BIOS v6.00PG, An Energy Star Ally';
+                contentDiv.appendChild(headerLine1);
+                
+                // Create copyright line with Energy Star logo positioned to the right
+                const copyrightContainer = document.createElement('div');
+                copyrightContainer.className = 'bios-line-with-energystar';
+                copyrightContainer.innerHTML = `
+                    <div class="copyright-text">Copyright (C) 1984-99, Award Software, Inc.</div>
+                    <img src="energy-star-logo.png" alt="Energy Star" class="energystar-logo">
+                `;
+                contentDiv.appendChild(copyrightContainer);
+                
+                const remainingHeader = [
+                    '',
+                    'BIH1M/BIH2M BIOS V1.3',
+                    '',
+                    'Main Processor : PENTIUM II 910MHz'
+                ];
+                
+                remainingHeader.forEach(lineText => {
+                    const line = document.createElement('div');
+                    line.className = 'bios-line';
+                    line.innerHTML = lineText;
+                    contentDiv.appendChild(line);
+                });
+                
+                // Add memory testing line
+                memoryLine = document.createElement('div');
+                memoryLine.className = 'bios-line';
+                memoryLine.textContent = 'Memory Testing :     0K OK';
+                contentDiv.appendChild(memoryLine);
+                
+                setTimeout(() => {
+                    startMemoryCounter();
+                }, 100);
+                
+            }, 150);
         }
-        
-        // Start boot sequence immediately
-        displayMessage();
+
+        function startMemoryCounter() {
+            const targetMemory = 131072;
+            const duration = 800;
+            const steps = 50;
+            const increment = targetMemory / steps;
+            const interval = duration / steps;
+            
+            let currentStep = 0;
+            
+            const counterInterval = setInterval(() => {
+                currentStep++;
+                memoryCounter = Math.min(Math.floor(increment * currentStep), targetMemory);
+                
+                if (memoryLine) {
+                    const memoryStr = memoryCounter.toString().padStart(6, ' ');
+                    memoryLine.textContent = `Memory Testing : ${memoryStr}K OK`;
+                }
+                
+                if (memoryCounter >= targetMemory) {
+                    clearInterval(counterInterval);
+                    memoryLine.textContent = 'Memory Testing : 131072K OK + 1024K Shared Memory';
+                    
+                    setTimeout(() => {
+                        continueBootSequence();
+                    }, 300);
+                }
+            }, interval);
+        }
+
+        function continueBootSequence() {
+            const contentDiv = document.querySelector('.bios-content');
+            const remainingLines = [
+                '',
+                'Award Plug and Play BIOS Extension v1.0A',
+                'Copyright (C) 1999, Award Software, Inc.',
+                '',
+                'Trend ChipAwayVirus(R) On Guard Ver 1.64',
+                ''
+            ];
+            
+            let lineIndex = 0;
+            
+            function addLine() {
+                if (lineIndex < remainingLines.length) {
+                    const line = document.createElement('div');
+                    line.className = 'bios-line';
+                    line.textContent = remainingLines[lineIndex];
+                    contentDiv.appendChild(line);
+                    
+                    lineIndex++;
+                    setTimeout(addLine, 120);
+                } else {
+                    setTimeout(() => {
+                        loadingScreen.classList.add('hidden');
+                        desktop.classList.add('loaded');
+                        taskbar.classList.add('loaded');
+                    }, 600);
+                }
+            }
+            
+            addLine();
+        }
+
+        // Start boot sequence
+        createBiosScreen();
 
         // Window Management
         let activeWindow = null;
@@ -1299,8 +1488,7 @@ Os:              Linux(Debian), Windows<br>
             openWindow('aboutWindow');
         }
 
-        // CORRECTED DOS COMMAND FUNCTIONS
-// Add these to your <script> section
+// CORRECTED DOS COMMAND FUNCTIONS
 
 function openDOSWindow() {
     openWindow('dosWindow');
