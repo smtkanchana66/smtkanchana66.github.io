@@ -99,6 +99,20 @@
             word-break: break-word;
         }
 
+        /* Selection Box */
+        .selection-box {
+            position: fixed;
+            border: 1px dotted #000080;
+            background: rgba(0, 0, 128, 0.1);
+            pointer-events: none;
+            z-index: 1;
+            display: none;
+        }
+
+        .selection-box.active {
+            display: block;
+        }
+
         /* Window */
         .window {
             position: absolute;
@@ -539,7 +553,7 @@
             transform: translateY(-50%);
         }
 
-                /* DOS Toolbar */
+        /* DOS Toolbar */
         .dos-toolbar {
             background: var(--win95-gray);
             padding: 2px 4px;
@@ -631,6 +645,219 @@
             caret-color: #c0c0c0;
         }
 
+        /* Media Player Window */
+        .media-player-content {
+            background: var(--win95-gray);
+            height: calc(100% - 60px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .media-screen {
+            background: #000000;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            position: relative;
+        }
+
+        .windows-logo {
+            width: 180px;
+            height: auto;
+            opacity: 0.8;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .now-playing {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        .media-status-bar {
+            background: var(--win95-gray);
+            height: 20px;
+            border-top: 1px solid var(--win95-white);
+            border-bottom: 1px solid var(--win95-dark-gray);
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+            font-size: 11px;
+        }
+
+        .status-section {
+            padding: 0 8px;
+            border-right: 1px solid var(--win95-dark-gray);
+            border-left: 1px solid var(--win95-white);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-section:first-child {
+            border-left: none;
+        }
+
+        .seek-bar-container {
+            background: #000000;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            gap: 8px;
+        }
+
+        .seek-bar-wrapper {
+            flex: 1;
+            height: 12px;
+            background: #333333;
+            border: 1px solid #666666;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .seek-bar-fill {
+            height: 100%;
+            background: #00aa00;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .time-display {
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            min-width: 45px;
+        }
+
+.media-controls-bottom {
+    background: var(--win95-gray);
+    height: 60px;
+    border-top: 2px solid var(--win95-white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+}
+
+.control-buttons-left {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
+
+.control-buttons-right {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+        .media-btn {
+            width: 28px;
+            height: 28px;
+            background: var(--win95-gray);
+            border: 2px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 0;
+        }
+
+        .media-btn:active {
+            border-color: var(--win95-black) var(--win95-white) var(--win95-white) var(--win95-black);
+            padding: 2px 0 0 2px;
+        }
+
+        .media-btn img {
+            width: 16px;
+            height: 16px;
+            image-rendering: pixelated;
+        }
+
+        .separator {
+            width: 1px;
+            height: 32px;
+            background: var(--win95-dark-gray);
+            border-right: 1px solid var(--win95-white);
+            margin: 0 4px;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .volume-icon {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            image-rendering: pixelated;
+        }
+
+        .volume-slider-container {
+            width: 100px;
+            height: 6px;
+            background: #ffffff;
+            border: 1px solid;
+            border-color: var(--win95-dark-gray) var(--win95-light-gray) var(--win95-light-gray) var(--win95-dark-gray);
+            position: relative;
+            cursor: pointer;
+            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .volume-slider-fill {
+            height: 100%;
+            background: linear-gradient(to right, #000080, #1084d0);
+            width: 70%;
+            transition: width 0.05s;
+            position: relative;
+        }
+
+        .volume-slider-fill::after {
+            content: '';
+            position: absolute;
+            right: -2px;
+            top: -3px;
+            width: 8px;
+            height: 12px;
+            background: var(--win95-gray);
+            border: 1px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+            cursor: grab;
+        }
+
+        .volume-slider-fill::after:active {
+            cursor: grabbing;
+        }
+
+        .playlist-toggle {
+            width: 24px;
+            height: 24px;
+            background: var(--win95-gray);
+            border: 2px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
 
         /* Terminal Loading Screen */
         /* BIOS Boot Screen */
@@ -823,6 +1050,11 @@
             <span>MS-DOS Prompt</span>
         </div>
 
+        <div class="desktop-icon" ondblclick="openMediaPlayerWindow()">
+            <img src="Windows_Media_Player.svg" alt="Media Player">
+            <span>Windows Media Player</span>
+        </div>
+
     </div>
 
     <!-- Resume Window -->
@@ -931,6 +1163,96 @@ Os:              Linux(Debian), Windows<br>
 ═════════════════════════════════════════════════════════════════════════════<br>
         </div>
     </div>
+
+        <!-- Media Player Window -->
+<!-- Media Player Window -->
+<div class="window" id="mediaPlayerWindow" style="top: 100px; left: 120px; width: 580px; height: 420px;">
+    <div class="title-bar" onmousedown="startDrag(event, 'mediaPlayerWindow')">
+        <div class="title-bar-text">
+            <img src="Windows_Media_Player.svg" alt="">
+            Windows Media Player
+        </div>
+        <div class="title-bar-controls">
+            <button class="title-bar-btn" onclick="minimizeWindow('mediaPlayerWindow')">_</button>
+            <button class="title-bar-btn" onclick="maximizeWindow('mediaPlayerWindow')">□</button>
+            <button class="title-bar-btn" onclick="closeWindow('mediaPlayerWindow')">×</button>
+        </div>
+    </div>
+    <div class="menu-bar">
+        <div class="menu-item">File</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Play</div>
+        <div class="menu-item">Navigate</div>
+        <div class="menu-item">Favorites</div>
+        <div class="menu-item">Help</div>
+    </div>
+    <div class="media-player-content">
+        <!-- Main Display Area -->
+        <div class="media-screen">
+            <div class="now-playing" id="nowPlaying"></div>
+            <img src="win-logo.png" alt="Windows Logo" class="windows-logo">
+        </div>
+        
+        <!-- Status Bar -->
+        <div class="media-status-bar">
+            <div class="status-section">
+                <span id="statusText">Ready</span>
+            </div>
+            <div class="status-section">
+                <span id="trackInfo">No file</span>
+            </div>
+        </div>
+        
+        <!-- Seek Bar -->
+        <div class="seek-bar-container">
+            <span class="time-display" id="currentTime">0:00</span>
+            <div class="seek-bar-wrapper" id="seekBar" onclick="seekAudio(event)">
+                <div class="seek-bar-fill" id="seekBarFill"></div>
+            </div>
+            <span class="time-display" id="duration">0:00</span>
+        </div>
+        
+        <!-- Control Buttons -->
+        <div class="media-controls-bottom">
+            <div class="control-buttons-left">
+                <button class="media-btn" onclick="previousTrack()" title="Previous">
+                    <span>⏮</span>
+                </button>
+                <button class="media-btn" onclick="rewind()" title="Rewind">
+                    <span>⏪</span>
+                </button>
+                <button class="media-btn" id="playPauseBtn" onclick="togglePlayPause()" title="Play">
+                    <span>▶</span>
+                </button>
+                <button class="media-btn" onclick="stopPlayback()" title="Stop">
+                    <span>⏹</span>
+                </button>
+                <button class="media-btn" onclick="fastForward()" title="Fast Forward">
+                    <span>⏩</span>
+                </button>
+                <button class="media-btn" onclick="nextTrack()" title="Next">
+                    <span>⏭</span>
+                </button>
+                
+                <div class="separator"></div>
+                
+                <button class="media-btn" onclick="openPlaylist()" title="Playlist">
+                    <span>≡</span>
+                </button>
+            </div>
+            
+            <div class="control-buttons-right">
+                <div class="volume-control">
+                    <img src="speaker-icon.ico" alt="Volume" class="volume-icon" onclick="toggleMute()" title="Mute">
+                    <div class="volume-slider-container" onclick="setVolume(event)" onmousedown="startVolumeDrag(event)">
+                        <div class="volume-slider-fill" id="volumeSliderFill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <audio id="audioPlayer"></audio>
+</div>
 
         <!-- MS-DOS Prompt Window -->
     <div class="window" id="dosWindow" style="top: 60px; left: 80px; width: 640px; height: 400px;">
@@ -1447,6 +1769,12 @@ Os:              Linux(Debian), Windows<br>
         function closeWindow(windowId) {
             const window = document.getElementById(windowId);
             window.style.display = 'none';
+            
+            // Stop music when media player closes
+            if (windowId === 'mediaPlayerWindow') {
+                stopPlayback();
+            }
+            
             if (activeWindow === windowId) {
                 activeWindow = null;
             }
@@ -1684,16 +2012,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const taskbarItems = document.getElementById('taskbarItems');
             taskbarItems.innerHTML = '';
             
-            const windows = ['resumeWindow', 'projectsWindow', 'aboutWindow'];
+            const windows = ['resumeWindow', 'projectsWindow', 'aboutWindow', 'dosWindow', 'mediaPlayerWindow'];
             const titles = {
                 'resumeWindow': 'Resume.txt',
                 'projectsWindow': 'Projects',
-                'aboutWindow': 'My Computer'
+                'aboutWindow': 'My Computer',
+                'dosWindow': 'MS-DOS Prompt',
+                'mediaPlayerWindow': 'Media Player'
             };
             const icons = {
                 'resumeWindow': 'text-icon.ico',
                 'projectsWindow': 'folder-icon.ico',
-                'aboutWindow': 'computer-icon.ico'
+                'aboutWindow': 'computer-icon.ico',
+                'dosWindow': 'msdos-icon.ico',
+                'mediaPlayerWindow': 'Windows_Media_Player.svg'
             };
             
             windows.forEach(windowId => {
@@ -1766,22 +2098,22 @@ document.addEventListener('DOMContentLoaded', function() {
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Desktop icon selection
-        document.querySelectorAll('.desktop-icon').forEach(icon => {
-            icon.addEventListener('click', (e) => {
-                if (!e.ctrlKey) {
-                    document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
-                }
-                icon.classList.toggle('selected');
-            });
-        });
+        // // Desktop icon selection
+        // document.querySelectorAll('.desktop-icon').forEach(icon => {
+        //     icon.addEventListener('click', (e) => {
+        //         if (!e.ctrlKey) {
+        //             document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+        //         }
+        //         icon.classList.toggle('selected');
+        //     });
+        // });
 
-        // Click on desktop to deselect
-        document.querySelector('.desktop').addEventListener('click', (e) => {
-            if (e.target.classList.contains('desktop')) {
-                document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
-            }
-        });
+        // // Click on desktop to deselect
+        // document.querySelector('.desktop').addEventListener('click', (e) => {
+        //     if (e.target.classList.contains('desktop')) {
+        //         document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+        //     }
+        // });
 
         // Make windows clickable to bring to front
         document.querySelectorAll('.window').forEach(window => {
@@ -1789,6 +2121,411 @@ document.addEventListener('DOMContentLoaded', function() {
                 setActiveWindow(window.id);
             });
         });
+        
+        // ============ MEDIA PLAYER FUNCTIONALITY ============
+
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+        let isMuted = false;
+        let currentVolume = 0.7;
+        let playlist = [];
+        const audioPlayer = document.getElementById('audioPlayer');
+
+        // song files - UPDATE THIS with your actual MP3 files
+        const songFiles = [
+            { title: 'Neon After Midnight.mp3', file: 'songs/song1.mp3', artist: 'Artist 1' },
+            { title: 'Chrome Skies \’87.mp3', file: 'songs/song2.mp3', artist: 'Artist 2' },
+            { title: 'VHS Dreams (Rewind Love).mp3', file: 'songs/song3.mp3', artist: 'Artist 3' },
+            { title: 'Miami Circuit Lights.mp3', file: 'songs/song4.mp3', artist: 'Artist 4' },
+            { title: 'Digital Sunset Boulevard.mp3', file: 'songs/song5.mp3', artist: 'Artist 5' },
+            { title: 'Arcade Hearts & Laser Nights.mp3', file: 'songs/song6.mp3', artist: 'Artist 6' },
+            { title: 'Midnight Drive on Cassette.wav', file: 'songs/song7.mp3', artist: 'Artist 7' },
+            { title: 'Electric Palms Forever.mp3', file: 'songs/song8.mp3', artist: 'Artist 8' },
+            { title: 'Static on the Hotline.wav', file: 'songs/song9.mp3', artist: 'Artist 9' },
+            { title: 'Pink Grid Horizon.mp3', file: 'songs/song10.mp3', artist: 'Artist 10' },
+        ];
+
+        function openMediaPlayerWindow() {
+            openWindow('mediaPlayerWindow');
+            setTimeout(() => {
+                initializeMediaPlayer();
+            }, 100);
+        }
+
+        function initializeMediaPlayer() {
+            playlist = songFiles;
+            
+            // Set initial volume
+            if (audioPlayer) {
+                audioPlayer.volume = currentVolume;
+                updateVolumeDisplay();
+                
+                // Audio event listeners
+                audioPlayer.addEventListener('timeupdate', updateProgress);
+                audioPlayer.addEventListener('ended', nextTrack);
+                audioPlayer.addEventListener('loadedmetadata', updateDuration);
+                
+                // Auto-play first track when player opens
+                setTimeout(() => {
+                    playTrack(0);
+                }, 300);
+            }
+        }
+
+        function playTrack(index) {
+            if (!audioPlayer) return;
+            
+            currentTrackIndex = index;
+            const track = playlist[currentTrackIndex];
+            
+            audioPlayer.src = track.file;
+            audioPlayer.load();
+            audioPlayer.play().then(() => {
+                isPlaying = true;
+                updateUI();
+            }).catch(err => {
+                console.error('Playback failed:', err);
+                document.getElementById('statusText').textContent = 'Error loading file';
+            });
+        }
+
+        function togglePlayPause() {
+            if (!audioPlayer.src) {
+                playTrack(0);
+                return;
+            }
+            
+            if (isPlaying) {
+                audioPlayer.pause();
+                isPlaying = false;
+            } else {
+                audioPlayer.play();
+                isPlaying = true;
+            }
+            updateUI();
+        }
+
+        function stopPlayback() {
+            if (!audioPlayer) return;
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+            isPlaying = false;
+            updateUI();
+        }
+
+        function previousTrack() {
+            currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+            playTrack(currentTrackIndex);
+        }
+
+        function nextTrack() {
+            currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+            playTrack(currentTrackIndex);
+        }
+
+        function rewind() {
+            if (audioPlayer) {
+                audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 5);
+            }
+        }
+
+        function fastForward() {
+            if (audioPlayer) {
+                audioPlayer.currentTime = Math.min(audioPlayer.duration, audioPlayer.currentTime + 5);
+            }
+        }
+
+        function seekAudio(event) {
+            if (!audioPlayer || !audioPlayer.duration) return;
+            
+            const seekBar = document.getElementById('seekBar');
+            const rect = seekBar.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            audioPlayer.currentTime = percent * audioPlayer.duration;
+        }
+
+        function setVolume(event) {
+            const slider = event.currentTarget;
+            const rect = slider.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            currentVolume = Math.max(0, Math.min(1, percent));
+            
+            if (audioPlayer) {
+                audioPlayer.volume = currentVolume;
+            }
+            isMuted = false;
+            updateVolumeDisplay();
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            if (audioPlayer) {
+                audioPlayer.volume = isMuted ? 0 : currentVolume;
+            }
+            updateVolumeDisplay();
+        }
+
+                // Volume slider drag functionality
+        let isDraggingVolume = false;
+
+        function startVolumeDrag(event) {
+            isDraggingVolume = true;
+            setVolume(event);
+            
+            document.addEventListener('mousemove', dragVolume);
+            document.addEventListener('mouseup', stopVolumeDrag);
+            event.preventDefault();
+        }
+
+        function dragVolume(event) {
+            if (isDraggingVolume) {
+                const slider = document.getElementById('volumeSliderFill').parentElement;
+                const rect = slider.getBoundingClientRect();
+                const percent = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+                
+                currentVolume = percent;
+                if (audioPlayer) {
+                    audioPlayer.volume = currentVolume;
+                }
+                isMuted = false;
+                updateVolumeDisplay();
+            }
+        }
+
+        function stopVolumeDrag() {
+            isDraggingVolume = false;
+            document.removeEventListener('mousemove', dragVolume);
+            document.removeEventListener('mouseup', stopVolumeDrag);
+        }
+
+        function updateVolumeDisplay() {
+            const volumeFill = document.getElementById('volumeSliderFill');
+            if (volumeFill) {
+                volumeFill.style.width = (isMuted ? 0 : currentVolume * 100) + '%';
+            }
+        }
+
+        function updateProgress() {
+            if (!audioPlayer) return;
+            
+            const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            const seekFill = document.getElementById('seekBarFill');
+            if (seekFill) {
+                seekFill.style.width = progress + '%';
+            }
+            
+            const currentTimeEl = document.getElementById('currentTime');
+            if (currentTimeEl) {
+                currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+            }
+        }
+
+        function updateDuration() {
+            const durationEl = document.getElementById('duration');
+            if (durationEl && audioPlayer) {
+                durationEl.textContent = formatTime(audioPlayer.duration);
+            }
+        }
+
+        function updateUI() {
+            const playBtn = document.getElementById('playPauseBtn');
+            const statusText = document.getElementById('statusText');
+            const trackInfo = document.getElementById('trackInfo');
+            const nowPlaying = document.getElementById('nowPlaying');
+            
+            if (playBtn) {
+                playBtn.querySelector('span').textContent = isPlaying ? '⏸' : '▶';
+            }
+            
+            if (audioPlayer && audioPlayer.src) {
+                const track = playlist[currentTrackIndex];
+                if (statusText) {
+                    statusText.textContent = isPlaying ? 'Playing' : 'Paused';
+                }
+                if (trackInfo) {
+                    trackInfo.textContent = track.title;
+                }
+                if (nowPlaying) {
+                    nowPlaying.textContent = isPlaying ? `♫ ${track.title}` : '';
+                }
+            } else {
+                if (statusText) statusText.textContent = 'Ready';
+                if (trackInfo) trackInfo.textContent = 'No file';
+                if (nowPlaying) nowPlaying.textContent = '';
+            }
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins + ':' + (secs < 10 ? '0' : '') + secs;
+        }
+
+        function openPlaylist() {
+            alert('Playlist:\n\n' + playlist.map((s, i) => `${i + 1}. ${s.title}`).join('\n'));
+        }
+
+        // ============ DESKTOP SELECTION BOX ============
+
+        let isSelecting = false;
+        let selectionBox = null;
+        let selectionStart = { x: 0, y: 0 };
+        let selectionCurrent = { x: 0, y: 0 };
+
+        // Create selection box element
+        function createSelectionBox() {
+            if (!selectionBox) {
+                selectionBox = document.createElement('div');
+                selectionBox.className = 'selection-box';
+                document.body.appendChild(selectionBox);
+            }
+        }
+
+        // Start selection on desktop mousedown
+        // Start selection on desktop mousedown
+        document.querySelector('.desktop').addEventListener('mousedown', function(e) {
+            // Only start selection if clicking directly on desktop (not on icons or windows)
+            if (e.target.classList.contains('desktop')) {
+                isSelecting = true;
+                createSelectionBox();
+                
+                selectionStart.x = e.clientX;
+                selectionStart.y = e.clientY;
+                selectionCurrent.x = e.clientX;
+                selectionCurrent.y = e.clientY;
+                
+                // Clear previous selections if not holding Ctrl
+                if (!e.ctrlKey) {
+                    document.querySelectorAll('.desktop-icon').forEach(icon => {
+                        icon.classList.remove('selected');
+                    });
+                }
+                
+                selectionBox.classList.add('active');
+                updateSelectionBox();
+                
+                e.preventDefault();
+            }
+        });
+
+        // Also stop selection when clicking on any window
+        document.querySelectorAll('.window').forEach(window => {
+            window.addEventListener('mousedown', function(e) {
+                if (isSelecting) {
+                    isSelecting = false;
+                    if (selectionBox) {
+                        selectionBox.classList.remove('active');
+                    }
+                }
+            });
+        });
+
+        // Update selection box during drag
+        document.addEventListener('mousemove', function(e) {
+            if (isSelecting) {
+                selectionCurrent.x = e.clientX;
+                selectionCurrent.y = e.clientY;
+                
+                updateSelectionBox();
+                selectIconsInBox();
+            }
+        });
+
+        // End selection on mouseup
+        document.addEventListener('mouseup', function(e) {
+            if (isSelecting) {
+                isSelecting = false;
+                if (selectionBox) {
+                    selectionBox.classList.remove('active');
+                }
+            }
+        });
+
+        // Update selection box position and size
+        function updateSelectionBox() {
+            if (!selectionBox) return;
+            
+            const left = Math.min(selectionStart.x, selectionCurrent.x);
+            const top = Math.min(selectionStart.y, selectionCurrent.y);
+            const width = Math.abs(selectionCurrent.x - selectionStart.x);
+            const height = Math.abs(selectionCurrent.y - selectionStart.y);
+            
+            selectionBox.style.left = left + 'px';
+            selectionBox.style.top = top + 'px';
+            selectionBox.style.width = width + 'px';
+            selectionBox.style.height = height + 'px';
+        }
+
+        // Select icons that intersect with selection box
+        function selectIconsInBox() {
+            const boxRect = selectionBox.getBoundingClientRect();
+            
+            document.querySelectorAll('.desktop-icon').forEach(icon => {
+                const iconRect = icon.getBoundingClientRect();
+                
+                // Check if icon intersects with selection box
+                const intersects = !(
+                    iconRect.right < boxRect.left ||
+                    iconRect.left > boxRect.right ||
+                    iconRect.bottom < boxRect.top ||
+                    iconRect.top > boxRect.bottom
+                );
+                
+                if (intersects) {
+                    icon.classList.add('selected');
+                } else {
+                    // Only deselect if not holding Ctrl
+                    if (!window.event || !window.event.ctrlKey) {
+                        icon.classList.remove('selected');
+                    }
+                }
+            });
+        }
+
+// Update existing icon click handler to support Ctrl+Click
+document.querySelectorAll('.desktop-icon').forEach(icon => {
+    // Remove old click listener and add new one
+    const newIcon = icon.cloneNode(true);
+    icon.parentNode.replaceChild(newIcon, icon);
+    
+    newIcon.addEventListener('click', function(e) {
+        e.stopPropagation(); // This prevents the desktop click handler from firing
+        e.preventDefault();   // Add this to prevent default behavior
+        
+        if (e.ctrlKey) {
+            // Ctrl+Click: Toggle selection
+            this.classList.toggle('selected');
+        } else {
+            // Regular click: Select only this icon
+            document.querySelectorAll('.desktop-icon').forEach(i => {
+                i.classList.remove('selected');
+            });
+            this.classList.add('selected');
+        }
+    });
+    
+    // Preserve double-click functionality
+    newIcon.addEventListener('dblclick', function(e) {
+        e.stopPropagation(); // Also stop propagation on double-click
+        const onDblClick = this.getAttribute('ondblclick');
+        if (onDblClick) {
+            eval(onDblClick);
+        }
+    });
+});
+
+// // Click on desktop to deselect all (update existing handler)
+// const desktopElement = document.querySelector('.desktop');
+// desktopElement.addEventListener('click', function(e) {
+//     // Only deselect if clicking directly on desktop, not on icons
+//     if (e.target === desktopElement && !e.defaultPrevented) {
+//         document.querySelectorAll('.desktop-icon').forEach(icon => {
+//             icon.classList.remove('selected');
+//         });
+//     }
+// });
+
     </script>
 </body>
 </html>
