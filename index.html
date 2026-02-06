@@ -99,6 +99,20 @@
             word-break: break-word;
         }
 
+        /* Selection Box */
+        .selection-box {
+            position: fixed;
+            border: 1px dotted #000080;
+            background: rgba(0, 0, 128, 0.1);
+            pointer-events: none;
+            z-index: 1;
+            display: none;
+        }
+
+        .selection-box.active {
+            display: block;
+        }
+
         /* Window */
         .window {
             position: absolute;
@@ -2084,22 +2098,22 @@ document.addEventListener('DOMContentLoaded', function() {
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Desktop icon selection
-        document.querySelectorAll('.desktop-icon').forEach(icon => {
-            icon.addEventListener('click', (e) => {
-                if (!e.ctrlKey) {
-                    document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
-                }
-                icon.classList.toggle('selected');
-            });
-        });
+        // // Desktop icon selection
+        // document.querySelectorAll('.desktop-icon').forEach(icon => {
+        //     icon.addEventListener('click', (e) => {
+        //         if (!e.ctrlKey) {
+        //             document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+        //         }
+        //         icon.classList.toggle('selected');
+        //     });
+        // });
 
-        // Click on desktop to deselect
-        document.querySelector('.desktop').addEventListener('click', (e) => {
-            if (e.target.classList.contains('desktop')) {
-                document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
-            }
-        });
+        // // Click on desktop to deselect
+        // document.querySelector('.desktop').addEventListener('click', (e) => {
+        //     if (e.target.classList.contains('desktop')) {
+        //         document.querySelectorAll('.desktop-icon').forEach(i => i.classList.remove('selected'));
+        //     }
+        // });
 
         // Make windows clickable to bring to front
         document.querySelectorAll('.window').forEach(window => {
@@ -2351,6 +2365,166 @@ document.addEventListener('DOMContentLoaded', function() {
         function openPlaylist() {
             alert('Playlist:\n\n' + playlist.map((s, i) => `${i + 1}. ${s.title}`).join('\n'));
         }
+
+        // ============ DESKTOP SELECTION BOX ============
+
+        let isSelecting = false;
+        let selectionBox = null;
+        let selectionStart = { x: 0, y: 0 };
+        let selectionCurrent = { x: 0, y: 0 };
+
+        // Create selection box element
+        function createSelectionBox() {
+            if (!selectionBox) {
+                selectionBox = document.createElement('div');
+                selectionBox.className = 'selection-box';
+                document.body.appendChild(selectionBox);
+            }
+        }
+
+        // Start selection on desktop mousedown
+        // Start selection on desktop mousedown
+        document.querySelector('.desktop').addEventListener('mousedown', function(e) {
+            // Only start selection if clicking directly on desktop (not on icons or windows)
+            if (e.target.classList.contains('desktop')) {
+                isSelecting = true;
+                createSelectionBox();
+                
+                selectionStart.x = e.clientX;
+                selectionStart.y = e.clientY;
+                selectionCurrent.x = e.clientX;
+                selectionCurrent.y = e.clientY;
+                
+                // Clear previous selections if not holding Ctrl
+                if (!e.ctrlKey) {
+                    document.querySelectorAll('.desktop-icon').forEach(icon => {
+                        icon.classList.remove('selected');
+                    });
+                }
+                
+                selectionBox.classList.add('active');
+                updateSelectionBox();
+                
+                e.preventDefault();
+            }
+        });
+
+        // Also stop selection when clicking on any window
+        document.querySelectorAll('.window').forEach(window => {
+            window.addEventListener('mousedown', function(e) {
+                if (isSelecting) {
+                    isSelecting = false;
+                    if (selectionBox) {
+                        selectionBox.classList.remove('active');
+                    }
+                }
+            });
+        });
+
+        // Update selection box during drag
+        document.addEventListener('mousemove', function(e) {
+            if (isSelecting) {
+                selectionCurrent.x = e.clientX;
+                selectionCurrent.y = e.clientY;
+                
+                updateSelectionBox();
+                selectIconsInBox();
+            }
+        });
+
+        // End selection on mouseup
+        document.addEventListener('mouseup', function(e) {
+            if (isSelecting) {
+                isSelecting = false;
+                if (selectionBox) {
+                    selectionBox.classList.remove('active');
+                }
+            }
+        });
+
+        // Update selection box position and size
+        function updateSelectionBox() {
+            if (!selectionBox) return;
+            
+            const left = Math.min(selectionStart.x, selectionCurrent.x);
+            const top = Math.min(selectionStart.y, selectionCurrent.y);
+            const width = Math.abs(selectionCurrent.x - selectionStart.x);
+            const height = Math.abs(selectionCurrent.y - selectionStart.y);
+            
+            selectionBox.style.left = left + 'px';
+            selectionBox.style.top = top + 'px';
+            selectionBox.style.width = width + 'px';
+            selectionBox.style.height = height + 'px';
+        }
+
+        // Select icons that intersect with selection box
+        function selectIconsInBox() {
+            const boxRect = selectionBox.getBoundingClientRect();
+            
+            document.querySelectorAll('.desktop-icon').forEach(icon => {
+                const iconRect = icon.getBoundingClientRect();
+                
+                // Check if icon intersects with selection box
+                const intersects = !(
+                    iconRect.right < boxRect.left ||
+                    iconRect.left > boxRect.right ||
+                    iconRect.bottom < boxRect.top ||
+                    iconRect.top > boxRect.bottom
+                );
+                
+                if (intersects) {
+                    icon.classList.add('selected');
+                } else {
+                    // Only deselect if not holding Ctrl
+                    if (!window.event || !window.event.ctrlKey) {
+                        icon.classList.remove('selected');
+                    }
+                }
+            });
+        }
+
+// Update existing icon click handler to support Ctrl+Click
+document.querySelectorAll('.desktop-icon').forEach(icon => {
+    // Remove old click listener and add new one
+    const newIcon = icon.cloneNode(true);
+    icon.parentNode.replaceChild(newIcon, icon);
+    
+    newIcon.addEventListener('click', function(e) {
+        e.stopPropagation(); // This prevents the desktop click handler from firing
+        e.preventDefault();   // Add this to prevent default behavior
+        
+        if (e.ctrlKey) {
+            // Ctrl+Click: Toggle selection
+            this.classList.toggle('selected');
+        } else {
+            // Regular click: Select only this icon
+            document.querySelectorAll('.desktop-icon').forEach(i => {
+                i.classList.remove('selected');
+            });
+            this.classList.add('selected');
+        }
+    });
+    
+    // Preserve double-click functionality
+    newIcon.addEventListener('dblclick', function(e) {
+        e.stopPropagation(); // Also stop propagation on double-click
+        const onDblClick = this.getAttribute('ondblclick');
+        if (onDblClick) {
+            eval(onDblClick);
+        }
+    });
+});
+
+// // Click on desktop to deselect all (update existing handler)
+// const desktopElement = document.querySelector('.desktop');
+// desktopElement.addEventListener('click', function(e) {
+//     // Only deselect if clicking directly on desktop, not on icons
+//     if (e.target === desktopElement && !e.defaultPrevented) {
+//         document.querySelectorAll('.desktop-icon').forEach(icon => {
+//             icon.classList.remove('selected');
+//         });
+//     }
+// });
 
     </script>
 </body>
