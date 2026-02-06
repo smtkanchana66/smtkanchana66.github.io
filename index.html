@@ -539,7 +539,7 @@
             transform: translateY(-50%);
         }
 
-                /* DOS Toolbar */
+        /* DOS Toolbar */
         .dos-toolbar {
             background: var(--win95-gray);
             padding: 2px 4px;
@@ -631,7 +631,7 @@
             caret-color: #c0c0c0;
         }
 
-                /* Media Player Window */
+        /* Media Player Window */
         .media-player-content {
             background: var(--win95-gray);
             height: calc(100% - 60px);
@@ -727,27 +727,27 @@
             min-width: 45px;
         }
 
-        .media-controls-bottom {
-            background: var(--win95-gray);
-            height: 60px;
-            border-top: 2px solid var(--win95-white);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 12px;
-        }
+.media-controls-bottom {
+    background: var(--win95-gray);
+    height: 60px;
+    border-top: 2px solid var(--win95-white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+}
 
-        .control-buttons-left {
-            display: flex;
-            gap: 3px;
-            align-items: center;
-        }
+.control-buttons-left {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
 
-        .control-buttons-right {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
+.control-buttons-right {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
 
         .media-btn {
             width: 28px;
@@ -776,40 +776,60 @@
         }
 
         .separator {
-            width: 2px;
-            height: 28px;
+            width: 1px;
+            height: 32px;
             background: var(--win95-dark-gray);
-            border-left: 1px solid var(--win95-white);
-            margin: 0 2px;
+            border-right: 1px solid var(--win95-white);
+            margin: 0 4px;
         }
 
         .volume-control {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
 
         .volume-icon {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             cursor: pointer;
+            image-rendering: pixelated;
         }
 
         .volume-slider-container {
-            width: 80px;
-            height: 20px;
-            background: white;
-            border: 2px solid;
-            border-color: var(--win95-dark-gray) var(--win95-white) var(--win95-white) var(--win95-dark-gray);
+            width: 100px;
+            height: 6px;
+            background: #ffffff;
+            border: 1px solid;
+            border-color: var(--win95-dark-gray) var(--win95-light-gray) var(--win95-light-gray) var(--win95-dark-gray);
             position: relative;
             cursor: pointer;
+            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);
         }
 
         .volume-slider-fill {
             height: 100%;
-            background: var(--win95-blue);
+            background: linear-gradient(to right, #000080, #1084d0);
             width: 70%;
-            transition: width 0.1s;
+            transition: width 0.05s;
+            position: relative;
+        }
+
+        .volume-slider-fill::after {
+            content: '';
+            position: absolute;
+            right: -2px;
+            top: -3px;
+            width: 8px;
+            height: 12px;
+            background: var(--win95-gray);
+            border: 1px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+            cursor: grab;
+        }
+
+        .volume-slider-fill::after:active {
+            cursor: grabbing;
         }
 
         .playlist-toggle {
@@ -1131,93 +1151,94 @@ Os:              Linux(Debian), Windows<br>
     </div>
 
         <!-- Media Player Window -->
-    <div class="window" id="mediaPlayerWindow" style="top: 100px; left: 120px; width: 580px; height: 420px;">
-        <div class="title-bar" onmousedown="startDrag(event, 'mediaPlayerWindow')">
-            <div class="title-bar-text">
-                <img src="Windows_Media_Player.svg" alt="">
-                Windows Media Player
+<!-- Media Player Window -->
+<div class="window" id="mediaPlayerWindow" style="top: 100px; left: 120px; width: 580px; height: 420px;">
+    <div class="title-bar" onmousedown="startDrag(event, 'mediaPlayerWindow')">
+        <div class="title-bar-text">
+            <img src="Windows_Media_Player.svg" alt="">
+            Windows Media Player
+        </div>
+        <div class="title-bar-controls">
+            <button class="title-bar-btn" onclick="minimizeWindow('mediaPlayerWindow')">_</button>
+            <button class="title-bar-btn" onclick="maximizeWindow('mediaPlayerWindow')">□</button>
+            <button class="title-bar-btn" onclick="closeWindow('mediaPlayerWindow')">×</button>
+        </div>
+    </div>
+    <div class="menu-bar">
+        <div class="menu-item">File</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Play</div>
+        <div class="menu-item">Navigate</div>
+        <div class="menu-item">Favorites</div>
+        <div class="menu-item">Help</div>
+    </div>
+    <div class="media-player-content">
+        <!-- Main Display Area -->
+        <div class="media-screen">
+            <div class="now-playing" id="nowPlaying"></div>
+            <img src="win-logo.png" alt="Windows Logo" class="windows-logo">
+        </div>
+        
+        <!-- Status Bar -->
+        <div class="media-status-bar">
+            <div class="status-section">
+                <span id="statusText">Ready</span>
             </div>
-            <div class="title-bar-controls">
-                <button class="title-bar-btn" onclick="minimizeWindow('mediaPlayerWindow')">_</button>
-                <button class="title-bar-btn" onclick="maximizeWindow('mediaPlayerWindow')">□</button>
-                <button class="title-bar-btn" onclick="closeWindow('mediaPlayerWindow')">×</button>
+            <div class="status-section">
+                <span id="trackInfo">No file</span>
             </div>
         </div>
-        <div class="menu-bar">
-            <div class="menu-item">File</div>
-            <div class="menu-item">View</div>
-            <div class="menu-item">Play</div>
-            <div class="menu-item">Navigate</div>
-            <div class="menu-item">Favorites</div>
-            <div class="menu-item">Help</div>
+        
+        <!-- Seek Bar -->
+        <div class="seek-bar-container">
+            <span class="time-display" id="currentTime">0:00</span>
+            <div class="seek-bar-wrapper" id="seekBar" onclick="seekAudio(event)">
+                <div class="seek-bar-fill" id="seekBarFill"></div>
+            </div>
+            <span class="time-display" id="duration">0:00</span>
         </div>
-        <div class="media-player-content">
-            <!-- Main Display Area -->
-            <div class="media-screen">
-                <div class="now-playing" id="nowPlaying"></div>
-                <img src="win-logo.png" alt="Windows Logo" class="windows-logo">
-            </div>
-            
-            <!-- Status Bar -->
-            <div class="media-status-bar">
-                <div class="status-section">
-                    <span id="statusText">Ready</span>
-                </div>
-                <div class="status-section">
-                    <span id="trackInfo">No file</span>
-                </div>
-            </div>
-            
-            <!-- Seek Bar -->
-            <div class="seek-bar-container">
-                <span class="time-display" id="currentTime">0:00</span>
-                <div class="seek-bar-wrapper" id="seekBar" onclick="seekAudio(event)">
-                    <div class="seek-bar-fill" id="seekBarFill"></div>
-                </div>
-                <span class="time-display" id="duration">0:00</span>
-            </div>
-            
-            <!-- Control Buttons -->
-            <div class="media-controls-bottom">
-                <div class="control-buttons-left">
-                    <button class="media-btn" onclick="previousTrack()" title="Previous">
-                        <span>⏮</span>
-                    </button>
-                    <button class="media-btn" onclick="rewind()" title="Rewind">
-                        <span>⏪</span>
-                    </button>
-                    <button class="media-btn" id="playPauseBtn" onclick="togglePlayPause()" title="Play">
-                        <span>▶</span>
-                    </button>
-                    <button class="media-btn" onclick="stopPlayback()" title="Stop">
-                        <span>⏹</span>
-                    </button>
-                    <button class="media-btn" onclick="fastForward()" title="Fast Forward">
-                        <span>⏩</span>
-                    </button>
-                    <button class="media-btn" onclick="nextTrack()" title="Next">
-                        <span>⏭</span>
-                    </button>
-                    
-                    <div class="separator"></div>
-                    
-                    <button class="media-btn" onclick="openPlaylist()" title="Playlist">
-                        <span>≡</span>
-                    </button>
-                </div>
+        
+        <!-- Control Buttons -->
+        <div class="media-controls-bottom">
+            <div class="control-buttons-left">
+                <button class="media-btn" onclick="previousTrack()" title="Previous">
+                    <span>⏮</span>
+                </button>
+                <button class="media-btn" onclick="rewind()" title="Rewind">
+                    <span>⏪</span>
+                </button>
+                <button class="media-btn" id="playPauseBtn" onclick="togglePlayPause()" title="Play">
+                    <span>▶</span>
+                </button>
+                <button class="media-btn" onclick="stopPlayback()" title="Stop">
+                    <span>⏹</span>
+                </button>
+                <button class="media-btn" onclick="fastForward()" title="Fast Forward">
+                    <span>⏩</span>
+                </button>
+                <button class="media-btn" onclick="nextTrack()" title="Next">
+                    <span>⏭</span>
+                </button>
                 
-                <div class="control-buttons-right">
-                    <div class="volume-control">
-                        <div class="volume-icon" onclick="toggleMute()">🔊</div>
-                        <div class="volume-slider-container" onclick="setVolume(event)">
-                            <div class="volume-slider-fill" id="volumeSliderFill"></div>
-                        </div>
+                <div class="separator"></div>
+                
+                <button class="media-btn" onclick="openPlaylist()" title="Playlist">
+                    <span>≡</span>
+                </button>
+            </div>
+            
+            <div class="control-buttons-right">
+                <div class="volume-control">
+                    <img src="speaker-icon.ico" alt="Volume" class="volume-icon" onclick="toggleMute()" title="Mute">
+                    <div class="volume-slider-container" onclick="setVolume(event)" onmousedown="startVolumeDrag(event)">
+                        <div class="volume-slider-fill" id="volumeSliderFill"></div>
                     </div>
                 </div>
             </div>
         </div>
-        <audio id="audioPlayer"></audio>
     </div>
+    <audio id="audioPlayer"></audio>
+</div>
 
         <!-- MS-DOS Prompt Window -->
     <div class="window" id="dosWindow" style="top: 60px; left: 80px; width: 640px; height: 400px;">
@@ -1734,6 +1755,12 @@ Os:              Linux(Debian), Windows<br>
         function closeWindow(windowId) {
             const window = document.getElementById(windowId);
             window.style.display = 'none';
+            
+            // Stop music when media player closes
+            if (windowId === 'mediaPlayerWindow') {
+                stopPlayback();
+            }
+            
             if (activeWindow === windowId) {
                 activeWindow = null;
             }
@@ -1971,16 +1998,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const taskbarItems = document.getElementById('taskbarItems');
             taskbarItems.innerHTML = '';
             
-            const windows = ['resumeWindow', 'projectsWindow', 'aboutWindow'];
+            const windows = ['resumeWindow', 'projectsWindow', 'aboutWindow', 'dosWindow', 'mediaPlayerWindow'];
             const titles = {
                 'resumeWindow': 'Resume.txt',
                 'projectsWindow': 'Projects',
-                'aboutWindow': 'My Computer'
+                'aboutWindow': 'My Computer',
+                'dosWindow': 'MS-DOS Prompt',
+                'mediaPlayerWindow': 'Media Player'
             };
             const icons = {
                 'resumeWindow': 'text-icon.ico',
                 'projectsWindow': 'folder-icon.ico',
-                'aboutWindow': 'computer-icon.ico'
+                'aboutWindow': 'computer-icon.ico',
+                'dosWindow': 'msdos-icon.ico',
+                'mediaPlayerWindow': 'Windows_Media_Player.svg'
             };
             
             windows.forEach(windowId => {
@@ -2088,16 +2119,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // song files - UPDATE THIS with your actual MP3 files
         const songFiles = [
-            { title: 'Track 1', file: 'songs/song1.mp3', artist: 'Artist 1' },
-            { title: 'Track 2', file: 'songs/song2.mp3', artist: 'Artist 2' },
-            { title: 'Track 3', file: 'songs/song3.mp3', artist: 'Artist 3' },
-            { title: 'Track 4', file: 'songs/song4.mp3', artist: 'Artist 4' },
-            { title: 'Track 5', file: 'songs/song5.mp3', artist: 'Artist 5' },
-            { title: 'Track 6', file: 'songs/song6.mp3', artist: 'Artist 6' },
-            { title: 'Track 7', file: 'songs/song7.mp3', artist: 'Artist 7' },
-            { title: 'Track 8', file: 'songs/song8.mp3', artist: 'Artist 8' },
-            { title: 'Track 9', file: 'songs/song9.mp3', artist: 'Artist 9' },
-            { title: 'Track 10', file: 'songs/song10.mp3', artist: 'Artist 10' },
+            { title: 'Neon After Midnight.mp3', file: 'songs/song1.mp3', artist: 'Artist 1' },
+            { title: 'Chrome Skies \’87.mp3', file: 'songs/song2.mp3', artist: 'Artist 2' },
+            { title: 'VHS Dreams (Rewind Love).mp3', file: 'songs/song3.mp3', artist: 'Artist 3' },
+            { title: 'Miami Circuit Lights.mp3', file: 'songs/song4.mp3', artist: 'Artist 4' },
+            { title: 'Digital Sunset Boulevard.mp3', file: 'songs/song5.mp3', artist: 'Artist 5' },
+            { title: 'Arcade Hearts & Laser Nights.mp3', file: 'songs/song6.mp3', artist: 'Artist 6' },
+            { title: 'Midnight Drive on Cassette.wav', file: 'songs/song7.mp3', artist: 'Artist 7' },
+            { title: 'Electric Palms Forever.mp3', file: 'songs/song8.mp3', artist: 'Artist 8' },
+            { title: 'Static on the Hotline.wav', file: 'songs/song9.mp3', artist: 'Artist 9' },
+            { title: 'Pink Grid Horizon.mp3', file: 'songs/song10.mp3', artist: 'Artist 10' },
         ];
 
         function openMediaPlayerWindow() {
@@ -2119,6 +2150,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 audioPlayer.addEventListener('timeupdate', updateProgress);
                 audioPlayer.addEventListener('ended', nextTrack);
                 audioPlayer.addEventListener('loadedmetadata', updateDuration);
+                
+                // Auto-play first track when player opens
+                setTimeout(() => {
+                    playTrack(0);
+                }, 300);
             }
         }
 
@@ -2213,6 +2249,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 audioPlayer.volume = isMuted ? 0 : currentVolume;
             }
             updateVolumeDisplay();
+        }
+
+                // Volume slider drag functionality
+        let isDraggingVolume = false;
+
+        function startVolumeDrag(event) {
+            isDraggingVolume = true;
+            setVolume(event);
+            
+            document.addEventListener('mousemove', dragVolume);
+            document.addEventListener('mouseup', stopVolumeDrag);
+            event.preventDefault();
+        }
+
+        function dragVolume(event) {
+            if (isDraggingVolume) {
+                const slider = document.getElementById('volumeSliderFill').parentElement;
+                const rect = slider.getBoundingClientRect();
+                const percent = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+                
+                currentVolume = percent;
+                if (audioPlayer) {
+                    audioPlayer.volume = currentVolume;
+                }
+                isMuted = false;
+                updateVolumeDisplay();
+            }
+        }
+
+        function stopVolumeDrag() {
+            isDraggingVolume = false;
+            document.removeEventListener('mousemove', dragVolume);
+            document.removeEventListener('mouseup', stopVolumeDrag);
         }
 
         function updateVolumeDisplay() {
