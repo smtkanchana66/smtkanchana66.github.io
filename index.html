@@ -631,6 +631,199 @@
             caret-color: #c0c0c0;
         }
 
+                /* Media Player Window */
+        .media-player-content {
+            background: var(--win95-gray);
+            height: calc(100% - 60px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .media-screen {
+            background: #000000;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            position: relative;
+        }
+
+        .windows-logo {
+            width: 180px;
+            height: auto;
+            opacity: 0.8;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .now-playing {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        .media-status-bar {
+            background: var(--win95-gray);
+            height: 20px;
+            border-top: 1px solid var(--win95-white);
+            border-bottom: 1px solid var(--win95-dark-gray);
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+            font-size: 11px;
+        }
+
+        .status-section {
+            padding: 0 8px;
+            border-right: 1px solid var(--win95-dark-gray);
+            border-left: 1px solid var(--win95-white);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-section:first-child {
+            border-left: none;
+        }
+
+        .seek-bar-container {
+            background: #000000;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            gap: 8px;
+        }
+
+        .seek-bar-wrapper {
+            flex: 1;
+            height: 12px;
+            background: #333333;
+            border: 1px solid #666666;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .seek-bar-fill {
+            height: 100%;
+            background: #00aa00;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .time-display {
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            min-width: 45px;
+        }
+
+        .media-controls-bottom {
+            background: var(--win95-gray);
+            height: 60px;
+            border-top: 2px solid var(--win95-white);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+        }
+
+        .control-buttons-left {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+        }
+
+        .control-buttons-right {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .media-btn {
+            width: 28px;
+            height: 28px;
+            background: var(--win95-gray);
+            border: 2px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 0;
+        }
+
+        .media-btn:active {
+            border-color: var(--win95-black) var(--win95-white) var(--win95-white) var(--win95-black);
+            padding: 2px 0 0 2px;
+        }
+
+        .media-btn img {
+            width: 16px;
+            height: 16px;
+            image-rendering: pixelated;
+        }
+
+        .separator {
+            width: 2px;
+            height: 28px;
+            background: var(--win95-dark-gray);
+            border-left: 1px solid var(--win95-white);
+            margin: 0 2px;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .volume-icon {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .volume-slider-container {
+            width: 80px;
+            height: 20px;
+            background: white;
+            border: 2px solid;
+            border-color: var(--win95-dark-gray) var(--win95-white) var(--win95-white) var(--win95-dark-gray);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .volume-slider-fill {
+            height: 100%;
+            background: var(--win95-blue);
+            width: 70%;
+            transition: width 0.1s;
+        }
+
+        .playlist-toggle {
+            width: 24px;
+            height: 24px;
+            background: var(--win95-gray);
+            border: 2px solid;
+            border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
 
         /* Terminal Loading Screen */
         /* BIOS Boot Screen */
@@ -823,6 +1016,11 @@
             <span>MS-DOS Prompt</span>
         </div>
 
+        <div class="desktop-icon" ondblclick="openMediaPlayerWindow()">
+            <img src="Windows_Media_Player.svg" alt="Media Player">
+            <span>Windows Media Player</span>
+        </div>
+
     </div>
 
     <!-- Resume Window -->
@@ -930,6 +1128,95 @@ Os:              Linux(Debian), Windows<br>
 
 ═════════════════════════════════════════════════════════════════════════════<br>
         </div>
+    </div>
+
+        <!-- Media Player Window -->
+    <div class="window" id="mediaPlayerWindow" style="top: 100px; left: 120px; width: 580px; height: 420px;">
+        <div class="title-bar" onmousedown="startDrag(event, 'mediaPlayerWindow')">
+            <div class="title-bar-text">
+                <img src="Windows_Media_Player.svg" alt="">
+                Windows Media Player
+            </div>
+            <div class="title-bar-controls">
+                <button class="title-bar-btn" onclick="minimizeWindow('mediaPlayerWindow')">_</button>
+                <button class="title-bar-btn" onclick="maximizeWindow('mediaPlayerWindow')">□</button>
+                <button class="title-bar-btn" onclick="closeWindow('mediaPlayerWindow')">×</button>
+            </div>
+        </div>
+        <div class="menu-bar">
+            <div class="menu-item">File</div>
+            <div class="menu-item">View</div>
+            <div class="menu-item">Play</div>
+            <div class="menu-item">Navigate</div>
+            <div class="menu-item">Favorites</div>
+            <div class="menu-item">Help</div>
+        </div>
+        <div class="media-player-content">
+            <!-- Main Display Area -->
+            <div class="media-screen">
+                <div class="now-playing" id="nowPlaying"></div>
+                <img src="win-logo.png" alt="Windows Logo" class="windows-logo">
+            </div>
+            
+            <!-- Status Bar -->
+            <div class="media-status-bar">
+                <div class="status-section">
+                    <span id="statusText">Ready</span>
+                </div>
+                <div class="status-section">
+                    <span id="trackInfo">No file</span>
+                </div>
+            </div>
+            
+            <!-- Seek Bar -->
+            <div class="seek-bar-container">
+                <span class="time-display" id="currentTime">0:00</span>
+                <div class="seek-bar-wrapper" id="seekBar" onclick="seekAudio(event)">
+                    <div class="seek-bar-fill" id="seekBarFill"></div>
+                </div>
+                <span class="time-display" id="duration">0:00</span>
+            </div>
+            
+            <!-- Control Buttons -->
+            <div class="media-controls-bottom">
+                <div class="control-buttons-left">
+                    <button class="media-btn" onclick="previousTrack()" title="Previous">
+                        <span>⏮</span>
+                    </button>
+                    <button class="media-btn" onclick="rewind()" title="Rewind">
+                        <span>⏪</span>
+                    </button>
+                    <button class="media-btn" id="playPauseBtn" onclick="togglePlayPause()" title="Play">
+                        <span>▶</span>
+                    </button>
+                    <button class="media-btn" onclick="stopPlayback()" title="Stop">
+                        <span>⏹</span>
+                    </button>
+                    <button class="media-btn" onclick="fastForward()" title="Fast Forward">
+                        <span>⏩</span>
+                    </button>
+                    <button class="media-btn" onclick="nextTrack()" title="Next">
+                        <span>⏭</span>
+                    </button>
+                    
+                    <div class="separator"></div>
+                    
+                    <button class="media-btn" onclick="openPlaylist()" title="Playlist">
+                        <span>≡</span>
+                    </button>
+                </div>
+                
+                <div class="control-buttons-right">
+                    <div class="volume-control">
+                        <div class="volume-icon" onclick="toggleMute()">🔊</div>
+                        <div class="volume-slider-container" onclick="setVolume(event)">
+                            <div class="volume-slider-fill" id="volumeSliderFill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <audio id="audioPlayer"></audio>
     </div>
 
         <!-- MS-DOS Prompt Window -->
@@ -1789,6 +2076,213 @@ document.addEventListener('DOMContentLoaded', function() {
                 setActiveWindow(window.id);
             });
         });
+        
+        // ============ MEDIA PLAYER FUNCTIONALITY ============
+
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+        let isMuted = false;
+        let currentVolume = 0.7;
+        let playlist = [];
+        const audioPlayer = document.getElementById('audioPlayer');
+
+        // song files - UPDATE THIS with your actual MP3 files
+        const songFiles = [
+            { title: 'Track 1', file: 'songs/song1.mp3', artist: 'Artist 1' },
+            { title: 'Track 2', file: 'songs/song2.mp3', artist: 'Artist 2' },
+            { title: 'Track 3', file: 'songs/song3.mp3', artist: 'Artist 3' },
+            { title: 'Track 4', file: 'songs/song4.mp3', artist: 'Artist 4' },
+            { title: 'Track 5', file: 'songs/song5.mp3', artist: 'Artist 5' },
+            { title: 'Track 6', file: 'songs/song6.mp3', artist: 'Artist 6' },
+            { title: 'Track 7', file: 'songs/song7.mp3', artist: 'Artist 7' },
+            { title: 'Track 8', file: 'songs/song8.mp3', artist: 'Artist 8' },
+            { title: 'Track 9', file: 'songs/song9.mp3', artist: 'Artist 9' },
+            { title: 'Track 10', file: 'songs/song10.mp3', artist: 'Artist 10' },
+        ];
+
+        function openMediaPlayerWindow() {
+            openWindow('mediaPlayerWindow');
+            setTimeout(() => {
+                initializeMediaPlayer();
+            }, 100);
+        }
+
+        function initializeMediaPlayer() {
+            playlist = songFiles;
+            
+            // Set initial volume
+            if (audioPlayer) {
+                audioPlayer.volume = currentVolume;
+                updateVolumeDisplay();
+                
+                // Audio event listeners
+                audioPlayer.addEventListener('timeupdate', updateProgress);
+                audioPlayer.addEventListener('ended', nextTrack);
+                audioPlayer.addEventListener('loadedmetadata', updateDuration);
+            }
+        }
+
+        function playTrack(index) {
+            if (!audioPlayer) return;
+            
+            currentTrackIndex = index;
+            const track = playlist[currentTrackIndex];
+            
+            audioPlayer.src = track.file;
+            audioPlayer.load();
+            audioPlayer.play().then(() => {
+                isPlaying = true;
+                updateUI();
+            }).catch(err => {
+                console.error('Playback failed:', err);
+                document.getElementById('statusText').textContent = 'Error loading file';
+            });
+        }
+
+        function togglePlayPause() {
+            if (!audioPlayer.src) {
+                playTrack(0);
+                return;
+            }
+            
+            if (isPlaying) {
+                audioPlayer.pause();
+                isPlaying = false;
+            } else {
+                audioPlayer.play();
+                isPlaying = true;
+            }
+            updateUI();
+        }
+
+        function stopPlayback() {
+            if (!audioPlayer) return;
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+            isPlaying = false;
+            updateUI();
+        }
+
+        function previousTrack() {
+            currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+            playTrack(currentTrackIndex);
+        }
+
+        function nextTrack() {
+            currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+            playTrack(currentTrackIndex);
+        }
+
+        function rewind() {
+            if (audioPlayer) {
+                audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 5);
+            }
+        }
+
+        function fastForward() {
+            if (audioPlayer) {
+                audioPlayer.currentTime = Math.min(audioPlayer.duration, audioPlayer.currentTime + 5);
+            }
+        }
+
+        function seekAudio(event) {
+            if (!audioPlayer || !audioPlayer.duration) return;
+            
+            const seekBar = document.getElementById('seekBar');
+            const rect = seekBar.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            audioPlayer.currentTime = percent * audioPlayer.duration;
+        }
+
+        function setVolume(event) {
+            const slider = event.currentTarget;
+            const rect = slider.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            currentVolume = Math.max(0, Math.min(1, percent));
+            
+            if (audioPlayer) {
+                audioPlayer.volume = currentVolume;
+            }
+            isMuted = false;
+            updateVolumeDisplay();
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            if (audioPlayer) {
+                audioPlayer.volume = isMuted ? 0 : currentVolume;
+            }
+            updateVolumeDisplay();
+        }
+
+        function updateVolumeDisplay() {
+            const volumeFill = document.getElementById('volumeSliderFill');
+            if (volumeFill) {
+                volumeFill.style.width = (isMuted ? 0 : currentVolume * 100) + '%';
+            }
+        }
+
+        function updateProgress() {
+            if (!audioPlayer) return;
+            
+            const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            const seekFill = document.getElementById('seekBarFill');
+            if (seekFill) {
+                seekFill.style.width = progress + '%';
+            }
+            
+            const currentTimeEl = document.getElementById('currentTime');
+            if (currentTimeEl) {
+                currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+            }
+        }
+
+        function updateDuration() {
+            const durationEl = document.getElementById('duration');
+            if (durationEl && audioPlayer) {
+                durationEl.textContent = formatTime(audioPlayer.duration);
+            }
+        }
+
+        function updateUI() {
+            const playBtn = document.getElementById('playPauseBtn');
+            const statusText = document.getElementById('statusText');
+            const trackInfo = document.getElementById('trackInfo');
+            const nowPlaying = document.getElementById('nowPlaying');
+            
+            if (playBtn) {
+                playBtn.querySelector('span').textContent = isPlaying ? '⏸' : '▶';
+            }
+            
+            if (audioPlayer && audioPlayer.src) {
+                const track = playlist[currentTrackIndex];
+                if (statusText) {
+                    statusText.textContent = isPlaying ? 'Playing' : 'Paused';
+                }
+                if (trackInfo) {
+                    trackInfo.textContent = track.title;
+                }
+                if (nowPlaying) {
+                    nowPlaying.textContent = isPlaying ? `♫ ${track.title}` : '';
+                }
+            } else {
+                if (statusText) statusText.textContent = 'Ready';
+                if (trackInfo) trackInfo.textContent = 'No file';
+                if (nowPlaying) nowPlaying.textContent = '';
+            }
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins + ':' + (secs < 10 ? '0' : '') + secs;
+        }
+
+        function openPlaylist() {
+            alert('Playlist:\n\n' + playlist.map((s, i) => `${i + 1}. ${s.title}`).join('\n'));
+        }
+
     </script>
 </body>
 </html>
