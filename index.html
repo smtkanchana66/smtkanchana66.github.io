@@ -1055,6 +1055,11 @@
             <span>Windows Media Player</span>
         </div>
 
+        <div class="desktop-icon" ondblclick="window.open('blog.html', '_blank')">
+            <img src="epaper-icon.ico" alt="Blog">
+            <span>Blog.html</span>
+        </div>
+
     </div>
 
     <!-- Resume Window -->
@@ -1159,6 +1164,7 @@ Os:              Linux(Debian), Windows<br>
 • Reading<br> 
 • <a href="https://www.youtube.com/@ST3R1XX">Music Producing</a><br>
 • Gaming<br>
+• <a href="https://smtkanchana66.github.io/blog.html">Blogging</a><br>
 
 ═════════════════════════════════════════════════════════════════════════════<br>
         </div>
@@ -1603,8 +1609,8 @@ Os:              Linux(Debian), Windows<br>
     </div>
 
     <script>
-        // Terminal Boot Sequence
-// BIOS Boot Sequence
+
+        // BIOS Boot Sequence
         const biosContainer = document.getElementById('biosContainer');
         const loadingScreen = document.getElementById('loadingScreen');
         const desktop = document.getElementById('desktop');
@@ -2131,19 +2137,21 @@ document.addEventListener('DOMContentLoaded', function() {
         let playlist = [];
         const audioPlayer = document.getElementById('audioPlayer');
 
-        // song files - UPDATE THIS with your actual MP3 files
+        // song files 
         const songFiles = [
-            { title: 'Neon After Midnight.mp3', file: 'songs/song1.mp3', artist: 'Artist 1' },
-            { title: 'Chrome Skies \’87.mp3', file: 'songs/song2.mp3', artist: 'Artist 2' },
-            { title: 'VHS Dreams (Rewind Love).mp3', file: 'songs/song3.mp3', artist: 'Artist 3' },
-            { title: 'Miami Circuit Lights.mp3', file: 'songs/song4.mp3', artist: 'Artist 4' },
-            { title: 'Digital Sunset Boulevard.mp3', file: 'songs/song5.mp3', artist: 'Artist 5' },
+            { title: 'Nightfall.mp3', file: 'songs/song1.mp3', artist: 'Artist 1' },
+            { title: 'It was only a Dream.mp3', file: 'songs/song2.mp3', artist: 'Artist 2' },
+            { title: 'Afternoon Memories.mp3', file: 'songs/song3.mp3', artist: 'Artist 3' },
+            { title: 'Sunshine Drive.mp3', file: 'songs/song4.mp3', artist: 'Artist 4' },
+            { title: 'Fainted.mp3', file: 'songs/song5.mp3', artist: 'Artist 5' },
             { title: 'Arcade Hearts & Laser Nights.mp3', file: 'songs/song6.mp3', artist: 'Artist 6' },
             { title: 'Midnight Drive on Cassette.wav', file: 'songs/song7.mp3', artist: 'Artist 7' },
             { title: 'Electric Palms Forever.mp3', file: 'songs/song8.mp3', artist: 'Artist 8' },
             { title: 'Static on the Hotline.wav', file: 'songs/song9.mp3', artist: 'Artist 9' },
             { title: 'Pink Grid Horizon.mp3', file: 'songs/song10.mp3', artist: 'Artist 10' },
         ];
+
+        //All these songs from this playlist of mine :- https://youtube.com/playlist?list=PLG6cn_GRC_VBm60hJ11W1rxF4XAGpH0pX&si=NgWwRcn7pP3aGW0R
 
         function openMediaPlayerWindow() {
             openWindow('mediaPlayerWindow');
@@ -2265,7 +2273,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateVolumeDisplay();
         }
 
-                // Volume slider drag functionality
+        // Volume slider drag functionality
         let isDraggingVolume = false;
 
         function startVolumeDrag(event) {

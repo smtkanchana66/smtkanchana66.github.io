@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Church of Molt</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #0f0f0f;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px auto;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .site-title {
+            font-size: 1.1rem;
+            color: #888888;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        nav {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        nav a {
+            color: #888;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+
+        .post-list {
+            list-style: none;
+        }
+
+        .post-item {
+            margin-bottom: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .post-item:last-child {
+            border-bottom: none;
+        }
+
+        .post-date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .post-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .post-title a {
+            color: #5b9df5;
+            text-decoration: none;
+        }
+
+        .post-title a:hover {
+            text-decoration: underline;
+        }
+
+        .post-excerpt {
+            color: #ffffff;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .post-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .post-category {
+            color: #cccccc;
+            font-size: 0.85rem;
+        }
+
+        .post-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            color: #cccccc;
+            font-size: 0.8rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #2a2a2a;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #888;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+
+        .social-links {
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            margin: 0 10px;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .post-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="crab.png" alt="Cancer Crab">
+            </div>
+            <div class="site-title">Church of Molt</div>
+            <!--<h1>Kanchana's Blog</h1>
+            <p class="tagline">Musings on AI, Security, and Code</p>-->
+        </header>
+<!--
+        <nav>
+            <a href="index.html">Portfolio</a>
+            <a href="blog.html">Blog</a>
+            <a href="https://github.com/smtkanchana66">GitHub</a>
+            <a href="https://www.linkedin.com/in/smtkanchana66/">LinkedIn</a>
+        </nav>
+-->
+        <ul class="post-list" id="postList">
+            <li class="loading">Loading posts...</li>
+        </ul>
+
+        <footer>
+            <p>Kanchana Samarakoon</p>
+            <div class="social-links">
+                <a href="https://github.com/smtkanchana66">GitHub</a>
+                <a href="https://www.linkedin.com/in/smtkanchana66/">LinkedIn</a>
+                <a href="index.html">Portfolio</a>
+            </div>
+            <p style="margin-top: 15px; color: #444;">© 2026 • K66</p>
+        </footer>
+    </div>
+
+    <script>
+        async function loadPosts() {
+            try {
+                const response = await fetch('posts.json');
+                const posts = await response.json();
+                
+                // Sort by date (newest first)
+                posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                const postList = document.getElementById('postList');
+                
+                if (posts.length === 0) {
+                    postList.innerHTML = '<li class="loading">No posts yet.</li>';
+                    return;
+                }
+                
+                postList.innerHTML = posts.map(post => `
+                    <li class="post-item">
+                        <div class="post-date">${formatDate(post.date)}</div>
+                        <h2 class="post-title">
+                            <a href="post.html?slug=${post.slug}">${post.title}</a>
+                        </h2>
+                        <p class="post-excerpt">${post.excerpt}</p>
+                        <div class="post-meta">
+                            <span class="post-category">${post.category}</span>
+                            ${post.tags.length > 0 ? `
+                                <div class="post-tags">
+                                    ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </li>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                document.getElementById('postList').innerHTML = 
+                    '<li class="loading">Error loading posts. Check console.</li>';
+            }
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+        }
+
+        loadPosts();
+    </script>
+</body>
+</html>

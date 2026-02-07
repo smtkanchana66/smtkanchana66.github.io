@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Blog Post</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #0f0f0f;
+            color: #e0e0e0;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .back-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: #fff;
+        }
+
+        .post-header {
+            margin-bottom: 40px;
+        }
+
+        .post-date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .post-excerpt {
+            color: #aaa;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .post-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .post-category {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .post-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .post-content {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #ccc;
+        }
+
+        .post-content h2 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin: 40px 0 20px 0;
+            font-weight: 600;
+        }
+
+        .post-content h3 {
+            font-size: 1.4rem;
+            color: #fff;
+            margin: 30px 0 15px 0;
+            font-weight: 600;
+        }
+
+        .post-content p {
+            margin-bottom: 20px;
+        }
+
+        .post-content a {
+            color: #5b9df5;
+            text-decoration: none;
+        }
+
+        .post-content a:hover {
+            text-decoration: underline;
+        }
+
+        .post-content ul, .post-content ol {
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+
+        .post-content li {
+            margin-bottom: 10px;
+        }
+
+        .post-content blockquote {
+            margin: 30px 0;
+            padding: 15px 20px;
+            border-left: 3px solid #444;
+            background: #1a1a1a;
+            color: #aaa;
+            font-style: italic;
+        }
+
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 4px;
+        }
+
+        .post-content code {
+            font-family: 'Courier New', Courier, monospace;
+            background: #1a1a1a;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            color: #e06c75;
+        }
+
+        .post-content pre {
+            margin: 25px 0;
+            padding: 20px;
+            background: #1e1e1e;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #2a2a2a;
+        }
+
+        .post-content pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #2a2a2a;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .author-box {
+            margin-top: 50px;
+            padding: 25px;
+            background: #1a1a1a;
+            border-radius: 5px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .author-box h3 {
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .author-box p {
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .post-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .post-content h3 {
+                font-size: 1.3rem;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="blog.html" class="back-link">← Back to Blog</a>
+        </header>
+
+        <article id="postContent">
+            <div class="loading">Loading post...</div>
+        </article>
+
+        <footer>
+            <p>© 2026 Kanchana Samarakoon</p>
+        </footer>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const postSlug = urlParams.get('slug');
+
+        async function loadPost() {
+            try {
+                const response = await fetch('posts.json');
+                const posts = await response.json();
+                const post = posts.find(p => p.slug === postSlug);
+
+                if (!post) {
+                    document.getElementById('postContent').innerHTML = `
+                        <div class="loading">
+                            <h2>Post not found</h2>
+                            <p>The post you're looking for doesn't exist.</p>
+                            <br>
+                            <a href="blog.html" style="color: #5b9df5;">← Back to Blog</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                document.getElementById('pageTitle').textContent = post.title;
+
+                document.getElementById('postContent').innerHTML = `
+                    <div class="post-header">
+                        <div class="post-date">${formatDate(post.date)}</div>
+                        <h1>${post.title}</h1>
+                        <p class="post-excerpt">${post.excerpt}</p>
+                        <div class="post-meta">
+                            <span class="post-category">${post.category}</span>
+                            ${post.tags.length > 0 ? `
+                                <div class="post-tags">
+                                    ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    ${post.image ? `<img src="${post.image}" alt="${post.title}" style="width: 100%;">` : ''}
+                    <div class="post-content">
+                        ${post.content}
+                    </div>
+                    <div class="author-box">
+                        <h3>Kanchana Samarakoon</h3>
+                        <p>ICT Graduate | Linux & AI Enthusiast | Technology-Driven Innovator</p>
+                    </div>
+                `;
+
+                document.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+
+            } catch (error) {
+                console.error('Error loading post:', error);
+                document.getElementById('postContent').innerHTML = `
+                    <div class="loading">
+                        <h2>Error loading post</h2>
+                        <p>There was an error loading this post.</p>
+                        <br>
+                        <a href="blog.html" style="color: #5b9df5;">← Back to Blog</a>
+                    </div>
+                `;
+            }
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+        }
+
+        loadPost();
+    </script>
+</body>
+</html>
