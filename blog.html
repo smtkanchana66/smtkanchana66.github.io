@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Church of Molt</title>
+    <title>Church of Molt - Blog</title>
     <style>
         * {
             margin: 0;
@@ -18,15 +18,15 @@
             line-height: 1.6;
         }
 
-        .container {
-            max-width: 800px;
+        .top-container {
+            max-width: 1400px;
             margin: 0 auto;
             padding: 40px 20px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
             padding-bottom: 30px;
             border-bottom: 1px solid #2a2a2a;
         }
@@ -52,34 +52,63 @@
             margin-bottom: 15px;
         }
 
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 10px;
-        }
-
         .tagline {
             color: #888;
             font-size: 1rem;
         }
 
-        nav {
-            text-align: center;
-            margin-bottom: 40px;
+        /* Search Section */
+        .search-section {
+            max-width: 600px;
+            margin: 0 auto 40px auto;
         }
 
-        nav a {
-            color: #888;
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 0.95rem;
+        .search-box {
+            position: relative;
         }
 
-        nav a:hover {
-            color: #fff;
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            transition: border-color 0.3s;
         }
 
+        .search-input:focus {
+            outline: none;
+            border-color: #5b9df5;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .search-icon.fade {
+            opacity: 0.3;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Posts List */
         .post-list {
             list-style: none;
         }
@@ -88,10 +117,15 @@
             margin-bottom: 40px;
             padding-bottom: 40px;
             border-bottom: 1px solid #1a1a1a;
+            transition: transform 0.2s;
         }
 
         .post-item:last-child {
             border-bottom: none;
+        }
+
+        .post-item:hover {
+            transform: translateX(5px);
         }
 
         .post-date {
@@ -116,7 +150,7 @@
         }
 
         .post-excerpt {
-            color: #ffffff;
+            color: #aaa;
             font-size: 0.95rem;
             line-height: 1.6;
             margin-bottom: 10px;
@@ -130,7 +164,7 @@
         }
 
         .post-category {
-            color: #cccccc;
+            color: #888;
             font-size: 0.85rem;
         }
 
@@ -141,14 +175,159 @@
         }
 
         .tag {
-            color: #cccccc;
+            color: #666;
             font-size: 0.8rem;
         }
 
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* Featured Post Slider */
+        .featured-slider {
+            position: relative;
+            overflow: hidden;
+            height: 300px;
+        }
+
+        .featured-post {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .featured-post.active {
+            opacity: 1;
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 150px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .featured-title {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .featured-title a {
+            color: #5b9df5;
+            text-decoration: none;
+        }
+
+        .featured-excerpt {
+            color: #888;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .slider-dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #444;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot.active {
+            background: #5b9df5;
+        }
+
+        /* Categories */
+        .category-list {
+            list-style: none;
+        }
+
+        .category-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .category-item:last-child {
+            border-bottom: none;
+        }
+
+        .category-link {
+            color: #888;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .category-link:hover {
+            color: #5b9df5;
+        }
+
+        .category-count {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        /* Tags Cloud */
+        .tags-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag-link {
+            background: #2a2a2a;
+            color: #888;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .tag-link:hover {
+            background: #5b9df5;
+            color: #fff;
+        }
+
+        /* Footer */
         footer {
             text-align: center;
             margin-top: 60px;
-            padding-top: 30px;
+            padding: 30px 20px;
             border-top: 1px solid #2a2a2a;
             color: #666;
             font-size: 0.9rem;
@@ -171,95 +350,314 @@
             margin: 0 10px;
         }
 
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            .post-title {
-                font-size: 1.3rem;
-            }
-        }
-
         .loading {
             text-align: center;
             color: #666;
             padding: 40px;
         }
+
+        .no-results {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .post-title {
+                font-size: 1.3rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="top-container">
         <header>
             <div class="logo">
                 <img src="crab.png" alt="Cancer Crab">
             </div>
             <div class="site-title">Church of Molt</div>
-            <!--<h1>Kanchana's Blog</h1>
-            <p class="tagline">Musings on AI, Security, and Code</p>-->
         </header>
-<!--
-        <nav>
-            <a href="index.html">Portfolio</a>
-            <a href="blog.html">Blog</a>
-            <a href="https://github.com/smtkanchana66">GitHub</a>
-            <a href="https://www.linkedin.com/in/smtkanchana66/">LinkedIn</a>
-        </nav>
--->
-        <ul class="post-list" id="postList">
-            <li class="loading">Loading posts...</li>
-        </ul>
 
-        <footer>
-            <p>Kanchana Samarakoon</p>
-            <div class="social-links">
-                <a href="https://github.com/smtkanchana66">GitHub</a>
-                <a href="https://www.linkedin.com/in/smtkanchana66/">LinkedIn</a>
-                <a href="index.html">Portfolio</a>
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" 
+                       id="searchInput" 
+                       class="search-input" 
+                       placeholder="Search posts...">
+                <img src="search.png" alt="Search" class="search-icon" id="searchIcon">
             </div>
-            <p style="margin-top: 15px; color: #444;">© 2026 • K66</p>
-        </footer>
+        </div>
     </div>
 
+    <div class="main-layout">
+        <!-- Main Content -->
+        <div class="main-content">
+            <ul class="post-list" id="postList">
+                <li class="loading">Loading posts...</li>
+            </ul>
+            <div id="noResults" class="no-results" style="display: none;">
+                No posts found matching your search.
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Featured Posts Slider -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Featured Posts</h3>
+                <div class="featured-slider" id="featuredSlider">
+                    <!-- Featured posts will be inserted here -->
+                </div>
+                <div class="slider-dots" id="sliderDots"></div>
+            </div>
+
+            <!-- Categories -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Categories</h3>
+                <ul class="category-list" id="categoryList">
+                    <!-- Categories will be inserted here -->
+                </ul>
+            </div>
+
+            <!-- Tags -->
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Popular Tags</h3>
+                <div class="tags-cloud" id="tagsCloud">
+                    <!-- Tags will be inserted here -->
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer>
+        <p>Kanchana Samarakoon</p>
+        <div class="social-links">
+            <a href="https://github.com/smtkanchana66">GitHub</a>
+            <a href="https://www.linkedin.com/in/smtkanchana66/">LinkedIn</a>
+            <a href="index.html">Portfolio</a>
+        </div>
+        <p style="margin-top: 15px; color: #444;">© 2026 • K66</p>
+    </footer>
+
     <script>
+        let allPosts = [];
+        let currentSlide = 0;
+        let sliderInterval;
+
         async function loadPosts() {
             try {
                 const response = await fetch('posts.json');
                 const posts = await response.json();
                 
-                // Sort by date (newest first)
-                posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+                allPosts = posts.sort((a, b) => new Date(b.date) - new Date(a.date));
                 
-                const postList = document.getElementById('postList');
+                displayPosts(allPosts);
+                setupFeaturedSlider(allPosts);
+                setupCategories(allPosts);
+                setupTags(allPosts);
                 
-                if (posts.length === 0) {
-                    postList.innerHTML = '<li class="loading">No posts yet.</li>';
-                    return;
-                }
-                
-                postList.innerHTML = posts.map(post => `
-                    <li class="post-item">
-                        <div class="post-date">${formatDate(post.date)}</div>
-                        <h2 class="post-title">
-                            <a href="post.html?slug=${post.slug}">${post.title}</a>
-                        </h2>
-                        <p class="post-excerpt">${post.excerpt}</p>
-                        <div class="post-meta">
-                            <span class="post-category">${post.category}</span>
-                            ${post.tags.length > 0 ? `
-                                <div class="post-tags">
-                                    ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
-                                </div>
-                            ` : ''}
-                        </div>
-                    </li>
-                `).join('');
             } catch (error) {
                 console.error('Error loading posts:', error);
                 document.getElementById('postList').innerHTML = 
                     '<li class="loading">Error loading posts. Check console.</li>';
             }
         }
+
+        function displayPosts(posts) {
+            const postList = document.getElementById('postList');
+            const noResults = document.getElementById('noResults');
+            
+            if (posts.length === 0) {
+                postList.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            postList.style.display = 'block';
+            noResults.style.display = 'none';
+            
+            postList.innerHTML = posts.map(post => `
+                <li class="post-item">
+                    <div class="post-date">${formatDate(post.date)}</div>
+                    <h2 class="post-title">
+                        <a href="post.html?slug=${post.slug}">${post.title}</a>
+                    </h2>
+                    <p class="post-excerpt">${post.excerpt}</p>
+                    <div class="post-meta">
+                        <span class="post-category">${post.category}</span>
+                        ${post.tags.length > 0 ? `
+                            <div class="post-tags">
+                                ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        function setupFeaturedSlider(posts) {
+            const slider = document.getElementById('featuredSlider');
+            const dots = document.getElementById('sliderDots');
+            
+            // Take first 3 posts for featured
+            const featured = posts.slice(0, 3);
+            
+            slider.innerHTML = featured.map((post, index) => `
+                <div class="featured-post ${index === 0 ? 'active' : ''}">
+                    <div class="featured-image">
+                        ${post.image ? `<img src="${post.image}" alt="${post.title}">` : `<img src="ai.webp" alt="${post.title}">`}
+                    </div>
+                    <h4 class="featured-title">
+                        <a href="post.html?slug=${post.slug}">${post.title}</a>
+                    </h4>
+                    <p class="featured-excerpt">${post.excerpt.substring(0, 100)}...</p>
+                </div>
+            `).join('');
+
+            dots.innerHTML = featured.map((_, index) => 
+                `<span class="dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></span>`
+            ).join('');
+
+            // Auto-slide every 4 seconds
+            sliderInterval = setInterval(() => {
+                currentSlide = (currentSlide + 1) % featured.length;
+                updateSlider();
+            }, 4000);
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlider();
+            // Reset auto-slide timer
+            clearInterval(sliderInterval);
+            sliderInterval = setInterval(() => {
+                currentSlide = (currentSlide + 1) % 3;
+                updateSlider();
+            }, 4000);
+        }
+
+        function updateSlider() {
+            const slides = document.querySelectorAll('.featured-post');
+            const dots = document.querySelectorAll('.dot');
+            
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function setupCategories(posts) {
+            const categories = {};
+            posts.forEach(post => {
+                categories[post.category] = (categories[post.category] || 0) + 1;
+            });
+
+            const categoryList = document.getElementById('categoryList');
+            
+            // Add 'All' category first
+            let categoryHTML = `
+                <li class="category-item">
+                    <a href="#" class="category-link" onclick="showAllPosts(); return false;">
+                        All
+                    </a>
+                    <span class="category-count">${posts.length}</span>
+                </li>
+            `;
+            
+            // Add other categories
+            categoryHTML += Object.entries(categories)
+                .sort((a, b) => b[1] - a[1])
+                .map(([category, count]) => `
+                    <li class="category-item">
+                        <a href="#" class="category-link" onclick="filterByCategory('${category}'); return false;">
+                            ${category}
+                        </a>
+                        <span class="category-count">${count}</span>
+                    </li>
+                `).join('');
+            
+            categoryList.innerHTML = categoryHTML;
+        }
+
+        function setupTags(posts) {
+            const tags = {};
+            posts.forEach(post => {
+                post.tags.forEach(tag => {
+                    tags[tag] = (tags[tag] || 0) + 1;
+                });
+            });
+
+            const tagsCloud = document.getElementById('tagsCloud');
+            tagsCloud.innerHTML = Object.entries(tags)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10)
+                .map(([tag, count]) => `
+                    <a href="#" class="tag-link" onclick="filterByTag('${tag}'); return false;">
+                        ${tag}
+                    </a>
+                `).join('');
+        }
+
+        function filterByCategory(category) {
+            const filtered = allPosts.filter(post => post.category === category);
+            displayPosts(filtered);
+            document.getElementById('searchInput').value = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showAllPosts() {
+            displayPosts(allPosts);
+            document.getElementById('searchInput').value = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function filterByTag(tag) {
+            const filtered = allPosts.filter(post => post.tags.includes(tag));
+            displayPosts(filtered);
+            document.getElementById('searchInput').value = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const searchIcon = document.getElementById('searchIcon');
+            
+            // Fade icon when typing
+            if (searchTerm !== '') {
+                searchIcon.classList.add('fade');
+            } else {
+                searchIcon.classList.remove('fade');
+            }
+            
+            if (searchTerm === '') {
+                displayPosts(allPosts);
+                return;
+            }
+
+            const filtered = allPosts.filter(post => 
+                post.title.toLowerCase().includes(searchTerm) ||
+                post.excerpt.toLowerCase().includes(searchTerm) ||
+                post.category.toLowerCase().includes(searchTerm) ||
+                post.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+            );
+
+            displayPosts(filtered);
+        });
 
         function formatDate(dateString) {
             const date = new Date(dateString);
