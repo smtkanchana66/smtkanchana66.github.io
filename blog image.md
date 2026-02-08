@@ -130,3 +130,10 @@ If you don't add any classes, images will:
 On mobile (screens < 768px):
 - Left and right floating images automatically become full-width
 - All images stack vertically for better readability
+
+## baisc html tags 
+<h2></h2>
+<p></p>
+<h2></h2>
+<pre><code class='language-javascript'></code></pre>
+<blockquote></blockquote>
