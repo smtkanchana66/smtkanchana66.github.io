@@ -12,14 +12,17 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             padding: 20px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
+            background: #1a1a1a;
+            color: #e0e0e0;
         }
 
         h1 {
             margin-bottom: 20px;
+            color: #ffffff;
         }
 
         .container {
@@ -29,8 +32,36 @@
         }
 
         .editor, .preview {
-            border: 1px solid #ccc;
-            padding: 15px;
+            border: 1px solid #333;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            height: fit-content;
+        }
+
+        .preview {
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .preview::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .preview::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 4px;
+        }
+
+        .preview::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+
+        .preview::-webkit-scrollbar-thumb:hover {
+            background: #666;
         }
 
         .form-group {
@@ -40,21 +71,41 @@
         label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
+            font-weight: 600;
+            color: #b0b0b0;
+            font-size: 14px;
         }
 
         input[type="text"],
         input[type="date"],
         textarea {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            font-family: Arial, sans-serif;
+            padding: 10px;
+            border: 1px solid #444;
+            font-family: inherit;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
         }
 
         textarea {
             min-height: 300px;
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+
+        #jsonOutput {
+            min-height: 200px;
+            background: #1a1a1a;
         }
 
         button {
@@ -64,37 +115,209 @@
             padding: 10px 20px;
             cursor: pointer;
             margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background 0.2s;
         }
 
         button:hover {
             background: #0056b3;
         }
 
+        button:active {
+            transform: scale(0.98);
+        }
+
         .preview h2 {
-            margin-top: 20px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            color: #ffffff;
+            border-bottom: 2px solid #444;
+            padding-bottom: 10px;
         }
 
         .preview-content {
             margin-top: 20px;
-            padding: 15px;
-            background: #f9f9f9;
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            border: 1px solid #333;
         }
 
-        @media (max-width: 768px) {
+        .preview-content h1 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .preview-content h2 {
+            font-size: 1.5em;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            color: #ffffff;
+            border-bottom: none;
+        }
+
+        .preview-content h3 {
+            font-size: 1.25em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #e0e0e0;
+        }
+
+        .preview-content p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: #d0d0d0;
+        }
+
+        .preview-content pre {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border: 1px solid #30363d;
+        }
+
+        .preview-content code {
+            color: #58a6ff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .preview-content ul, .preview-content ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            color: #d0d0d0;
+        }
+
+        .preview-content li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .preview-content a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+
+        .preview-content a:hover {
+            text-decoration: underline;
+        }
+
+        .preview-content blockquote {
+            border-left: 4px solid #58a6ff;
+            padding-left: 15px;
+            margin: 15px 0;
+            color: #b0b0b0;
+            font-style: italic;
+        }
+
+        .meta-date {
+            color: #888;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .meta-excerpt {
+            color: #b0b0b0;
+            font-size: 1.1em;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+
+        .meta-info {
+            margin: 15px 0;
+            padding: 10px 0;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+        }
+
+        .meta-category {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .meta-tag {
+            display: inline-block;
+            color: #58a6ff;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        .placeholder {
+            color: #666;
+            font-style: italic;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .copy-button {
+            background: #28a745;
+        }
+
+        .copy-button:hover {
+            background: #218838;
+        }
+
+        .clear-button {
+            background: #dc3545;
+        }
+
+        .clear-button:hover {
+            background: #c82333;
+        }
+
+        @media (max-width: 1024px) {
             .container {
                 grid-template-columns: 1fr;
             }
+
+            .preview {
+                position: static;
+                max-height: none;
+            }
+        }
+
+        .auto-update-info {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #b0b0b0;
+        }
+
+        .auto-update-info strong {
+            color: #58a6ff;
         }
     </style>
 </head>
 <body>
-    <h1>Blog Post Writer</h1>
+    <h1>📝 Blog Post Writer</h1>
 
     <div class="container">
         <div class="editor">
             <h2>Write Post</h2>
             
+            <div class="auto-update-info">
+                <strong>✨ Auto-preview enabled</strong> - Changes update automatically as you type
+            </div>
+
             <div class="form-group">
                 <label>Title:</label>
                 <input type="text" id="title" placeholder="Enter post title">
@@ -136,22 +359,34 @@ Example:
 <h3>Subheading</h3>
 <p>More content...</p>
 
-<pre><code>Your code here</code></pre>"></textarea>
+<ul>
+  <li>List item 1</li>
+  <li>List item 2</li>
+</ul>
+
+<pre><code>// Your code here
+function example() {
+  return 'Hello World';
+}</code></pre>
+
+<blockquote>A meaningful quote</blockquote>"></textarea>
             </div>
 
-            <button onclick="updatePreview()">Update Preview</button>
-            <button onclick="generateJSON()">Generate JSON</button>
-            <button onclick="clearForm()">Clear</button>
+            <div class="button-group">
+                <button onclick="generateJSON()">📋 Generate JSON</button>
+                <button class="copy-button" onclick="copyJSON()">📄 Copy JSON</button>
+                <button class="clear-button" onclick="clearForm()">🗑️ Clear</button>
+            </div>
         </div>
 
         <div class="preview">
-            <h2>Preview</h2>
+            <h2>Live Preview</h2>
             <div class="preview-content" id="preview">
-                <p style="color: #999;">Fill in the form and click "Update Preview" to see your post</p>
+                <p class="placeholder">Fill in the form to see your post preview</p>
             </div>
 
             <h2 style="margin-top: 30px;">JSON Output</h2>
-            <textarea id="jsonOutput" rows="10" readonly style="background: #f0f0f0;"></textarea>
+            <textarea id="jsonOutput" rows="10" readonly></textarea>
         </div>
     </div>
 
@@ -167,6 +402,14 @@ Example:
             document.getElementById('slug').value = slug;
         });
 
+        // Auto-update preview on any input change
+        const formInputs = ['title', 'slug', 'excerpt', 'date', 'category', 'tags', 'content'];
+        formInputs.forEach(id => {
+            const element = document.getElementById(id);
+            element.addEventListener('input', updatePreview);
+            element.addEventListener('change', updatePreview);
+        });
+
         function updatePreview() {
             const title = document.getElementById('title').value;
             const excerpt = document.getElementById('excerpt').value;
@@ -175,25 +418,49 @@ Example:
             const tags = document.getElementById('tags').value;
             const content = document.getElementById('content').value;
 
+            // If no content, show placeholder
+            if (!title && !excerpt && !content) {
+                document.getElementById('preview').innerHTML = '<p class="placeholder">Fill in the form to see your post preview</p>';
+                return;
+            }
+
             const tagsArray = tags.split(',').map(t => t.trim()).filter(t => t);
-            const tagsHTML = tagsArray.map(tag => `<span style="color: #666; margin-right: 10px;">#${tag}</span>`).join('');
+            const tagsHTML = tagsArray.map(tag => `<span class="meta-tag">#${tag}</span>`).join('');
 
             const previewHTML = `
-                <div style="color: #666; margin-bottom: 10px;">${date}</div>
-                <h1>${title}</h1>
-                <p style="color: #666; font-size: 1.1em; margin: 15px 0;">${excerpt}</p>
-                <div style="margin: 15px 0;">
-                    <span style="color: #888;">${category}</span>
-                    ${tagsHTML}
+                ${date ? `<div class="meta-date">📅 ${formatDate(date)}</div>` : ''}
+                ${title ? `<h1>${escapeHtml(title)}</h1>` : '<h1 class="placeholder">Untitled Post</h1>'}
+                ${excerpt ? `<p class="meta-excerpt">${escapeHtml(excerpt)}</p>` : ''}
+                ${category || tagsArray.length > 0 ? `
+                    <div class="meta-info">
+                        ${category ? `<span class="meta-category">${escapeHtml(category)}</span>` : ''}
+                        ${tagsHTML}
+                    </div>
+                ` : ''}
+                <div style="margin-top: 25px;">
+                    ${content ? content : '<p class="placeholder">No content yet...</p>'}
                 </div>
-                <hr style="margin: 20px 0;">
-                <div>${content}</div>
             `;
 
             document.getElementById('preview').innerHTML = previewHTML;
+            
+            // Auto-generate JSON as well
+            generateJSON(false);
         }
 
-        function generateJSON() {
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function generateJSON(showAlert = true) {
             const title = document.getElementById('title').value;
             const slug = document.getElementById('slug').value;
             const excerpt = document.getElementById('excerpt').value;
@@ -202,7 +469,7 @@ Example:
             const tags = document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t);
             const content = document.getElementById('content').value;
 
-            if (!title || !slug || !date) {
+            if (showAlert && (!title || !slug || !date)) {
                 alert('Please fill in at least Title, Slug, and Date');
                 return;
             }
@@ -220,10 +487,25 @@ Example:
 
             const json = JSON.stringify(post, null, 2);
             document.getElementById('jsonOutput').value = json;
+        }
 
-            // Also log instructions
-            console.log('Copy this JSON and add it to your posts.json array:');
-            console.log(json);
+        function copyJSON() {
+            const jsonOutput = document.getElementById('jsonOutput');
+            if (!jsonOutput.value) {
+                alert('Generate JSON first!');
+                return;
+            }
+            
+            jsonOutput.select();
+            document.execCommand('copy');
+            
+            // Visual feedback
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = '✅ Copied!';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 2000);
         }
 
         function clearForm() {
@@ -235,10 +517,13 @@ Example:
                 document.getElementById('category').value = '';
                 document.getElementById('tags').value = '';
                 document.getElementById('content').value = '';
-                document.getElementById('preview').innerHTML = '<p style="color: #999;">Fill in the form and click "Update Preview" to see your post</p>';
+                document.getElementById('preview').innerHTML = '<p class="placeholder">Fill in the form to see your post preview</p>';
                 document.getElementById('jsonOutput').value = '';
             }
         }
+
+        // Initial preview update
+        updatePreview();
     </script>
 </body>
 </html>
