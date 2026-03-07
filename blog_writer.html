@@ -7,21 +7,21 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0c0c0e;
-  --surface: #131316;
-  --surface2: #1a1a1f;
-  --surface3: #222228;
-  --border: #2a2a32;
-  --border2: #3a3a45;
-  --text: #e8e8f0;
-  --text2: #9898b0;
-  --text3: #606070;
-  --accent: #7c6af5;
-  --accent2: #a594ff;
-  --accent-dim: rgba(124,106,245,0.12);
-  --green: #3ecf8e;
-  --red: #f06060;
-  --yellow: #f5c542;
+  --bg: #16161e;
+  --surface: #1e1e2a;
+  --surface2: #262636;
+  --surface3: #2e2e42;
+  --border: #3a3a52;
+  --border2: #4e4e6a;
+  --text: #f0f0f8;
+  --text2: #b8b8d0;
+  --text3: #8080a0;
+  --accent: #9080ff;
+  --accent2: #c0aaff;
+  --accent-dim: rgba(144,128,255,0.18);
+  --green: #4ee8a0;
+  --red: #ff7070;
+  --yellow: #ffd060;
   --radius: 10px;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -163,8 +163,8 @@ body {
 .btn-danger:hover { background: rgba(240,96,96,0.1); }
 
 /* ── PANELS ── */
-.panel { display: none; flex: 1; overflow: hidden; }
-.panel.active { display: flex; }
+.panel { display: none; flex: 1; overflow: hidden; min-height: 0; }
+.panel.active { display: flex; min-height: 0; }
 
 /* ── WRITE PANEL ── */
 #writePanel { flex-direction: column; overflow: hidden; }
@@ -232,15 +232,14 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
   transition: all 0.15s; font-family: inherit;
 }
 .toolbar-btn:hover { background: var(--surface2); color: var(--text); }
-.toolbar-btn.active { background: var(--accent-dim); color: var(--accent2); }
+
+.toolbar-color-wrap { position: relative; display: inline-flex; }
+.toolbar-color-btn { padding: 4px 8px !important; }
+.toolbar-btn.active { background: var(--accent-dim); color: var(--accent2); border: 1px solid var(--accent); }
 .toolbar-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
-.toolbar-select {
-  background: var(--surface2); border: 1px solid var(--border);
-  color: var(--text2); border-radius: 6px;
-  padding: 4px 8px; font-family: 'Outfit', sans-serif;
-  font-size: 13px; outline: none; cursor: pointer;
-}
+.toolbar-select { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); border-radius: 6px; padding: 4px 8px; font-family: 'Outfit', sans-serif; font-size: 13px; outline: none; cursor: pointer; }
 .toolbar-select:hover { border-color: var(--border2); color: var(--text); }
+.toolbar-select.has-format { background: var(--accent-dim); border-color: var(--accent); color: var(--accent2); font-weight: 700; }
 
 /* Rich editor */
 .rich-editor {
@@ -257,12 +256,13 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
 }
 .rich-editor h2 { font-family: 'DM Serif Display', serif; font-size: 28px; color: white; margin: 32px 0 12px; font-weight: 400; }
 .rich-editor h3 { font-size: 20px; color: white; margin: 24px 0 10px; font-weight: 600; }
-.rich-editor p { margin-bottom: 16px; color: var(--text); }
-.rich-editor strong { color: white; }
-.rich-editor em { color: var(--text2); }
-.rich-editor a { color: var(--accent2); text-decoration: underline; }
+.rich-editor h4 { font-size: 16px; color: white; margin: 20px 0 8px; font-weight: 600; }
+.rich-editor p { margin-bottom: 16px; color: #d1d5db; }
+.rich-editor strong { color: #f9fafb; font-weight: 700; }
+.rich-editor em { color: var(--text2); font-style: italic; }
+.rich-editor a { color: var(--accent2); text-decoration: underline; text-underline-offset: 2px; }
 .rich-editor ul, .rich-editor ol { margin: 16px 0 16px 28px; }
-.rich-editor li { margin-bottom: 6px; color: var(--text); }
+.rich-editor li { margin-bottom: 6px; color: #d1d5db; }
 .rich-editor blockquote {
   border-left: 3px solid var(--accent);
   padding: 12px 20px;
@@ -283,6 +283,9 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
   font-size: 13px;
   line-height: 1.6;
   color: #a8b4d0;
+  white-space: pre;
+  tab-size: 2;
+  overflow-x: auto;
 }
 .rich-editor code {
   font-family: 'JetBrains Mono', monospace;
@@ -299,12 +302,111 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
 }
 .rich-editor img:hover { opacity: 0.9; }
 .rich-editor hr { border: none; border-top: 1px solid var(--border2); margin: 32px 0; }
+
+/* ── TABLE STYLES ── */
 .rich-editor table { width: 100%; border-collapse: collapse; margin: 20px 0; }
 .rich-editor td, .rich-editor th {
-  border: 1px solid var(--border2); padding: 8px 12px;
-  font-size: 14px;
+  border: 1px solid #4e4e6a; padding: 10px 14px;
+  font-size: 14px; min-width: 80px; position: relative;
+  vertical-align: top;
 }
-.rich-editor th { background: var(--surface2); font-weight: 600; }
+.rich-editor th { background: var(--surface2); font-weight: 700; color: var(--text); text-align: left; }
+.rich-editor td { background: var(--surface); color: var(--text); }
+.rich-editor tr:nth-child(even) td { background: var(--surface2); }
+.rich-editor td:focus, .rich-editor th:focus { outline: 2px solid var(--accent); outline-offset: -2px; background: var(--accent-dim); }
+
+/* Table modal grid picker */
+.table-grid-picker {
+  display: grid;
+  grid-template-columns: repeat(8, 28px);
+  gap: 3px;
+  margin-bottom: 14px;
+  user-select: none;
+}
+.table-grid-cell {
+  width: 28px; height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--surface2);
+  cursor: pointer;
+  transition: all 0.1s;
+}
+.table-grid-cell.highlighted { background: var(--accent-dim); border-color: var(--accent); }
+.table-grid-label { font-size: 12px; color: var(--text2); margin-bottom: 10px; font-weight: 600; }
+
+/* Table context menu */
+.table-context-menu {
+  position: fixed;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 4px;
+  z-index: 9999;
+  min-width: 180px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  display: none;
+}
+.table-context-menu.show { display: block; }
+.tcm-item {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text2);
+  cursor: pointer;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tcm-item:hover { background: var(--surface3); color: var(--text); }
+.tcm-item.danger { color: var(--red); }
+.tcm-item.danger:hover { background: rgba(255,112,112,0.1); }
+.tcm-sep { height: 1px; background: var(--border); margin: 4px 0; }
+/* Table border panel */
+.tcm-border-panel {
+  padding: 8px 12px 10px;
+  border-top: 1px solid var(--border);
+  margin-top: 2px;
+}
+.tcm-border-title {
+  font-size: 11px; font-weight: 700; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
+}
+.tcm-border-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+}
+.tcm-border-label { font-size: 12px; color: var(--text2); width: 52px; flex-shrink: 0; }
+.tcm-border-slider {
+  flex: 1; accent-color: var(--accent); cursor: pointer; height: 4px;
+}
+.tcm-border-value {
+  font-size: 11px; color: var(--text3); width: 28px; text-align: right;
+}
+.tcm-border-color {
+  width: 28px; height: 24px; border: 1px solid var(--border2);
+  border-radius: 4px; cursor: pointer; padding: 1px; background: none;
+}
+.tcm-border-style-row {
+  display: flex; gap: 5px; flex-wrap: wrap;
+}
+.tcm-style-btn {
+  flex: 1; padding: 5px 6px; font-size: 11px; font-weight: 600;
+  background: var(--surface3); border: 1px solid var(--border);
+  color: var(--text2); border-radius: 5px; cursor: pointer; text-align: center;
+  white-space: nowrap; transition: all 0.15s;
+}
+.tcm-style-btn:hover, .tcm-style-btn.active {
+  background: var(--accent-dim); border-color: var(--accent); color: var(--accent2);
+}
+.tcm-apply-btn {
+  width: 100%; margin-top: 10px; padding: 7px;
+  background: var(--accent); color: #fff; border: none;
+  border-radius: 6px; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: opacity 0.15s;
+}
+.tcm-apply-btn:hover { opacity: 0.85; }
+
+
 
 /* Editor sidebar */
 .editor-sidebar {
@@ -539,7 +641,7 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
 .image-card.selected .image-selected-badge { display: flex; }
 
 /* ── PREVIEW PANEL ── */
-#previewPanel { overflow-y: auto; justify-content: center; padding: 48px 24px; }
+#previewPanel { overflow-y: auto; overflow-x: hidden; justify-content: center; align-items: flex-start; padding: 48px 24px; min-height: 0; }
 #previewPanel::-webkit-scrollbar { width: 6px; }
 #previewPanel::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
 .preview-article {
@@ -559,6 +661,7 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
 .preview-content { font-size: 16px; line-height: 1.8; color: var(--text); }
 .preview-content h2 { font-family: 'DM Serif Display', serif; font-size: 26px; color: white; margin: 32px 0 12px; font-weight: 400; }
 .preview-content h3 { font-size: 19px; color: white; margin: 24px 0 10px; font-weight: 600; }
+.preview-content h4 { font-size: 15px; color: white; margin: 18px 0 8px; font-weight: 600; }
 .preview-content p { margin-bottom: 16px; }
 .preview-content ul, .preview-content ol { margin: 14px 0 14px 24px; }
 .preview-content li { margin-bottom: 6px; }
@@ -676,6 +779,8 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
 .empty-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; color: var(--text2); }
 .empty-sub { font-size: 13px; }
 
+
+
 /* Scrollbar */
 * { scrollbar-width: thin; scrollbar-color: var(--border2) transparent; }
 
@@ -708,9 +813,16 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
     <div class="post-list" id="postList"></div>
 
     <div class="sidebar-footer">
-      <button class="json-export-btn" onclick="exportAllJSON()">
-        <span>⬇</span> Export posts.json
+      <button class="json-export-btn" onclick="exportCurrentPostFile()" title="Download this post as slug.json">
+        <span>⬇</span> Export this post
       </button>
+      <button class="json-export-btn" onclick="exportAllPosts()" style="margin-top:8px" title="Download every post as individual .json files + index.json">
+        <span>⬇</span> Export all posts
+      </button>
+      <button class="json-export-btn" onclick="document.getElementById('importJsonInput').click()" style="margin-top:8px;border-color:var(--accent);color:var(--accent2)">
+        <span>⬆</span> Import JSON
+      </button>
+      <input type="file" id="importJsonInput" accept=".json,application/json" style="display:none" onchange="importJSON(event)">
     </div>
   </aside>
 
@@ -720,9 +832,9 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
     <div class="topbar">
       <div class="topbar-left">
         <div class="tab-bar">
-          <button class="tab active" onclick="switchPanel('write', this)">✍ Write</button>
-          <button class="tab" onclick="switchPanel('images', this)">🖼 Images</button>
-          <button class="tab" onclick="switchPanel('preview', this)">👁 Preview</button>
+          <button class="tab active" onclick="switchPanel('write', this)">Write</button>
+          <button class="tab" onclick="switchPanel('images', this)">Images</button>
+          <button class="tab" onclick="switchPanel('preview', this)">Preview</button>
           <button class="tab" onclick="switchPanel('json', this)">{ } JSON</button>
         </div>
       </div>
@@ -738,12 +850,12 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
     <div class="panel active" id="writePanel">
       <!-- Toolbar -->
       <div class="editor-toolbar">
-        <select class="toolbar-select" onchange="formatBlock(this.value); this.value=''">
+        <select class="toolbar-select" id="blockFormatSelect" onchange="formatBlock(this.value)">
           <option value="">Paragraph</option>
           <option value="h2">Heading 2</option>
           <option value="h3">Heading 3</option>
           <option value="h4">Heading 4</option>
-          <option value="pre">Code Block</option>
+          <option value="pre">Code Block…</option>
         </select>
         <div class="toolbar-sep"></div>
         <button class="toolbar-btn" title="Bold" onclick="fmt('bold')"><b>B</b></button>
@@ -758,7 +870,45 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
         <div class="toolbar-sep"></div>
         <button class="toolbar-btn" title="Link" onclick="insertLink()">🔗</button>
         <button class="toolbar-btn" title="Insert Image" onclick="openImagePicker()">🖼</button>
-        <button class="toolbar-btn" title="Inline Code" onclick="insertInlineCode()">⌨</button>
+        <button class="toolbar-btn" title="Inline Code" onclick="insertInlineCode()" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:-0.5px">&lt;/&gt;</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn" title="Insert Table" onclick="openTableModal()" style="font-size:13px;font-weight:700">⊞</button>
+        <div class="toolbar-sep"></div>
+        <!-- Alignment -->
+        <button class="toolbar-btn" title="Align Left" onclick="fmt('justifyLeft')" style="font-size:15px">⇤</button>
+        <button class="toolbar-btn" title="Align Center" onclick="fmt('justifyCenter')" style="font-size:15px">≡</button>
+        <button class="toolbar-btn" title="Align Right" onclick="fmt('justifyRight')" style="font-size:15px">⇥</button>
+        <button class="toolbar-btn" title="Justify" onclick="fmt('justifyFull')" style="font-size:15px">☰</button>
+        <div class="toolbar-sep"></div>
+        <!-- Font size -->
+        <select class="toolbar-select" id="fontSizeSelect" onchange="setFontSize(this.value)" title="Font size" style="width:64px">
+          <option value="">Size</option>
+          <option value="1">10px</option>
+          <option value="2">13px</option>
+          <option value="3">16px</option>
+          <option value="4">18px</option>
+          <option value="5">24px</option>
+          <option value="6">32px</option>
+          <option value="7">48px</option>
+        </select>
+        <!-- Text color -->
+        <div class="toolbar-color-wrap" title="Text Color">
+          <input type="color" id="textColorPicker" value="#f0f0f8" onchange="setTextColor(this.value)" style="opacity:0;position:absolute;width:0;height:0">
+          <button class="toolbar-btn toolbar-color-btn" title="Text Color" onclick="document.getElementById('textColorPicker').click()" style="font-size:13px;font-weight:800;position:relative">
+            A<span id="textColorBar" style="position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:14px;height:3px;background:#f0f0f8;border-radius:2px"></span>
+          </button>
+        </div>
+        <!-- Highlight color -->
+        <div class="toolbar-color-wrap" title="Highlight">
+          <input type="color" id="bgColorPicker" value="#9080ff" onchange="setHighlight(this.value)" style="opacity:0;position:absolute;width:0;height:0">
+          <button class="toolbar-btn toolbar-color-btn" title="Highlight" onclick="document.getElementById('bgColorPicker').click()" style="font-size:13px;font-weight:800;position:relative">
+            H<span id="bgColorBar" style="position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:14px;height:3px;background:#9080ff;border-radius:2px"></span>
+          </button>
+        </div>
+        <div class="toolbar-sep"></div>
+        <!-- Indent -->
+        <button class="toolbar-btn" title="Indent" onclick="fmt('indent')" style="font-size:15px">→</button>
+        <button class="toolbar-btn" title="Outdent" onclick="fmt('outdent')" style="font-size:15px">←</button>
         <div class="toolbar-sep"></div>
         <button class="toolbar-btn" title="Undo" onclick="fmt('undo')">↩</button>
         <button class="toolbar-btn" title="Redo" onclick="fmt('redo')">↪</button>
@@ -797,6 +947,7 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
 
         <!-- Editor sidebar -->
         <div class="editor-sidebar">
+
           <!-- Excerpt -->
           <div class="sidebar-card">
             <div class="sidebar-card-title">📝 Excerpt</div>
@@ -827,8 +978,7 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
           <div class="sidebar-card">
             <div class="sidebar-card-title">🏷 Tags</div>
             <div class="tags-input-wrap" id="tagsWrap" onclick="document.getElementById('tagInput').focus()">
-              <input type="text" class="tags-real-input" id="tagInput" placeholder="Add tag, press Enter…"
-                onkeydown="handleTagInput(event)">
+              <input type="text" class="tags-real-input" id="tagInput" placeholder="Add tag, press Enter…" onkeydown="handleTagInput(event)">
             </div>
           </div>
 
@@ -837,6 +987,7 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
             <div class="sidebar-card-title">📊 Stats</div>
             <div class="word-count" id="wordCount">0 words · ~0 min read</div>
           </div>
+
         </div>
       </div>
     </div>
@@ -903,6 +1054,107 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
       <textarea class="json-output" id="jsonOutput" readonly></textarea>
     </div>
   </main>
+</div>
+
+<!-- Modal: Table -->
+<div class="modal-overlay" id="tableModal">
+  <div class="modal" style="width:420px">
+    <h3>Insert Table</h3>
+    <div class="table-grid-label" id="tableGridLabel">Select size: 1 × 1</div>
+    <div class="table-grid-picker" id="tableGridPicker"></div>
+    <div style="display:flex;gap:10px;margin-bottom:14px;align-items:center">
+      <div style="font-size:13px;color:var(--text2)">Rows:</div>
+      <input type="number" id="tableRows" value="3" min="1" max="20" style="width:60px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 8px;font-size:13px;outline:none;">
+      <div style="font-size:13px;color:var(--text2)">Cols:</div>
+      <input type="number" id="tableCols" value="3" min="1" max="10" style="width:60px;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 8px;font-size:13px;outline:none;">
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);cursor:pointer">
+        <input type="checkbox" id="tableHasHeader" checked style="accent-color:var(--accent)"> Header row
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="action-btn btn-ghost" onclick="closeModal('tableModal')">Cancel</button>
+      <button class="action-btn btn-primary" onclick="confirmInsertTable()">Insert Table</button>
+    </div>
+  </div>
+</div>
+
+<!-- Table context menu -->
+<div class="table-context-menu" id="tableContextMenu" style="min-width:220px">
+  <div class="tcm-item" onclick="tableCmd('addRowAbove')">↑ Add row above</div>
+  <div class="tcm-item" onclick="tableCmd('addRowBelow')">↓ Add row below</div>
+  <div class="tcm-item" onclick="tableCmd('addColLeft')">← Add column left</div>
+  <div class="tcm-item" onclick="tableCmd('addColRight')">→ Add column right</div>
+  <div class="tcm-sep"></div>
+  <div class="tcm-item" onclick="tableCmd('deleteRow')">✕ Delete row</div>
+  <div class="tcm-item" onclick="tableCmd('deleteCol')">✕ Delete column</div>
+  <div class="tcm-sep"></div>
+  <div class="tcm-item danger" onclick="tableCmd('deleteTable')">⊠ Delete table</div>
+  <div class="tcm-sep"></div>
+  <!-- Border controls -->
+  <div class="tcm-border-panel">
+    <div class="tcm-border-title">Border</div>
+    <div class="tcm-border-row">
+      <span class="tcm-border-label">Thickness</span>
+      <input type="range" class="tcm-border-slider" id="borderThickness" min="0" max="6" step="0.5" value="1" oninput="document.getElementById('borderThicknessVal').textContent=this.value+'px'">
+      <span class="tcm-border-value" id="borderThicknessVal">1px</span>
+    </div>
+    <div class="tcm-border-row">
+      <span class="tcm-border-label">Color</span>
+      <input type="color" class="tcm-border-color" id="borderColor" value="#4e4e6a">
+      <span style="font-size:11px;color:var(--text3);flex:1" id="borderColorHex">#4e4e6a</span>
+    </div>
+    <div class="tcm-border-row">
+      <span class="tcm-border-label">Style</span>
+      <div class="tcm-border-style-row" style="flex:1">
+        <button class="tcm-style-btn active" id="styleBtn-solid" onclick="setTableBorderStyle('solid')">─ solid</button>
+        <button class="tcm-style-btn" id="styleBtn-dashed" onclick="setTableBorderStyle('dashed')">╌ dash</button>
+        <button class="tcm-style-btn" id="styleBtn-dotted" onclick="setTableBorderStyle('dotted')">··· dot</button>
+        <button class="tcm-style-btn" id="styleBtn-none" onclick="setTableBorderStyle('none')">✕ none</button>
+      </div>
+    </div>
+    <div class="tcm-border-row" style="margin-bottom:0">
+      <span class="tcm-border-label">Apply to</span>
+      <div class="tcm-border-style-row" style="flex:1">
+        <button class="tcm-style-btn active" id="applyBtn-table" onclick="setApplyTarget('table')">Table</button>
+        <button class="tcm-style-btn" id="applyBtn-cell" onclick="setApplyTarget('cell')">Cell</button>
+        <button class="tcm-style-btn" id="applyBtn-header" onclick="setApplyTarget('header')">Header</button>
+      </div>
+    </div>
+    <button class="tcm-apply-btn" onclick="applyTableBorder()">Apply Border</button>
+  </div>
+</div>
+
+<!-- Modal: Code Block -->
+<div class="modal-overlay" id="codeModal">
+  <div class="modal" style="width:580px">
+    <h3>Insert Code Block</h3>
+    <div style="margin-bottom:10px;display:flex;gap:10px;align-items:center">
+      <label style="font-size:12px;color:var(--text3)">Language:</label>
+      <select id="codeLangSelect" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:6px;padding:5px 10px;font-size:13px;outline:none;font-family:inherit">
+        <option value="">auto-detect</option>
+        <option value="javascript">JavaScript</option>
+        <option value="python">Python</option>
+        <option value="bash">Bash / Shell</option>
+        <option value="html">HTML</option>
+        <option value="css">CSS</option>
+        <option value="json">JSON</option>
+        <option value="sql">SQL</option>
+        <option value="php">PHP</option>
+        <option value="java">Java</option>
+        <option value="cpp">C / C++</option>
+        <option value="typescript">TypeScript</option>
+        <option value="yaml">YAML</option>
+        <option value="nginx">Nginx</option>
+        <option value="plaintext">Plain text</option>
+      </select>
+    </div>
+    <textarea id="codeTextarea" spellcheck="false" placeholder="Paste or type your code here…" style="width:100%;height:280px;background:#0d0d12;border:1px solid var(--border2);color:#a8b4d0;border-radius:8px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;resize:vertical;outline:none;tab-size:2;white-space:pre;overflow:auto"></textarea>
+    <div style="font-size:11px;color:var(--text3);margin-top:6px">Tab inserts 2 spaces · Ctrl+Enter to insert</div>
+    <div class="modal-actions">
+      <button class="action-btn btn-ghost" onclick="closeModal('codeModal')">Cancel</button>
+      <button class="action-btn btn-primary" onclick="confirmCodeBlock()">Insert Code</button>
+    </div>
+  </div>
 </div>
 
 <!-- Modal: Link -->
@@ -1041,6 +1293,24 @@ function savePost() {
   }
 }
 
+function serializeEditorContent() {
+  // Clone the editor so we don't modify the live DOM
+  var editor = document.getElementById('richEditor');
+  var clone = editor.cloneNode(true);
+
+  // For each <pre><code>, replace its innerHTML with escaped textContent
+  // This ensures newlines survive the innerHTML round-trip
+  clone.querySelectorAll('pre code').forEach(function(codeEl) {
+    var text = codeEl.textContent; // real newlines preserved here
+    codeEl.innerHTML = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  });
+
+  return clone.innerHTML;
+}
+
 function getCurrentPostData() {
   return {
     id: currentPostId,
@@ -1052,22 +1322,50 @@ function getCurrentPostData() {
     tags: [...tags],
     image: coverData ? (coverData.path || coverData.dataUrl) : document.getElementById('coverUrl').value.trim(),
     coverData: coverData,
-    content: document.getElementById('richEditor').innerHTML,
+    content: serializeEditorContent(),
     status: posts.find(p => p.id === currentPostId)?.status || 'draft',
     updatedAt: new Date().toISOString()
   };
 }
 
 function publishPost() {
-  savePost();
+  if (!currentPostId) { showToast('No post to publish', 'error'); return; }
   const idx = posts.findIndex(p => p.id === currentPostId);
-  if (idx !== -1) {
-    posts[idx].status = 'published';
-    savePosts();
-    updateStatusPill('published');
-    renderPostList();
-    showToast('🚀 Published!', 'success');
-  }
+  if (idx === -1) { showToast('Post not found', 'error'); return; }
+
+  const post = getCurrentPostData();
+  post.status = 'published';
+  post.publishedAt = new Date().toISOString();
+  posts[idx] = { ...posts[idx], ...post };
+  savePosts();
+  updateStatusPill('published');
+  renderPostList();
+
+  const slug = post.slug || ('post-' + currentPostId);
+  showToast('🚀 Published! Downloading ' + slug + '.json + index.json…', 'success');
+
+  setTimeout(() => {
+    // 1. Download this post as slug.json (full content)
+    const postData = {
+      slug: post.slug, title: post.title, excerpt: post.excerpt,
+      date: post.date, category: post.category, tags: post.tags || [],
+      image: post.image || '', content: post.content || ''
+    };
+    download(slug + '.json', JSON.stringify(postData, null, 2));
+  }, 300);
+
+  setTimeout(() => {
+    // 2. Download index.json (all posts, NO content — tiny file for blog listing)
+    const index = posts
+      .filter(p => p.status === 'published')
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .map(p => ({
+        slug: p.slug, title: p.title, excerpt: p.excerpt,
+        date: p.date, category: p.category, tags: p.tags || [],
+        image: p.image || ''
+      }));
+    download('index.json', JSON.stringify(index, null, 2));
+  }, 700);
 }
 
 function deleteCurrentPost() {
@@ -1113,22 +1411,98 @@ function renderPostList() {
 // ══════════════════════════════════════════════
 // TOOLBAR / EDITOR
 // ══════════════════════════════════════════════
+// ── TOOLBAR STATE SYNC ──
+document.addEventListener('selectionchange', updateToolbarState);
+
+function updateToolbarState() {
+  const editor = document.getElementById('richEditor');
+  if (!editor) return;
+  const sel = window.getSelection();
+  if (!sel || !sel.rangeCount) return;
+  const node = sel.anchorNode;
+  if (!node || !editor.contains(node)) return;
+
+  // Highlight inline format buttons
+  const fmtMap = { 'bold': 'Bold', 'italic': 'Italic', 'underline': 'Underline', 'strikeThrough': 'Strikethrough' };
+  Object.entries(fmtMap).forEach(([cmd, title]) => {
+    const active = document.queryCommandState(cmd);
+    document.querySelectorAll('.toolbar-btn').forEach(btn => {
+      if (btn.title === title) btn.classList.toggle('active', active);
+    });
+  });
+
+  // Highlight alignment buttons
+  const alignMap = {
+    'justifyLeft': 'Align Left',
+    'justifyCenter': 'Align Center',
+    'justifyRight': 'Align Right',
+    'justifyFull': 'Justify'
+  };
+  Object.entries(alignMap).forEach(([cmd, title]) => {
+    const active = document.queryCommandState(cmd);
+    document.querySelectorAll('.toolbar-btn').forEach(btn => {
+      if (btn.title === title) btn.classList.toggle('active', active);
+    });
+  });
+
+  // Highlight block format dropdown
+  const blockTag = document.queryCommandValue('formatBlock').toLowerCase().replace(/[<>]/g, '');
+  const sel2 = document.getElementById('blockFormatSelect');
+  if (!sel2) return;
+  const known = ['h2','h3','h4','pre'];
+  if (known.includes(blockTag)) {
+    sel2.value = blockTag;
+    sel2.classList.add('has-format');
+  } else {
+    sel2.value = '';
+    sel2.classList.remove('has-format');
+  }
+}
+
+
+// ── Alignment & formatting helpers ──
+function setFontSize(size) {
+  if (!size) return;
+  document.getElementById('richEditor').focus();
+  document.execCommand('fontSize', false, size);
+  document.getElementById('fontSizeSelect').value = '';
+  autoSave();
+}
+
+function setTextColor(color) {
+  document.getElementById('richEditor').focus();
+  document.execCommand('foreColor', false, color);
+  document.getElementById('textColorBar').style.background = color;
+  autoSave();
+}
+
+function setHighlight(color) {
+  document.getElementById('richEditor').focus();
+  document.execCommand('hiliteColor', false, color);
+  document.getElementById('bgColorBar').style.background = color;
+  autoSave();
+}
+
 function fmt(cmd, val) {
   document.getElementById('richEditor').focus();
   document.execCommand(cmd, false, val || null);
+  updateToolbarState();
   autoSave();
 }
 
 function formatBlock(tag) {
   if (!tag) return;
-  document.getElementById('richEditor').focus();
+  var editor = document.getElementById('richEditor');
+  editor.focus();
   if (tag === 'pre') {
-    const sel = window.getSelection();
-    const text = sel.toString() || 'code here';
-    document.execCommand('insertHTML', false, `<pre><code>${text}</code></pre><p><br></p>`);
+    // Open code modal — textarea handles multiline natively
+    openCodeModal();
+    return;
   } else {
     document.execCommand('formatBlock', false, tag);
   }
+  document.getElementById('blockFormatSelect').value = '';
+  updateToolbarState();
   autoSave();
 }
 
@@ -1167,42 +1541,38 @@ function confirmLink() {
 }
 
 function handleEditorKeydown(e) {
-  // Tab = indent in code blocks
-  if (e.key === 'Tab') {
+  var inPre = !!e.target.closest('pre');
+
+  // Tab inside pre = 2-space indent
+  if (e.key === 'Tab' && inPre) {
     e.preventDefault();
     document.execCommand('insertText', false, '  ');
+    return;
+  }
+
+  // Enter inside pre = <br> (renders as newline in pre-wrap)
+  if (e.key === 'Enter' && inPre) {
+    e.preventDefault();
+    document.execCommand('insertHTML', false, '<br>');
+    return;
   }
 }
 
-function handlePaste(e) {
-  // Handle image paste
-  const items = (e.clipboardData || e.originalEvent.clipboardData).items;
-  for (let item of items) {
-    if (item.type.startsWith('image/')) {
-      e.preventDefault();
-      const file = item.getAsFile();
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const img = addImageToLibrary(file, 'pasted');
-        document.execCommand('insertHTML', false, `<img src="${ev.target.result}" alt="pasted image">`);
-        autoSave();
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-}
+
+
 
 // ══════════════════════════════════════════════
 // IMAGE LIBRARY
 // ══════════════════════════════════════════════
-function addImageToLibrary(file, folder) {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const img = {
+function addImageToLibrary(file) {
+  return new Promise(function(resolve) {
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var img = {
         id: 'img_' + Date.now() + '_' + Math.random().toString(36).slice(2),
         name: file.name,
-        folder: folder || getFolderForCurrentPost(),
+        folder: 'images',
+        path: '/images/' + file.name,
         dataUrl: ev.target.result,
         size: file.size,
         type: file.type,
@@ -1217,15 +1587,8 @@ function addImageToLibrary(file, folder) {
   });
 }
 
-function getFolderForCurrentPost() {
-  const post = posts.find(p => p.id === currentPostId);
-  if (!post || !post.slug) return 'general';
-  return post.slug.replace(/[^a-z0-9-]/gi, '-').toLowerCase() || 'general';
-}
-
 function saveImages() {
   try { localStorage.setItem('k66_images', JSON.stringify(images)); } catch(e) {
-    // If storage full, remove oldest
     images = images.slice(0, Math.floor(images.length * 0.7));
     try { localStorage.setItem('k66_images', JSON.stringify(images)); } catch(e2) {}
     showToast('Storage full — oldest images removed', 'error');
@@ -1233,59 +1596,59 @@ function saveImages() {
 }
 
 function bulkUploadImages(e) {
-  const files = [...e.target.files];
-  let done = 0;
-  files.forEach(f => {
-    addImageToLibrary(f, getFolderForCurrentPost()).then(() => {
+  var files = Array.from(e.target.files);
+  var done = 0;
+  files.forEach(function(f) {
+    addImageToLibrary(f).then(function(img) {
       done++;
-      if (done === files.length) showToast(`✓ ${done} image${done > 1 ? 's' : ''} uploaded`, 'success');
+      if (done === files.length)
+        showToast(done + ' image' + (done > 1 ? 's' : '') + ' added — path: /images/' + img.name, 'success');
     });
   });
   e.target.value = '';
 }
 
 function renderImageLibrary() {
-  // Folders
-  const folders = ['all', ...new Set(images.map(i => i.folder))];
-  const folderGrid = document.getElementById('folderGrid');
-  folderGrid.innerHTML = folders.map(f => {
-    const count = f === 'all' ? images.length : images.filter(i => i.folder === f).length;
-    return `<div class="folder-chip ${currentFolder === f ? 'active' : ''}" onclick="filterFolder('${f}')">
-      📁 ${f} <span class="folder-count">${count}</span>
-    </div>`;
-  }).join('');
+  var folders = ['all'].concat(Array.from(new Set(images.map(function(i){ return i.folder; }))));
+  var folderGrid = document.getElementById('folderGrid');
+  if (folderGrid) {
+    folderGrid.innerHTML = folders.map(function(f) {
+      var count = f === 'all' ? images.length : images.filter(function(i){ return i.folder === f; }).length;
+      return '<div class="folder-chip ' + (currentFolder === f ? 'active' : '') + '" onclick="filterFolder(\'' + f + '\')">' +
+        f + ' <span class="folder-count">' + count + '</span></div>';
+    }).join('');
+  }
 
-  // Images
-  const filtered = currentFolder === 'all' ? images : images.filter(i => i.folder === currentFolder);
-  document.getElementById('imagesCount').textContent = `${filtered.length} image${filtered.length !== 1 ? 's' : ''}`;
-  document.getElementById('imagesGridLabel').textContent = currentFolder === 'all' ? 'All Images' : `📁 ${currentFolder}`;
+  var filtered = currentFolder === 'all' ? images : images.filter(function(i){ return i.folder === currentFolder; });
+  var countEl = document.getElementById('imagesCount');
+  if (countEl) countEl.textContent = filtered.length + ' image' + (filtered.length !== 1 ? 's' : '');
+  var labelEl = document.getElementById('imagesGridLabel');
+  if (labelEl) labelEl.textContent = currentFolder === 'all' ? 'All Images' : currentFolder;
 
-  const grid = document.getElementById('imageGrid');
+  var grid = document.getElementById('imageGrid');
+  if (!grid) return;
+
   if (filtered.length === 0) {
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
-      <div class="empty-icon">🖼</div>
-      <div class="empty-title">No images yet</div>
-      <div class="empty-sub">Upload images or paste them in the editor</div>
-    </div>`;
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🖼</div><div class="empty-title">No images yet</div><div class="empty-sub">Upload or drag images here</div></div>';
     return;
   }
 
-  grid.innerHTML = filtered.map(img => `
-    <div class="image-card" id="imgcard_${img.id}">
-      <img class="image-card-thumb" src="${img.dataUrl}" alt="${img.name}" loading="lazy">
-      <div class="image-card-body">
-        <div class="image-card-name" title="${img.name}">${img.name}</div>
-        <div class="image-card-meta">${img.folder} · ${formatSize(img.size)}</div>
-      </div>
-      <div class="image-card-overlay">
-        <button class="overlay-btn" title="Preview" onclick="previewImage('${img.id}')">👁</button>
-        <button class="overlay-btn" title="Insert into post" onclick="insertImageIntoPost('${img.id}')">✚</button>
-        <button class="overlay-btn" title="Copy path" onclick="copyImagePath('${img.id}')">📋</button>
-        <button class="overlay-btn danger" title="Delete" onclick="deleteImage('${img.id}')">🗑</button>
-      </div>
-      <div class="image-selected-badge">✓</div>
-    </div>
-  `).join('');
+  grid.innerHTML = filtered.map(function(img) {
+    return '<div class="image-card" id="imgcard_' + img.id + '">' +
+      '<img class="image-card-thumb" src="' + img.dataUrl + '" alt="' + img.name + '" loading="lazy">' +
+      '<div class="image-card-body">' +
+        '<div class="image-card-name" title="' + img.name + '">' + img.name + '</div>' +
+        '<div class="image-card-meta">/images/' + img.name + ' · ' + formatSize(img.size) + '</div>' +
+      '</div>' +
+      '<div class="image-card-overlay">' +
+        '<button class="overlay-btn" title="Preview" onclick="previewImage(\'' + img.id + '\')">👁</button>' +
+        '<button class="overlay-btn" title="Insert into post" onclick="insertImageFromLibrary(\'' + img.id + '\')">+</button>' +
+        '<button class="overlay-btn" title="Copy path" onclick="copyImagePath(\'' + img.id + '\')">⧉</button>' +
+        '<button class="overlay-btn danger" title="Delete" onclick="deleteImage(\'' + img.id + '\')">✕</button>' +
+      '</div>' +
+      '<div class="image-selected-badge">✓</div>' +
+    '</div>';
+  }).join('');
 }
 
 function filterFolder(f) {
@@ -1294,15 +1657,14 @@ function filterFolder(f) {
 }
 
 function createFolder() {
-  const name = prompt('Folder name:');
+  var name = prompt('Folder name:');
   if (!name) return;
-  const clean = name.toLowerCase().replace(/[^a-z0-9-]/g, '-');
-  currentFolder = clean;
+  currentFolder = name.toLowerCase().replace(/[^a-z0-9-]/g, '-');
   renderImageLibrary();
 }
 
 function previewImage(id) {
-  const img = images.find(i => i.id === id);
+  var img = images.find(function(i){ return i.id === id; });
   if (!img) return;
   document.getElementById('imgPreviewLarge').src = img.dataUrl;
   document.getElementById('imgPreviewName').textContent = img.name;
@@ -1310,45 +1672,91 @@ function previewImage(id) {
 }
 
 function copyImagePath(id) {
-  const img = images.find(i => i.id === id);
+  var img = images.find(function(i){ return i.id === id; });
   if (!img) return;
-  const path = `images/${img.folder}/${img.name}`;
-  navigator.clipboard.writeText(path).then(() => showToast('📋 Path copied', 'success'));
+  var path = img.path || ('/images/' + img.name);
+  navigator.clipboard.writeText(path).then(function(){ showToast('Copied: ' + path, 'success'); });
 }
 
 function deleteImage(id) {
-  if (!confirm('Delete this image?')) return;
-  images = images.filter(i => i.id !== id);
+  var img = images.find(function(i){ return i.id === id; });
+  if (!img) return;
+  if (!confirm('Delete ' + img.name + '?')) return;
+  images = images.filter(function(i){ return i.id !== id; });
   saveImages();
   renderImageLibrary();
-  showToast('🗑 Deleted', 'error');
+  showToast('Deleted ' + img.name, 'error');
 }
 
-function insertImageIntoPost(id) {
-  const img = images.find(i => i.id === id);
+function insertImageFromLibrary(id) {
+  var img = images.find(function(i){ return i.id === id; });
   if (!img) return;
-  const path = `images/${img.folder}/${img.name}`;
+  var path = img.path || ('/images/' + img.name);
   switchPanelName('write');
-  setTimeout(() => {
-    document.getElementById('richEditor').focus();
-    document.execCommand('insertHTML', false, `<img src="${img.dataUrl}" alt="${img.name}" data-path="${path}"><p><br></p>`);
+  setTimeout(function() {
+    var editor = document.getElementById('richEditor');
+    editor.focus();
+    var sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0 || !editor.contains(sel.anchorNode)) {
+      var r = document.createRange();
+      r.selectNodeContents(editor);
+      r.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(r);
+    }
+    document.execCommand('insertHTML', false,
+      '<img src="' + img.dataUrl + '" alt="' + img.name + '" data-path="' + path + '"><p><br></p>');
     autoSave();
-    showToast('✓ Image inserted', 'success');
-  }, 200);
+    showToast('Inserted — path: ' + path, 'success');
+  }, 50);
 }
+
+function handlePaste(e) {
+  // Try table paste first (from Word / Excel)
+  if (handleTablePaste(e)) return;
+
+  var items = (e.clipboardData || e.originalEvent.clipboardData).items;
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].type.startsWith('image/')) {
+      e.preventDefault();
+      var file = items[i].getAsFile();
+      addImageToLibrary(file).then(function(imgObj) {
+        document.execCommand('insertHTML', false,
+          '<img src="' + imgObj.dataUrl + '" alt="' + imgObj.name + '" data-path="' + imgObj.path + '"><p><br></p>');
+        autoSave();
+      });
+    }
+  }
+}
+
 
 // ── Image picker modal
+// Save editor selection before picker modal steals focus
+var pickerSavedRange = null;
+
+// Prevent editor blur when clicking Insert Image button
+(function() {
+  var btn = document.querySelector('.toolbar-btn[title="Insert Image"]');
+  if (btn) btn.addEventListener('mousedown', function(e){ e.preventDefault(); });
+})();
+
 function openImagePicker() {
+  // Save cursor position NOW before modal opens
+  var editor = document.getElementById('richEditor');
+  var sel = window.getSelection();
+  pickerSavedRange = null;
+  if (sel && sel.rangeCount > 0) {
+    try { pickerSavedRange = sel.getRangeAt(0).cloneRange(); } catch(e) {}
+  }
+
   selectedPickerImage = null;
-  const grid = document.getElementById('imagePickerGrid');
+  var grid = document.getElementById('imagePickerGrid');
   if (images.length === 0) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text3);padding:24px;font-size:13px">No images in library yet — upload some above or use a URL</div>`;
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text3);padding:24px;font-size:13px">No images yet — upload one below or paste a URL</div>';
   } else {
-    grid.innerHTML = images.map(img => `
-      <img class="picker-img" src="${img.dataUrl}" alt="${img.name}" 
-        title="${img.name}"
-        onclick="selectPickerImage('${img.id}', this)">
-    `).join('');
+    grid.innerHTML = images.map(function(img) {
+      return '<img class="picker-img" src="' + img.dataUrl + '" alt="' + img.name + '" title="' + img.name + '" onclick="selectPickerImage(\'' + img.id + '\', this)">';
+    }).join('');
   }
   document.getElementById('imagePickerUrl').value = '';
   openModal('imagePickerModal');
@@ -1356,38 +1764,50 @@ function openImagePicker() {
 
 function selectPickerImage(id, el) {
   selectedPickerImage = id;
-  document.querySelectorAll('.picker-img').forEach(i => i.classList.remove('selected'));
+  document.querySelectorAll('.picker-img').forEach(function(i){ i.classList.remove('selected'); });
   el.classList.add('selected');
+}
+
+function insertAtSavedRange(html) {
+  var editor = document.getElementById('richEditor');
+  editor.focus();
+  if (pickerSavedRange) {
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(pickerSavedRange);
+  }
+  document.execCommand('insertHTML', false, html);
+  pickerSavedRange = null;
+  autoSave();
 }
 
 function confirmImagePicker() {
   if (selectedPickerImage) {
-    insertImageIntoPost(selectedPickerImage);
+    var img = images.find(function(i){ return i.id === selectedPickerImage; });
+    if (!img) return;
     closeModal('imagePickerModal');
+    var path = img.path || ('/images/' + img.name);
+    insertAtSavedRange('<img src="' + img.dataUrl + '" alt="' + img.name + '" data-path="' + path + '"><p><br></p>');
+    showToast('Image inserted — path: ' + path, 'success');
   } else {
     insertImageFromUrl();
   }
 }
 
 function insertImageFromUrl() {
-  const url = document.getElementById('imagePickerUrl').value.trim();
-  if (!url) return;
-  document.getElementById('richEditor').focus();
-  document.execCommand('insertHTML', false, `<img src="${url}" alt="image"><p><br></p>`);
+  var url = document.getElementById('imagePickerUrl').value.trim();
+  if (!url) { showToast('Select an image or enter a URL', 'error'); return; }
   closeModal('imagePickerModal');
-  autoSave();
+  insertAtSavedRange('<img src="' + url + '" alt="image"><p><br></p>');
 }
 
 function uploadAndInsert(e) {
-  const file = e.target.files[0];
+  var file = e.target.files[0];
   if (!file) return;
-  addImageToLibrary(file, getFolderForCurrentPost()).then(img => {
+  addImageToLibrary(file).then(function(img) {
     closeModal('imagePickerModal');
-    setTimeout(() => {
-      document.getElementById('richEditor').focus();
-      document.execCommand('insertHTML', false, `<img src="${img.dataUrl}" alt="${img.name}" data-path="images/${img.folder}/${img.name}"><p><br></p>`);
-      autoSave();
-    }, 100);
+    insertAtSavedRange('<img src="' + img.dataUrl + '" alt="' + img.name + '" data-path="' + img.path + '"><p><br></p>');
+    showToast('Inserted — path: ' + img.path, 'success');
   });
   e.target.value = '';
 }
@@ -1398,10 +1818,16 @@ function mainDragLeave() { document.getElementById('mainUploadZone').classList.r
 function mainDrop(e) {
   e.preventDefault();
   document.getElementById('mainUploadZone').classList.remove('drag-over');
-  const files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'));
-  files.forEach(f => addImageToLibrary(f, getFolderForCurrentPost()));
-  if (files.length) showToast(`✓ ${files.length} image${files.length > 1 ? 's' : ''} uploaded`, 'success');
+  var files = Array.from(e.dataTransfer.files).filter(function(f){ return f.type.startsWith('image/'); });
+  var done = 0;
+  files.forEach(function(f) {
+    addImageToLibrary(f).then(function(img) {
+      done++;
+      if (done === files.length) showToast(done + ' image' + (done>1?'s':'') + ' added — path: /images/' + img.name, 'success');
+    });
+  });
 }
+
 
 // ── Cover image
 function coverDragOver(e) { e.preventDefault(); document.getElementById('coverDrop').classList.add('drag-over'); }
@@ -1417,16 +1843,16 @@ function coverFileInput(e) {
   if (file) processCoverFile(file);
 }
 function processCoverFile(file) {
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const folder = getFolderForCurrentPost();
-    coverData = { dataUrl: ev.target.result, path: `images/${folder}/${file.name}`, name: file.name };
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    coverData = { dataUrl: ev.target.result, path: '/images/' + file.name, name: file.name };
     showCoverPreview(ev.target.result);
-    addImageToLibrary(file, folder);
+    addImageToLibrary(file);
     autoSave();
   };
   reader.readAsDataURL(file);
 }
+
 function setCoverFromUrl(url) {
   if (url) { coverData = { dataUrl: url, path: url }; showCoverPreview(url); }
   else { coverData = null; hideCoverPreview(); }
@@ -1534,18 +1960,52 @@ function copyJSON() {
   navigator.clipboard.writeText(el.value).then(() => showToast('📋 JSON copied!', 'success'));
 }
 
-function exportCurrentPost() {
+function exportCurrentPostFile() {
+  savePost();
   const post = getCurrentPostData();
-  const clean = { slug: post.slug, title: post.title, excerpt: post.excerpt, date: post.date, category: post.category, tags: post.tags, image: post.image, content: post.content };
-  download(`${post.slug || 'post'}.json`, JSON.stringify(clean, null, 2));
+  if (!post.slug) { showToast('Set a slug first', 'error'); return; }
+  const clean = {
+    slug: post.slug, title: post.title, excerpt: post.excerpt,
+    date: post.date, category: post.category, tags: post.tags || [],
+    image: post.image || '', content: post.content || ''
+  };
+  download(post.slug + '.json', JSON.stringify(clean, null, 2));
+  showToast('⬇ ' + post.slug + '.json downloaded', 'success');
 }
 
-function exportAllJSON() {
+function exportAllPosts() {
   savePost();
-  const all = posts.map(p => ({ slug: p.slug, title: p.title, excerpt: p.excerpt, date: p.date, category: p.category, tags: p.tags, image: p.image, content: p.content }));
-  download('posts.json', JSON.stringify(all, null, 2));
-  showToast('⬇ posts.json downloaded', 'success');
+  // Download each post as its own slug.json
+  posts.forEach(function(p, i) {
+    setTimeout(function() {
+      const clean = {
+        slug: p.slug, title: p.title, excerpt: p.excerpt,
+        date: p.date, category: p.category, tags: p.tags || [],
+        image: p.image || '', content: p.content || ''
+      };
+      const filename = (p.slug || ('post-' + p.id)) + '.json';
+      download(filename, JSON.stringify(clean, null, 2));
+    }, i * 200);
+  });
+  // Also download index.json
+  setTimeout(function() {
+    const index = posts
+      .sort(function(a, b) { return new Date(b.date) - new Date(a.date); })
+      .map(function(p) {
+        return {
+          slug: p.slug, title: p.title, excerpt: p.excerpt,
+          date: p.date, category: p.category, tags: p.tags || [],
+          image: p.image || '', status: p.status || 'draft'
+        };
+      });
+    download('index.json', JSON.stringify(index, null, 2));
+    showToast('⬇ ' + posts.length + ' post files + index.json downloaded', 'success');
+  }, posts.length * 200 + 200);
 }
+
+// Keep old name as alias for JSON panel download button
+function exportCurrentPost() { exportCurrentPostFile(); }
+function exportAllJSON() { exportAllPosts(); }
 
 // ══════════════════════════════════════════════
 // PANELS / UI
@@ -1647,6 +2107,521 @@ function download(filename, text) {
   a.download = filename; a.click();
 }
 
+
+
+
+// ══════════════════════════════════════════════
+// IMPORT JSON
+// ══════════════════════════════════════════════
+function importJSON(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  e.target.value = '';
+
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    let data;
+    try {
+      data = JSON.parse(ev.target.result);
+    } catch(err) {
+      showToast('Invalid JSON file', 'error');
+      return;
+    }
+
+    // Accept a single post object or an array of posts
+    const incoming = Array.isArray(data) ? data : [data];
+    if (!incoming.length) { showToast('No posts found in file', 'error'); return; }
+
+    let imported = 0;
+    incoming.forEach(function(raw) {
+      // Must have at least a title or slug
+      if (!raw.title && !raw.slug && !raw.content) return;
+
+      // Check if a post with same slug already exists — update it
+      const slug = raw.slug || (raw.title || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+      const existing = posts.find(function(p) { return p.slug && p.slug === slug; });
+
+      if (existing) {
+        // Update existing post in place
+        const idx = posts.indexOf(existing);
+        posts[idx] = Object.assign({}, existing, {
+          slug:     slug,
+          title:    raw.title    || existing.title,
+          excerpt:  raw.excerpt  || existing.excerpt,
+          date:     raw.date     || existing.date,
+          category: raw.category || existing.category,
+          tags:     raw.tags     || existing.tags,
+          image:    raw.image    || existing.image,
+          content:  raw.content  || existing.content,
+          status:   raw.status   || existing.status || 'draft',
+          updatedAt: new Date().toISOString()
+        });
+        savePosts();
+        loadPost(existing.id);
+      } else {
+        // Create brand-new post
+        const id = 'post_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+        const post = {
+          id:        id,
+          slug:      slug,
+          title:     raw.title    || '',
+          excerpt:   raw.excerpt  || '',
+          date:      raw.date     || today(),
+          category:  raw.category || '',
+          tags:      raw.tags     || [],
+          image:     raw.image    || '',
+          coverData: raw.image ? { path: raw.image, dataUrl: raw.image } : null,
+          content:   raw.content  || '',
+          status:    raw.status   || 'draft',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        posts.unshift(post);
+        savePosts();
+        loadPost(id);
+      }
+      imported++;
+    });
+
+    renderPostList();
+    switchPanelName('write');
+    if (imported === 0) {
+      showToast('No valid posts found in file', 'error');
+    } else if (imported === 1) {
+      showToast('Imported "' + (incoming[0].title || 'post') + '" — ready to edit', 'success');
+    } else {
+      showToast('Imported ' + imported + ' posts', 'success');
+    }
+  };
+  reader.readAsText(file);
+}
+
+
+// ══════════════════════════════════════════════
+// TABLE
+// ══════════════════════════════════════════════
+var tableSavedRange = null;
+var contextMenuTarget = null; // the td/th that was right-clicked
+
+// Build the 8x8 grid picker on load
+(function buildTableGrid() {
+  var picker = document.getElementById('tableGridPicker');
+  if (!picker) return;
+  for (var r = 1; r <= 8; r++) {
+    for (var c = 1; c <= 8; c++) {
+      var cell = document.createElement('div');
+      cell.className = 'table-grid-cell';
+      cell.dataset.row = r;
+      cell.dataset.col = c;
+      picker.appendChild(cell);
+    }
+  }
+  picker.addEventListener('mouseover', function(e) {
+    var cell = e.target.closest('.table-grid-cell');
+    if (!cell) return;
+    var r = parseInt(cell.dataset.row);
+    var c = parseInt(cell.dataset.col);
+    document.getElementById('tableRows').value = r;
+    document.getElementById('tableCols').value = c;
+    document.getElementById('tableGridLabel').textContent = 'Select size: ' + r + ' × ' + c;
+    document.querySelectorAll('.table-grid-cell').forEach(function(tc) {
+      var tr = parseInt(tc.dataset.row);
+      var tc2 = parseInt(tc.dataset.col);
+      tc.classList.toggle('highlighted', tr <= r && tc2 <= c);
+    });
+  });
+  picker.addEventListener('click', function(e) {
+    var cell = e.target.closest('.table-grid-cell');
+    if (!cell) return;
+    confirmInsertTable();
+  });
+})();
+
+// Prevent blur on table button mousedown
+(function() {
+  var btn = document.querySelector('.toolbar-btn[title="Insert Table"]');
+  if (btn) btn.addEventListener('mousedown', function(e){ e.preventDefault(); });
+})();
+
+function openTableModal() {
+  // save cursor
+  var sel = window.getSelection();
+  tableSavedRange = null;
+  if (sel && sel.rangeCount > 0) {
+    try { tableSavedRange = sel.getRangeAt(0).cloneRange(); } catch(e) {}
+  }
+  // reset grid highlight
+  document.querySelectorAll('.table-grid-cell').forEach(function(c){ c.classList.remove('highlighted'); });
+  document.getElementById('tableGridLabel').textContent = 'Select size: 1 × 1';
+  document.getElementById('tableRows').value = 3;
+  document.getElementById('tableCols').value = 3;
+  openModal('tableModal');
+}
+
+function confirmInsertTable() {
+  var rows = parseInt(document.getElementById('tableRows').value) || 3;
+  var cols = parseInt(document.getElementById('tableCols').value) || 3;
+  var hasHeader = document.getElementById('tableHasHeader').checked;
+
+  // Build table HTML
+  var html = '<table><tbody>';
+  for (var r = 0; r < rows; r++) {
+    html += '<tr>';
+    for (var c = 0; c < cols; c++) {
+      if (r === 0 && hasHeader) {
+        html += '<th contenteditable="true">Header ' + (c + 1) + '</th>';
+      } else {
+        html += '<td contenteditable="true"> </td>';
+      }
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table><p><br></p>';
+
+  var editor = document.getElementById('richEditor');
+  editor.focus();
+
+  // Restore cursor
+  if (tableSavedRange) {
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(tableSavedRange);
+  }
+
+  document.execCommand('insertHTML', false, html);
+  closeModal('tableModal');
+  tableSavedRange = null;
+  autoSave();
+}
+
+
+// ── Table border controls ──
+var tableBorderStyle = 'solid';
+var tableBorderTarget = 'table';
+
+function setTableBorderStyle(style) {
+  tableBorderStyle = style;
+  ['solid','dashed','dotted','none'].forEach(function(s) {
+    var btn = document.getElementById('styleBtn-' + s);
+    if (btn) btn.classList.toggle('active', s === style);
+  });
+}
+
+function setApplyTarget(target) {
+  tableBorderTarget = target;
+  ['table','cell','header'].forEach(function(t) {
+    var btn = document.getElementById('applyBtn-' + t);
+    if (btn) btn.classList.toggle('active', t === target);
+  });
+}
+
+// Sync color hex label
+document.getElementById('borderColor') && document.getElementById('borderColor').addEventListener('input', function() {
+  document.getElementById('borderColorHex').textContent = this.value;
+});
+
+function applyTableBorder() {
+  var table = contextMenuTarget ? contextMenuTarget.closest('table') : null;
+  if (!table) return;
+
+  var thickness = document.getElementById('borderThickness').value;
+  var color = document.getElementById('borderColor').value;
+  var style = tableBorderStyle;
+  var borderVal = style === 'none' ? 'none' : (thickness + 'px ' + style + ' ' + color);
+
+  var target = tableBorderTarget;
+
+  if (target === 'table') {
+    // Apply to all cells and headers
+    table.querySelectorAll('td, th').forEach(function(c) {
+      c.style.border = borderVal;
+    });
+    // Also store on table as data attr for export
+    table.setAttribute('data-border', borderVal);
+  } else if (target === 'cell') {
+    table.querySelectorAll('td').forEach(function(c) {
+      c.style.border = borderVal;
+    });
+  } else if (target === 'header') {
+    table.querySelectorAll('th').forEach(function(c) {
+      c.style.border = borderVal;
+    });
+  }
+
+  autoSave();
+  showToast('Border updated', 'success');
+}
+
+// When context menu opens on a table, read its current border settings
+function syncBorderControls(cell) {
+  if (!cell) return;
+  var style = cell.style.border || '';
+  // Try parse thickness
+  var match = style.match(/^([\d.]+)px\s+(\w+)\s+(#[\w]+|rgb[^)]+\))/);
+  if (match) {
+    document.getElementById('borderThickness').value = parseFloat(match[1]);
+    document.getElementById('borderThicknessVal').textContent = match[1] + 'px';
+    setTableBorderStyle(match[2]);
+    // Convert color if possible
+    try {
+      document.getElementById('borderColor').value = match[3].length === 7 ? match[3] : '#4e4e6a';
+      document.getElementById('borderColorHex').textContent = document.getElementById('borderColor').value;
+    } catch(e) {}
+  } else if (style === 'none' || style.includes('none')) {
+    setTableBorderStyle('none');
+  }
+}
+
+// ── Right-click context menu on table cells ──
+document.getElementById('richEditor').addEventListener('contextmenu', function(e) {
+  var cell = e.target.closest('td, th');
+  if (!cell) return;
+  e.preventDefault();
+  contextMenuTarget = cell;
+  syncBorderControls(cell);
+  var menu = document.getElementById('tableContextMenu');
+  menu.style.left = Math.min(e.clientX, window.innerWidth - 240) + 'px';
+  menu.style.top = Math.min(e.clientY, window.innerHeight - 420) + 'px';
+  menu.classList.add('show');
+});
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#tableContextMenu')) {
+    document.getElementById('tableContextMenu').classList.remove('show');
+  }
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.getElementById('tableContextMenu').classList.remove('show');
+  }
+});
+
+function tableCmd(cmd) {
+  document.getElementById('tableContextMenu').classList.remove('show');
+  var cell = contextMenuTarget;
+  if (!cell) return;
+  var row = cell.closest('tr');
+  var table = cell.closest('table');
+  var tbody = table.querySelector('tbody');
+  var rows = Array.from(tbody.querySelectorAll('tr'));
+  var rowIdx = rows.indexOf(row);
+  var cells = Array.from(row.querySelectorAll('td, th'));
+  var colIdx = cells.indexOf(cell);
+
+  if (cmd === 'addRowAbove' || cmd === 'addRowBelow') {
+    var newRow = document.createElement('tr');
+    var colCount = rows[0].querySelectorAll('td, th').length;
+    for (var c = 0; c < colCount; c++) {
+      var td = document.createElement('td');
+      td.setAttribute('contenteditable', 'true');
+      td.innerHTML = ' ';
+      newRow.appendChild(td);
+    }
+    if (cmd === 'addRowAbove') {
+      tbody.insertBefore(newRow, row);
+    } else {
+      tbody.insertBefore(newRow, row.nextSibling);
+    }
+  }
+
+  else if (cmd === 'addColLeft' || cmd === 'addColRight') {
+    rows.forEach(function(r, ri) {
+      var rCells = Array.from(r.querySelectorAll('td, th'));
+      var refCell = rCells[colIdx];
+      var newCell = document.createElement(ri === 0 && rows[0].querySelector('th') ? 'th' : 'td');
+      newCell.setAttribute('contenteditable', 'true');
+      newCell.innerHTML = ' ';
+      if (cmd === 'addColLeft') {
+        r.insertBefore(newCell, refCell);
+      } else {
+        r.insertBefore(newCell, refCell ? refCell.nextSibling : null);
+      }
+    });
+  }
+
+  else if (cmd === 'deleteRow') {
+    if (rows.length <= 1) { cmd = 'deleteTable'; }
+    else { row.remove(); }
+  }
+
+  else if (cmd === 'deleteCol') {
+    var totalCols = rows[0].querySelectorAll('td, th').length;
+    if (totalCols <= 1) { cmd = 'deleteTable'; }
+    else {
+      rows.forEach(function(r) {
+        var rCells = Array.from(r.querySelectorAll('td, th'));
+        if (rCells[colIdx]) rCells[colIdx].remove();
+      });
+    }
+  }
+
+  if (cmd === 'deleteTable') {
+    table.remove();
+  }
+
+  autoSave();
+}
+
+// ── Tab key navigation inside tables ──
+document.getElementById('richEditor').addEventListener('keydown', function(e) {
+  if (e.key !== 'Tab') return;
+  var cell = e.target.closest('td, th');
+  if (!cell) return;
+  e.preventDefault();
+  var table = cell.closest('table');
+  var allCells = Array.from(table.querySelectorAll('td, th'));
+  var idx = allCells.indexOf(cell);
+  if (e.shiftKey) {
+    if (idx > 0) allCells[idx - 1].focus();
+  } else {
+    if (idx < allCells.length - 1) {
+      allCells[idx + 1].focus();
+    } else {
+      // Add new row at end
+      var row = cell.closest('tr');
+      var colCount = row.querySelectorAll('td, th').length;
+      var newRow = document.createElement('tr');
+      for (var c = 0; c < colCount; c++) {
+        var td = document.createElement('td');
+        td.setAttribute('contenteditable', 'true');
+        td.innerHTML = ' ';
+        newRow.appendChild(td);
+      }
+      cell.closest('tbody').appendChild(newRow);
+      newRow.querySelectorAll('td')[0].focus();
+      autoSave();
+    }
+  }
+});
+
+// ── Handle paste from Word/Excel — keep table structure, strip inline styles ──
+function handleTablePaste(e) {
+  var html = e.clipboardData.getData('text/html');
+  if (!html || !html.includes('<table')) return false;
+  e.preventDefault();
+
+  // Parse pasted HTML
+  var tmp = document.createElement('div');
+  tmp.innerHTML = html;
+
+  // Clean each table: remove all inline styles/classes, keep structure
+  tmp.querySelectorAll('table').forEach(function(t) {
+    t.removeAttribute('style');
+    t.removeAttribute('class');
+    t.removeAttribute('border');
+    t.removeAttribute('cellpadding');
+    t.removeAttribute('cellspacing');
+    t.removeAttribute('width');
+  });
+  tmp.querySelectorAll('td, th').forEach(function(c) {
+    c.removeAttribute('style');
+    c.removeAttribute('class');
+    c.removeAttribute('width');
+    c.removeAttribute('height');
+    c.removeAttribute('bgcolor');
+    c.setAttribute('contenteditable', 'true');
+    // Clean up nested spans/fonts Word adds
+    c.querySelectorAll('span, font, o\:p').forEach(function(s) {
+      var text = s.innerText || s.textContent;
+      s.replaceWith(document.createTextNode(text));
+    });
+  });
+  tmp.querySelectorAll('tr').forEach(function(r) {
+    r.removeAttribute('style');
+    r.removeAttribute('class');
+  });
+  tmp.querySelectorAll('colgroup, col').forEach(function(c){ c.remove(); });
+
+  // Extract cleaned tables + surrounding text
+  var cleaned = tmp.innerHTML;
+  document.execCommand('insertHTML', false, cleaned + '<p><br></p>');
+  autoSave();
+  return true;
+}
+
+
+
+// ══════════════════════════════════════════════
+// CODE BLOCK MODAL
+// ══════════════════════════════════════════════
+var codeSavedRange = null;
+
+function openCodeModal() {
+  var editor = document.getElementById('richEditor');
+  var sel = window.getSelection();
+  codeSavedRange = null;
+  if (sel && sel.rangeCount > 0) {
+    try { codeSavedRange = sel.getRangeAt(0).cloneRange(); } catch(e) {}
+  }
+  // Pre-fill with selected text if any
+  var selectedText = sel ? sel.toString() : '';
+  document.getElementById('codeTextarea').value = selectedText || '';
+  document.getElementById('codeLangSelect').value = '';
+  openModal('codeModal');
+  setTimeout(function(){ document.getElementById('codeTextarea').focus(); }, 100);
+}
+
+function confirmCodeBlock() {
+  var code = document.getElementById('codeTextarea').value;
+  var lang = document.getElementById('codeLangSelect').value;
+  if (!code.trim()) { closeModal('codeModal'); return; }
+
+  // Build DOM directly — never use insertHTML which strips \n
+  var pre = document.createElement('pre');
+  var codeEl = document.createElement('code');
+  if (lang) codeEl.className = 'language-' + lang;
+  codeEl.textContent = code; // textContent preserves every newline/space exactly
+  pre.appendChild(codeEl);
+
+  var spacer = document.createElement('p');
+  spacer.innerHTML = '<br>';
+
+  var editor = document.getElementById('richEditor');
+  editor.focus();
+
+  // Remove selected content and insert at cursor
+  if (codeSavedRange) {
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(codeSavedRange);
+    codeSavedRange.deleteContents();
+
+    // Insert pre then spacer
+    codeSavedRange.insertNode(spacer);
+    codeSavedRange.insertNode(pre);
+
+    // Move cursor after the block
+    var r = document.createRange();
+    r.setStartAfter(spacer);
+    r.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(r);
+  } else {
+    editor.appendChild(pre);
+    editor.appendChild(spacer);
+  }
+
+  closeModal('codeModal');
+  codeSavedRange = null;
+  autoSave();
+}
+
+// Tab key in code textarea = 2 spaces (not focus jump)
+document.getElementById('codeTextarea') && document.getElementById('codeTextarea').addEventListener('keydown', function(e) {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    var start = this.selectionStart;
+    var end = this.selectionEnd;
+    this.value = this.value.substring(0, start) + '  ' + this.value.substring(end);
+    this.selectionStart = this.selectionEnd = start + 2;
+  }
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault();
+    confirmCodeBlock();
+  }
+});
+
 let toastTimer;
 function showToast(msg, type = 'success') {
   const toast = document.getElementById('toast');
@@ -1656,6 +2631,12 @@ function showToast(msg, type = 'success') {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
 }
+
+// ══════════════════════════════════════════════
+// DIRECTORY TREE WIDGET
+// ══════════════════════════════════════════════
+
+
 </script>
 </body>
 </html>

@@ -457,7 +457,7 @@
 
         async function loadPosts() {
             try {
-                const response = await fetch('posts.json');
+                const response = await fetch('index.json');
                 const posts = await response.json();
                 
                 allPosts = posts.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -470,7 +470,7 @@
             } catch (error) {
                 console.error('Error loading posts:', error);
                 document.getElementById('postList').innerHTML = 
-                    '<li class="loading">Error loading posts. Check console.</li>';
+                    '<li class="loading">Error loading posts. Make sure index.json exists.</li>';
             }
         }
 
