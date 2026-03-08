@@ -1320,7 +1320,7 @@ function getCurrentPostData() {
     date: document.getElementById('postDate').value,
     category: document.getElementById('postCategory').value.trim(),
     tags: [...tags],
-    image: coverData ? (coverData.path || coverData.dataUrl) : document.getElementById('coverUrl').value.trim(),
+    image: coverData ? (coverData.dataUrl || coverData.path) : document.getElementById('coverUrl').value.trim(),
     coverData: coverData,
     content: serializeEditorContent(),
     status: posts.find(p => p.id === currentPostId)?.status || 'draft',
@@ -1349,7 +1349,8 @@ function publishPost() {
     const postData = {
       slug: post.slug, title: post.title, excerpt: post.excerpt,
       date: post.date, category: post.category, tags: post.tags || [],
-      image: post.image || '', content: post.content || ''
+      image: (post.coverData && post.coverData.dataUrl) ? post.coverData.dataUrl : (post.image || ''),
+      content: post.content || ''
     };
     download(slug + '.json', JSON.stringify(postData, null, 2));
   }, 300);
@@ -1362,7 +1363,7 @@ function publishPost() {
       .map(p => ({
         slug: p.slug, title: p.title, excerpt: p.excerpt,
         date: p.date, category: p.category, tags: p.tags || [],
-        image: p.image || ''
+        image: (p.coverData && p.coverData.dataUrl) ? p.coverData.dataUrl : (p.image || '')
       }));
     download('index.json', JSON.stringify(index, null, 2));
   }, 700);
@@ -1967,7 +1968,8 @@ function exportCurrentPostFile() {
   const clean = {
     slug: post.slug, title: post.title, excerpt: post.excerpt,
     date: post.date, category: post.category, tags: post.tags || [],
-    image: post.image || '', content: post.content || ''
+    image: (post.coverData && post.coverData.dataUrl) ? post.coverData.dataUrl : (post.image || ''),
+    content: post.content || ''
   };
   download(post.slug + '.json', JSON.stringify(clean, null, 2));
   showToast('⬇ ' + post.slug + '.json downloaded', 'success');
@@ -1981,7 +1983,8 @@ function exportAllPosts() {
       const clean = {
         slug: p.slug, title: p.title, excerpt: p.excerpt,
         date: p.date, category: p.category, tags: p.tags || [],
-        image: p.image || '', content: p.content || ''
+        image: (p.coverData && p.coverData.dataUrl) ? p.coverData.dataUrl : (p.image || ''),
+        content: p.content || ''
       };
       const filename = (p.slug || ('post-' + p.id)) + '.json';
       download(filename, JSON.stringify(clean, null, 2));
