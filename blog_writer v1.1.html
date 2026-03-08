@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post Editor - Advanced</title>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .info-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .info-banner h3 {
+            margin-bottom: 8px;
+        }
+
+        .info-banner ul {
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+
+        .info-banner li {
+            margin-bottom: 3px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .editor, .preview {
+            border: 1px solid #333;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            height: fit-content;
+        }
+
+        .preview {
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .preview::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .preview::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 4px;
+        }
+
+        .preview::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #b0b0b0;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #444;
+            font-family: inherit;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        /* Quill Editor Styling */
+        #editor-container {
+            height: 400px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #e0e0e0;
+        }
+
+        .ql-toolbar.ql-snow {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .ql-container.ql-snow {
+            border: 1px solid #444;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .ql-editor {
+            color: #e0e0e0;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .ql-editor.ql-blank::before {
+            color: #666;
+            font-style: italic;
+        }
+
+        .ql-snow .ql-stroke {
+            stroke: #b0b0b0;
+        }
+
+        .ql-snow .ql-fill {
+            fill: #b0b0b0;
+        }
+
+        .ql-snow .ql-picker-label {
+            color: #b0b0b0;
+        }
+
+        .ql-toolbar.ql-snow .ql-picker-label:hover,
+        .ql-toolbar.ql-snow button:hover {
+            color: #58a6ff;
+        }
+
+        .ql-toolbar.ql-snow button:hover .ql-stroke {
+            stroke: #58a6ff;
+        }
+
+        .ql-toolbar.ql-snow button:hover .ql-fill {
+            fill: #58a6ff;
+        }
+
+        /* Image Upload Area */
+        .image-upload-area {
+            margin-top: 15px;
+            padding: 30px;
+            border: 2px dashed #444;
+            border-radius: 8px;
+            text-align: center;
+            background: #1a1a1a;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .image-upload-area:hover {
+            border-color: #58a6ff;
+            background: #242424;
+        }
+
+        .image-upload-area.dragover {
+            border-color: #28a745;
+            background: #1e3a1e;
+        }
+
+        .image-upload-area input[type="file"] {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .uploaded-images {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .uploaded-image-item {
+            position: relative;
+            border: 1px solid #444;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+
+        .uploaded-image-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .uploaded-image-item .image-info {
+            padding: 8px;
+            font-size: 12px;
+            color: #b0b0b0;
+            background: #2a2a2a;
+        }
+
+        .uploaded-image-item .image-path {
+            font-family: 'Courier New', monospace;
+            color: #58a6ff;
+            word-break: break-all;
+            margin-top: 3px;
+        }
+
+        .uploaded-image-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 3px 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .uploaded-image-item .insert-btn {
+            width: 100%;
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .uploaded-image-item .insert-btn:hover {
+            background: #218838;
+        }
+
+        /* Image Class Selector Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 25px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+            color: #ffffff;
+            border-bottom: 2px solid #444;
+            padding-bottom: 10px;
+        }
+
+        .class-section {
+            margin-bottom: 20px;
+        }
+
+        .class-section h4 {
+            color: #58a6ff;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .class-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+        }
+
+        .class-option {
+            background: #1a1a1a;
+            border: 2px solid #444;
+            border-radius: 4px;
+            padding: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .class-option:hover {
+            border-color: #58a6ff;
+            background: #242424;
+        }
+
+        .class-option.selected {
+            border-color: #28a745;
+            background: #1e3a1e;
+        }
+
+        .class-option .icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .class-option .name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+
+        .class-option .desc {
+            font-size: 10px;
+            color: #888;
+            margin-top: 3px;
+        }
+
+        .modal-preview {
+            margin: 20px 0;
+            padding: 15px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+        }
+
+        .modal-preview img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+        }
+
+        .alt-text-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            color: #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .selected-classes {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #58a6ff;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .preview h2 {
+            margin-bottom: 15px;
+            color: #ffffff;
+            border-bottom: 2px solid #444;
+            padding-bottom: 10px;
+        }
+
+        .preview-content {
+            margin-top: 20px;
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        /* Preview Content Styling - Matching Blog Styles */
+        .preview-content h1 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .preview-content h2 {
+            font-size: 1.5em;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            color: #ffffff;
+            border-bottom: none;
+        }
+
+        .preview-content h3 {
+            font-size: 1.25em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #e0e0e0;
+        }
+
+        .preview-content p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: #d0d0d0;
+        }
+
+        /* Image Classes - Matching Your Blog */
+        .preview-content img {
+            margin: 30px 0;
+            border-radius: 4px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .preview-content .img-small {
+            max-width: 300px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .preview-content .img-medium {
+            max-width: 600px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .preview-content .img-large {
+            max-width: 100%;
+        }
+
+        .preview-content .img-full {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .preview-content .img-left {
+            float: left;
+            margin-right: 20px;
+            margin-bottom: 20px;
+        }
+
+        .preview-content .img-right {
+            float: right;
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .preview-content .img-center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .preview-content .img-rounded {
+            border-radius: 12px;
+        }
+
+        .preview-content .img-circle {
+            border-radius: 50%;
+        }
+
+        .preview-content .img-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .preview-content .img-border {
+            border: 3px solid #444;
+            padding: 8px;
+        }
+
+        .preview-content pre {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border: 1px solid #30363d;
+        }
+
+        .preview-content code {
+            color: #58a6ff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .preview-content ul, .preview-content ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            color: #d0d0d0;
+        }
+
+        .preview-content li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .preview-content a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+
+        .preview-content blockquote {
+            border-left: 4px solid #58a6ff;
+            padding-left: 15px;
+            margin: 15px 0;
+            color: #b0b0b0;
+            font-style: italic;
+        }
+
+        .meta-date {
+            color: #888;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .meta-excerpt {
+            color: #b0b0b0;
+            font-size: 1.1em;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+
+        .meta-info {
+            margin: 15px 0;
+            padding: 10px 0;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+        }
+
+        .meta-category {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .meta-tag {
+            display: inline-block;
+            color: #58a6ff;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        .placeholder {
+            color: #666;
+            font-style: italic;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .copy-button {
+            background: #28a745;
+        }
+
+        .copy-button:hover {
+            background: #218838;
+        }
+
+        .clear-button {
+            background: #dc3545;
+        }
+
+        .clear-button:hover {
+            background: #c82333;
+        }
+
+        #jsonOutput {
+            width: 100%;
+            min-height: 200px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 10px;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .preview {
+                position: static;
+                max-height: none;
+            }
+        }
+
+        .auto-update-info {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #b0b0b0;
+        }
+
+        .auto-update-info strong {
+            color: #58a6ff;
+        }
+    </style>
+</head>
+<body>
+    <h1>📝 Blog Post Editor - Advanced</h1>
+
+    <div class="info-banner">
+        <h3>🎨 Advanced Blog Editor Features</h3>
+        <ul>
+            <li>✅ Visual text editor - Format like Word/Google Docs</li>
+            <li>🖼️ Drag & drop images with style options (small/medium/large/full)</li>
+            <li>🎯 Image styling - Alignment, shadows, borders, rounded corners</li>
+            <li>📁 Auto-save to <code>/images/</code> folder</li>
+            <li>👁️ Live preview with actual blog styles</li>
+            <li>📋 Clean JSON output ready for your blog</li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div class="editor">
+            <h2>Write Post</h2>
+            
+            <div class="auto-update-info">
+                <strong>✨ Live Preview</strong> - Preview updates automatically. Click "Generate JSON" button when ready to export.
+            </div>
+
+            <div class="form-group">
+                <label>Title:</label>
+                <input type="text" id="title" placeholder="Enter post title">
+            </div>
+
+            <div class="form-group">
+                <label>Slug (URL friendly name):</label>
+                <input type="text" id="slug" placeholder="my-blog-post">
+            </div>
+
+            <div class="form-group">
+                <label>Excerpt (short description):</label>
+                <textarea id="excerpt" rows="3" placeholder="Brief description of your post"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Date:</label>
+                <input type="date" id="date">
+            </div>
+
+            <div class="form-group">
+                <label>Category:</label>
+                <input type="text" id="category" placeholder="e.g., Development, AI, Security">
+            </div>
+
+            <div class="form-group">
+                <label>Tags (comma separated):</label>
+                <input type="text" id="tags" placeholder="python, tutorial, beginner">
+            </div>
+
+            <div class="form-group">
+                <label>Content (Visual Editor):</label>
+                <div id="editor-container"></div>
+            </div>
+
+            <div class="form-group">
+                <label>📸 Add Images:</label>
+                <div class="image-upload-area" id="imageUploadArea">
+                    <div class="upload-icon">🖼️</div>
+                    <p>Drag & drop images here or click to browse</p>
+                    <p style="font-size: 12px; color: #888; margin-top: 5px;">Images will be saved to: <code>/images/</code></p>
+                    <input type="file" id="imageInput" accept="image/*" multiple>
+                </div>
+                <div class="uploaded-images" id="uploadedImages"></div>
+            </div>
+
+            <div class="button-group">
+                <button onclick="generateJSON()">📋 Generate JSON</button>
+                <button class="copy-button" onclick="copyJSON()">📄 Copy JSON</button>
+                <button class="clear-button" onclick="clearForm()">🗑️ Clear</button>
+            </div>
+        </div>
+
+        <div class="preview">
+            <h2>Live Preview</h2>
+            <div class="preview-content" id="preview">
+                <p class="placeholder">Fill in the form to see your post preview</p>
+            </div>
+
+            <h2 style="margin-top: 30px;">JSON Output</h2>
+            <textarea id="jsonOutput" readonly></textarea>
+        </div>
+    </div>
+
+    <!-- Image Class Selector Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <h3>🎨 Customize Image</h3>
+            
+            <label>Alt Text (for accessibility):</label>
+            <input type="text" class="alt-text-input" id="imageAltText" placeholder="Describe the image">
+            
+            <div class="class-section">
+                <h4>📏 Size</h4>
+                <div class="class-options" id="sizeOptions"></div>
+            </div>
+
+            <div class="class-section">
+                <h4>↔️ Alignment</h4>
+                <div class="class-options" id="alignmentOptions"></div>
+            </div>
+
+            <div class="class-section">
+                <h4>🎭 Style</h4>
+                <div class="class-options" id="styleOptions"></div>
+            </div>
+
+            <div class="selected-classes">
+                Classes: <span id="selectedClassesText">none</span>
+            </div>
+
+            <div class="modal-preview">
+                <img id="modalPreviewImage" src="" alt="Preview">
+            </div>
+
+            <div class="modal-buttons">
+                <button onclick="cancelImageInsert()" class="clear-button">❌ Cancel</button>
+                <button onclick="confirmImageInsert()">✅ Insert Image</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        // Initialize Quill Editor
+        var quill = new Quill('#editor-container', {
+            theme: 'snow',
+            placeholder: 'Start writing your blog post...',
+            modules: {
+                toolbar: [
+                    [{ 'header': [2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote', 'code-block'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link'],
+                    ['clean']
+                ]
+            }
+        });
+
+        // Set today's date by default
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Store uploaded images
+        let uploadedImages = [];
+        let currentImageIndex = null;
+        let selectedClasses = {
+            size: null,
+            alignment: null,
+            styles: []
+        };
+
+        // Image class definitions
+        const imageClasses = {
+            size: [
+                { value: 'img-small', icon: '🔸', name: 'Small', desc: '300px max' },
+                { value: 'img-medium', icon: '🔹', name: 'Medium', desc: '600px max' },
+                { value: 'img-large', icon: '🔷', name: 'Large', desc: '100% max' },
+                { value: 'img-full', icon: '⬛', name: 'Full', desc: '100% width' }
+            ],
+            alignment: [
+                { value: 'img-left', icon: '⬅️', name: 'Left', desc: 'Float left' },
+                { value: 'img-center', icon: '⏺️', name: 'Center', desc: 'Centered' },
+                { value: 'img-right', icon: '➡️', name: 'Right', desc: 'Float right' },
+                { value: null, icon: '⬜', name: 'None', desc: 'Default' }
+            ],
+            style: [
+                { value: 'img-rounded', icon: '🔲', name: 'Rounded', desc: 'Round corners' },
+                { value: 'img-circle', icon: '⭕', name: 'Circle', desc: 'Circular' },
+                { value: 'img-shadow', icon: '🌑', name: 'Shadow', desc: 'Drop shadow' },
+                { value: 'img-border', icon: '🖼️', name: 'Border', desc: 'With border' }
+            ]
+        };
+
+        // Auto-generate slug from title
+        document.getElementById('title').addEventListener('input', function() {
+            const slug = this.value.toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-|-$/g, '');
+            document.getElementById('slug').value = slug;
+        });
+
+        // Auto-update preview on any input change
+        const formInputs = ['title', 'slug', 'excerpt', 'date', 'category', 'tags'];
+        formInputs.forEach(id => {
+            const element = document.getElementById(id);
+            element.addEventListener('input', updatePreview);
+            element.addEventListener('change', updatePreview);
+        });
+
+        // Update preview when editor content changes
+        quill.on('text-change', function() {
+            updatePreview();
+        });
+
+        // Image Upload Handling
+        const imageUploadArea = document.getElementById('imageUploadArea');
+        const imageInput = document.getElementById('imageInput');
+
+        imageUploadArea.addEventListener('click', () => imageInput.click());
+
+        imageUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            imageUploadArea.classList.add('dragover');
+        });
+
+        imageUploadArea.addEventListener('dragleave', () => {
+            imageUploadArea.classList.remove('dragover');
+        });
+
+        imageUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            imageUploadArea.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const imageData = {
+                            name: file.name,
+                            data: e.target.result,
+                            path: `/images/${file.name}`
+                        };
+                        uploadedImages.push(imageData);
+                        displayUploadedImages();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function displayUploadedImages() {
+            const container = document.getElementById('uploadedImages');
+            container.innerHTML = uploadedImages.map((img, index) => `
+                <div class="uploaded-image-item">
+                    <button class="remove-btn" onclick="removeImage(${index})">✕</button>
+                    <img src="${img.data}" alt="${img.name}">
+                    <div class="image-info">
+                        <div>${img.name}</div>
+                        <div class="image-path">${img.path}</div>
+                    </div>
+                    <button class="insert-btn" onclick="openImageModal(${index})">🎨 Insert with Style</button>
+                </div>
+            `).join('');
+        }
+
+        function removeImage(index) {
+            uploadedImages.splice(index, 1);
+            displayUploadedImages();
+        }
+
+        function openImageModal(index) {
+            currentImageIndex = index;
+            const img = uploadedImages[index];
+            
+            // Reset selections
+            selectedClasses = { size: 'img-medium', alignment: 'img-center', styles: [] };
+            
+            // Set preview
+            document.getElementById('modalPreviewImage').src = img.data;
+            document.getElementById('imageAltText').value = img.name.replace(/\.[^/.]+$/, '');
+            
+            // Populate options
+            populateClassOptions();
+            updateSelectedClassesDisplay();
+            
+            // Show modal
+            document.getElementById('imageModal').classList.add('active');
+        }
+
+        function populateClassOptions() {
+            // Size options
+            const sizeContainer = document.getElementById('sizeOptions');
+            sizeContainer.innerHTML = imageClasses.size.map(opt => `
+                <div class="class-option ${selectedClasses.size === opt.value ? 'selected' : ''}" 
+                     onclick="selectClass('size', '${opt.value}')">
+                    <div class="icon">${opt.icon}</div>
+                    <div class="name">${opt.name}</div>
+                    <div class="desc">${opt.desc}</div>
+                </div>
+            `).join('');
+
+            // Alignment options
+            const alignContainer = document.getElementById('alignmentOptions');
+            alignContainer.innerHTML = imageClasses.alignment.map(opt => `
+                <div class="class-option ${selectedClasses.alignment === opt.value ? 'selected' : ''}" 
+                     onclick="selectClass('alignment', ${opt.value ? `'${opt.value}'` : 'null'})">
+                    <div class="icon">${opt.icon}</div>
+                    <div class="name">${opt.name}</div>
+                    <div class="desc">${opt.desc}</div>
+                </div>
+            `).join('');
+
+            // Style options
+            const styleContainer = document.getElementById('styleOptions');
+            styleContainer.innerHTML = imageClasses.style.map(opt => `
+                <div class="class-option ${selectedClasses.styles.includes(opt.value) ? 'selected' : ''}" 
+                     onclick="toggleStyle('${opt.value}')">
+                    <div class="icon">${opt.icon}</div>
+                    <div class="name">${opt.name}</div>
+                    <div class="desc">${opt.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectClass(type, value) {
+            selectedClasses[type] = value;
+            populateClassOptions();
+            updateSelectedClassesDisplay();
+            updateModalPreview();
+        }
+
+        function toggleStyle(value) {
+            const index = selectedClasses.styles.indexOf(value);
+            if (index > -1) {
+                selectedClasses.styles.splice(index, 1);
+            } else {
+                selectedClasses.styles.push(value);
+            }
+            populateClassOptions();
+            updateSelectedClassesDisplay();
+            updateModalPreview();
+        }
+
+        function updateSelectedClassesDisplay() {
+            const classes = [];
+            if (selectedClasses.size) classes.push(selectedClasses.size);
+            if (selectedClasses.alignment) classes.push(selectedClasses.alignment);
+            classes.push(...selectedClasses.styles);
+            
+            document.getElementById('selectedClassesText').textContent = 
+                classes.length > 0 ? classes.join(' ') : 'none';
+        }
+
+        function updateModalPreview() {
+            const img = document.getElementById('modalPreviewImage');
+            const classes = [];
+            if (selectedClasses.size) classes.push(selectedClasses.size);
+            if (selectedClasses.alignment) classes.push(selectedClasses.alignment);
+            classes.push(...selectedClasses.styles);
+            
+            img.className = classes.join(' ');
+        }
+
+        function confirmImageInsert() {
+            const img = uploadedImages[currentImageIndex];
+            const altText = document.getElementById('imageAltText').value || img.name;
+            
+            const classes = [];
+            if (selectedClasses.size) classes.push(selectedClasses.size);
+            if (selectedClasses.alignment) classes.push(selectedClasses.alignment);
+            classes.push(...selectedClasses.styles);
+            
+            const classAttr = classes.length > 0 ? ` class="${classes.join(' ')}"` : '';
+            const imgHTML = `<img src="${img.path}"${classAttr} alt="${altText}">`;
+            
+            // Insert into Quill
+            const range = quill.getSelection(true);
+            quill.clipboard.dangerouslyPasteHTML(range.index, imgHTML);
+            
+            // Close modal
+            document.getElementById('imageModal').classList.remove('active');
+            currentImageIndex = null;
+        }
+
+        function cancelImageInsert() {
+            document.getElementById('imageModal').classList.remove('active');
+            currentImageIndex = null;
+        }
+
+        function updatePreview() {
+            const title = document.getElementById('title').value;
+            const excerpt = document.getElementById('excerpt').value;
+            const date = document.getElementById('date').value;
+            const category = document.getElementById('category').value;
+            const tags = document.getElementById('tags').value;
+            const content = quill.root.innerHTML;
+
+            // If no content, show placeholder
+            if (!title && !excerpt && content === '<p><br></p>') {
+                document.getElementById('preview').innerHTML = '<p class="placeholder">Fill in the form to see your post preview</p>';
+                return;
+            }
+
+            const tagsArray = tags.split(',').map(t => t.trim()).filter(t => t);
+            const tagsHTML = tagsArray.map(tag => `<span class="meta-tag">#${tag}</span>`).join('');
+
+            const previewHTML = `
+                ${date ? `<div class="meta-date">📅 ${formatDate(date)}</div>` : ''}
+                ${title ? `<h1>${escapeHtml(title)}</h1>` : '<h1 class="placeholder">Untitled Post</h1>'}
+                ${excerpt ? `<p class="meta-excerpt">${escapeHtml(excerpt)}</p>` : ''}
+                ${category || tagsArray.length > 0 ? `
+                    <div class="meta-info">
+                        ${category ? `<span class="meta-category">${escapeHtml(category)}</span>` : ''}
+                        ${tagsHTML}
+                    </div>
+                ` : ''}
+                <div style="margin-top: 25px;">
+                    ${content !== '<p><br></p>' ? content : '<p class="placeholder">No content yet...</p>'}
+                </div>
+            `;
+
+            document.getElementById('preview').innerHTML = previewHTML;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function generateJSON(showAlert = true) {
+            const title = document.getElementById('title').value;
+            const slug = document.getElementById('slug').value;
+            const excerpt = document.getElementById('excerpt').value;
+            const date = document.getElementById('date').value;
+            const category = document.getElementById('category').value;
+            const tags = document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t);
+            const content = quill.root.innerHTML;
+
+            if (showAlert && (!title || !slug || !date)) {
+                alert('Please fill in at least Title, Slug, and Date');
+                return;
+            }
+
+            const post = {
+                slug: slug,
+                title: title,
+                excerpt: excerpt,
+                date: date,
+                category: category,
+                tags: tags,
+                image: "",
+                content: content,
+                images: uploadedImages.map(img => ({
+                    name: img.name,
+                    path: img.path
+                }))
+            };
+
+            const json = JSON.stringify(post, null, 2);
+            document.getElementById('jsonOutput').value = json;
+        }
+
+        function copyJSON() {
+            const jsonOutput = document.getElementById('jsonOutput');
+            if (!jsonOutput.value) {
+                alert('Generate JSON first!');
+                return;
+            }
+            
+            jsonOutput.select();
+            document.execCommand('copy');
+            
+            // Visual feedback
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = '✅ Copied!';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 2000);
+        }
+
+        function clearForm() {
+            if (confirm('Clear all fields?')) {
+                document.getElementById('title').value = '';
+                document.getElementById('slug').value = '';
+                document.getElementById('excerpt').value = '';
+                document.getElementById('date').valueAsDate = new Date();
+                document.getElementById('category').value = '';
+                document.getElementById('tags').value = '';
+                quill.setContents([]);
+                uploadedImages = [];
+                displayUploadedImages();
+                document.getElementById('preview').innerHTML = '<p class="placeholder">Fill in the form to see your post preview</p>';
+                document.getElementById('jsonOutput').value = '';
+            }
+        }
+
+        // Initial preview update
+        updatePreview();
+    </script>
+</body>
+</html>
