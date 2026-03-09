@@ -231,31 +231,13 @@
             color: #e06c75;
         }
 
-        .post-content table { width: 100%; border-collapse: collapse; margin: 25px 0; }
-        .post-content td, .post-content th {
-            padding: 10px 14px;
-            font-size: 0.95rem;
-            vertical-align: top;
-            /* inline style from writer takes precedence */
-        }
-        .post-content th {
-            background: #1a1a1a;
-            font-weight: 700;
-            color: #fff;
-            text-align: left;
-        }
-        .post-content tr:nth-child(even) td { background: #161616; }
-
-                .post-content pre {
+        .post-content pre {
             margin: 25px 0;
             padding: 20px;
             background: #1e1e1e;
             border-radius: 5px;
             overflow-x: auto;
             border: 1px solid #2a2a2a;
-            white-space: pre-wrap;
-            tab-size: 2;
-            word-break: break-all;
         }
 
         .post-content pre code {
@@ -263,7 +245,6 @@
             padding: 0;
             color: inherit;
             font-size: 0.9rem;
-            white-space: pre-wrap;
         }
 
         footer {
@@ -339,16 +320,14 @@
 
         async function loadPost() {
             try {
-                // Each post lives in its own slug.json file
-                const response = await fetch(postSlug + '.json');
-                if (!response.ok) throw new Error('not found');
+                const response = await fetch(`json/posts/${postSlug}.json`);
                 const post = await response.json();
 
-                if (!post || !post.title) {
+                if (!response.ok || !post) {
                     document.getElementById('postContent').innerHTML = `
                         <div class="loading">
                             <h2>Post not found</h2>
-                            <p>Could not find <code>${postSlug}.json</code>.</p>
+                            <p>The post you're looking for doesn't exist.</p>
                             <br>
                             <a href="blog.html" style="color: #5b9df5;">← Back to Blog</a>
                         </div>
@@ -391,7 +370,7 @@
                 document.getElementById('postContent').innerHTML = `
                     <div class="loading">
                         <h2>Error loading post</h2>
-                        <p>Could not load <code>' + postSlug + '.json</code>. Make sure the file exists.</p>
+                        <p>There was an error loading this post.</p>
                         <br>
                         <a href="blog.html" style="color: #5b9df5;">← Back to Blog</a>
                     </div>

@@ -640,37 +640,55 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
 }
 .image-card.selected .image-selected-badge { display: flex; }
 
-/* ── PREVIEW PANEL ── */
-#previewPanel { overflow-y: auto; overflow-x: hidden; justify-content: center; align-items: flex-start; padding: 48px 24px; min-height: 0; }
-#previewPanel::-webkit-scrollbar { width: 6px; }
-#previewPanel::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
-.preview-article {
-  max-width: 720px; width: 100%;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  overflow: hidden;
+/* ── PREVIEW PANEL — pixel-perfect match with post.html ── */
+#previewPanel {
+  overflow-y: auto; overflow-x: hidden;
+  justify-content: center; align-items: flex-start;
+  padding: 40px 40px; min-height: 0;
+  background: #0f0f0f;
 }
-.preview-cover { width: 100%; max-height: 320px; object-fit: cover; display: block; }
-.preview-body { padding: 40px 48px; }
-.preview-date { font-size: 12px; color: var(--text3); font-weight: 600; margin-bottom: 12px; letter-spacing: 0.5px; text-transform: uppercase; }
-.preview-title { font-family: 'DM Serif Display', serif; font-size: 36px; color: white; line-height: 1.2; margin-bottom: 14px; font-weight: 400; }
-.preview-excerpt { font-size: 17px; color: var(--text2); line-height: 1.6; margin-bottom: 20px; }
-.preview-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
-.preview-tag { font-size: 12px; color: var(--text3); font-weight: 500; }
-.preview-content { font-size: 16px; line-height: 1.8; color: var(--text); }
-.preview-content h2 { font-family: 'DM Serif Display', serif; font-size: 26px; color: white; margin: 32px 0 12px; font-weight: 400; }
-.preview-content h3 { font-size: 19px; color: white; margin: 24px 0 10px; font-weight: 600; }
-.preview-content h4 { font-size: 15px; color: white; margin: 18px 0 8px; font-weight: 600; }
-.preview-content p { margin-bottom: 16px; }
-.preview-content ul, .preview-content ol { margin: 14px 0 14px 24px; }
-.preview-content li { margin-bottom: 6px; }
-.preview-content blockquote { border-left: 3px solid var(--accent); padding: 12px 20px; margin: 20px 0; background: var(--accent-dim); border-radius: 0 8px 8px 0; color: var(--text2); font-style: italic; }
-.preview-content pre { background: #0d0d12; border: 1px solid var(--border2); border-radius: 8px; padding: 16px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #a8b4d0; margin: 16px 0; }
-.preview-content code { font-family: 'JetBrains Mono', monospace; background: var(--surface3); padding: 2px 6px; border-radius: 4px; font-size: 0.88em; color: var(--accent2); }
-.preview-content pre code { background: none; padding: 0; color: inherit; }
-.preview-content img { max-width: 100%; border-radius: 8px; margin: 16px 0; }
-.preview-content a { color: var(--accent2); }
+#previewPanel::-webkit-scrollbar { width: 6px; }
+#previewPanel::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+/* The article wraps at 1000px exactly like post.html .container */
+.preview-article {
+  max-width: 1000px; width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  background: #0f0f0f;
+  color: #e0e0e0;
+  line-height: 1.7;
+}
+/* cover image */
+.preview-cover { width: 100%; height: auto; max-height: 400px; object-fit: cover; display: block; margin-bottom: 32px; }
+.preview-body { padding: 0; }
+/* post-header */
+.preview-date { color: #666; font-size: 0.9rem; margin-bottom: 15px; }
+.preview-title { font-size: 2.2rem; font-weight: 700; color: #ffffff; margin-bottom: 15px; line-height: 1.3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; }
+.preview-excerpt { color: #aaa; font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px; }
+/* post-meta row: category + tags */
+.preview-meta { display: flex; gap: 15px; flex-wrap: wrap; padding-bottom: 30px; border-bottom: 1px solid #1a1a1a; margin-bottom: 30px; align-items: center; }
+.preview-category { color: #888; font-size: 0.85rem; }
+.preview-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.preview-tag { color: #666; font-size: 0.8rem; }
+/* post-content — copy-pasted from post.html verbatim */
+.preview-content { font-size: 1.05rem; line-height: 1.8; color: #ccc; }
+.preview-content h2 { font-size: 1.8rem; color: #fff; margin: 40px 0 20px 0; font-weight: 600; }
+.preview-content h3 { font-size: 1.4rem; color: #fff; margin: 30px 0 15px 0; font-weight: 600; }
+.preview-content h4 { font-size: 1.1rem; color: #fff; margin: 24px 0 12px 0; font-weight: 600; }
+.preview-content p { margin-bottom: 20px; }
+.preview-content a { color: #5b9df5; text-decoration: none; }
+.preview-content a:hover { text-decoration: underline; }
+.preview-content ul, .preview-content ol { margin: 20px 0; padding-left: 30px; }
+.preview-content li { margin-bottom: 10px; }
+.preview-content blockquote { margin: 30px 0; padding: 15px 20px; border-left: 3px solid #444; background: #1a1a1a; color: #aaa; font-style: italic; border-radius: 0; }
+.preview-content img { max-width: 100%; height: auto; margin: 30px 0; border-radius: 4px; display: block; }
+.preview-content code { font-family: 'Courier New', Courier, monospace; background: #1a1a1a; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; color: #e06c75; }
+.preview-content pre { margin: 25px 0; padding: 20px; background: #1e1e1e; border-radius: 5px; overflow-x: auto; border: 1px solid #2a2a2a; }
+.preview-content pre code { background: transparent; padding: 0; color: inherit; font-size: 0.9rem; }
+/* TABLE — same as post.html (post.html inherits from .post-content, so we replicate here) */
+.preview-content table { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 1rem; }
+.preview-content thead th { background: #1a1a1a; color: #fff; font-weight: 700; text-align: left; padding: 12px 16px; border: 1px solid #2a2a2a; }
+.preview-content tbody td { padding: 10px 16px; border: 1px solid #2a2a2a; color: #ccc; vertical-align: top; background: #111; }
+.preview-content tbody tr:nth-child(even) td { background: #161616; }
 
 /* ── JSON PANEL ── */
 #jsonPanel { padding: 24px 30px; overflow-y: auto; flex-direction: column; gap: 16px; }
@@ -1027,15 +1045,20 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
       </div>
     </div>
 
-    <!-- Preview Panel -->
+    <!-- Preview Panel — layout mirrors post.html exactly -->
     <div class="panel" id="previewPanel">
       <article class="preview-article">
         <img class="preview-cover" id="previewCover" src="" alt="" style="display:none">
         <div class="preview-body">
-          <div class="preview-date" id="previewDate"></div>
-          <h1 class="preview-title" id="previewTitle">Untitled Post</h1>
-          <p class="preview-excerpt" id="previewExcerpt"></p>
-          <div class="preview-tags" id="previewTags"></div>
+          <div class="post-header-preview">
+            <div class="preview-date" id="previewDate"></div>
+            <h1 class="preview-title" id="previewTitle">Untitled Post</h1>
+            <p class="preview-excerpt" id="previewExcerpt"></p>
+            <div class="preview-meta">
+              <span class="preview-category" id="previewCategory"></span>
+              <div class="preview-tags" id="previewTags"></div>
+            </div>
+          </div>
           <div class="preview-content" id="previewContent"></div>
         </div>
       </article>
@@ -1293,22 +1316,90 @@ function savePost() {
   }
 }
 
-function serializeEditorContent() {
-  // Clone the editor so we don't modify the live DOM
-  var editor = document.getElementById('richEditor');
-  var clone = editor.cloneNode(true);
+// ══════════════════════════════════════════════
+// CONTENT EXPORT CLEANER
+// Strips every editor-only attribute so the generated
+// JSON renders perfectly inside post.html.
+// ══════════════════════════════════════════════
+function cleanContentForExport(rawHtml) {
+  var tmp = document.createElement('div');
+  tmp.innerHTML = rawHtml;
 
-  // For each <pre><code>, replace its innerHTML with escaped textContent
-  // This ensures newlines survive the innerHTML round-trip
-  clone.querySelectorAll('pre code').forEach(function(codeEl) {
-    var text = codeEl.textContent; // real newlines preserved here
+  // 1. Encode <pre><code> text so newlines survive JSON round-trip
+  tmp.querySelectorAll('pre code').forEach(function(codeEl) {
+    var text = codeEl.textContent;
     codeEl.innerHTML = text
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
   });
 
-  return clone.innerHTML;
+  // 2. Strip contenteditable from every element (tables add this to every cell)
+  tmp.querySelectorAll('[contenteditable]').forEach(function(el) {
+    el.removeAttribute('contenteditable');
+  });
+
+  // 3. Strip ALL inline styles — execCommand adds these (font-size, color, etc.)
+  //    post.html relies purely on its own CSS so inline styles break the look
+  tmp.querySelectorAll('[style]').forEach(function(el) {
+    el.removeAttribute('style');
+  });
+
+  // 4. Strip internal data attributes
+  tmp.querySelectorAll('[data-path]').forEach(function(el) {
+    el.removeAttribute('data-path');
+  });
+
+  // 5. Deep-clean tables — remove ALL presentation attributes so post.html
+  //    CSS takes full control (this was the "ugly table" bug)
+  tmp.querySelectorAll('table').forEach(function(t) {
+    ['border','cellpadding','cellspacing','width','height','align',
+     'bgcolor','class','style'].forEach(function(a){ t.removeAttribute(a); });
+  });
+  tmp.querySelectorAll('tr').forEach(function(r) {
+    ['class','style','bgcolor','align','valign'].forEach(function(a){ r.removeAttribute(a); });
+  });
+  tmp.querySelectorAll('th, td').forEach(function(c) {
+    ['width','height','bgcolor','align','valign','class','style','nowrap'].forEach(function(a){ c.removeAttribute(a); });
+  });
+  // Remove colgroup / col — only confuse CSS layout
+  tmp.querySelectorAll('colgroup, col').forEach(function(c){ c.remove(); });
+
+  // 6. Ensure table structure is correct: thead for first row if it has <th>
+  tmp.querySelectorAll('table').forEach(function(table) {
+    var tbody = table.querySelector('tbody');
+    if (!tbody) return;
+    var rows = Array.from(tbody.querySelectorAll('tr'));
+    // If first row has all <th> cells, move it into a <thead>
+    if (rows.length > 0) {
+      var firstRow = rows[0];
+      var cells = Array.from(firstRow.cells);
+      var allTh = cells.length > 0 && cells.every(function(c){ return c.tagName === 'TH'; });
+      if (allTh && !table.querySelector('thead')) {
+        var thead = document.createElement('thead');
+        table.insertBefore(thead, tbody);
+        thead.appendChild(firstRow);
+      }
+    }
+  });
+
+  // 7. Trim trailing empty <p><br></p> noise at end
+  var nodes = Array.from(tmp.childNodes);
+  for (var i = nodes.length - 1; i >= 0; i--) {
+    var n = nodes[i];
+    if (n.nodeType === 1 && n.tagName === 'P') {
+      var inner = n.innerHTML.trim();
+      if (inner === '<br>' || inner === '') { n.remove(); continue; }
+    }
+    break;
+  }
+
+  return tmp.innerHTML;
+}
+
+function serializeEditorContent() {
+  var editor = document.getElementById('richEditor');
+  return cleanContentForExport(editor.innerHTML);
 }
 
 function getCurrentPostData() {
@@ -1918,22 +2009,28 @@ function removeTag(i) {
 // PREVIEW
 // ══════════════════════════════════════════════
 function updatePreview() {
-  const title = document.getElementById('postTitle').value;
-  const excerpt = document.getElementById('postExcerpt').value;
-  const date = document.getElementById('postDate').value;
-  const content = document.getElementById('richEditor').innerHTML;
+  const title    = document.getElementById('postTitle').value;
+  const excerpt  = document.getElementById('postExcerpt').value;
+  const date     = document.getElementById('postDate').value;
+  const category = document.getElementById('postCategory').value.trim();
   const coverSrc = coverData ? (coverData.dataUrl || coverData.path) : document.getElementById('coverUrl').value;
 
-  document.getElementById('previewTitle').textContent = title || 'Untitled Post';
-  document.getElementById('previewExcerpt').textContent = excerpt;
-  document.getElementById('previewDate').textContent = date ? formatDateLong(date) : '';
-  document.getElementById('previewContent').innerHTML = content;
+  // Use the same cleaner as JSON export — preview is a live post.html simulation
+  const cleanedContent = cleanContentForExport(document.getElementById('richEditor').innerHTML);
+
+  document.getElementById('previewTitle').textContent     = title || 'Untitled Post';
+  document.getElementById('previewExcerpt').textContent   = excerpt;
+  // post.html uses formatDate() which gives "Mar 9, 2026" style
+  document.getElementById('previewDate').textContent      = date ? formatDateShort(date) : '';
+  document.getElementById('previewCategory').textContent  = category;
+  document.getElementById('previewContent').innerHTML     = cleanedContent;
 
   const cover = document.getElementById('previewCover');
   if (coverSrc) { cover.src = coverSrc; cover.style.display = 'block'; }
   else { cover.style.display = 'none'; }
 
-  document.getElementById('previewTags').innerHTML = tags.map(t => `<span class="preview-tag">#${t}</span>`).join('');
+  document.getElementById('previewTags').innerHTML =
+    tags.map(t => `<span class="preview-tag">#${t}</span>`).join('');
 }
 
 // ══════════════════════════════════════════════
