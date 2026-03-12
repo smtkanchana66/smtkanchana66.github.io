@@ -881,9 +881,6 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
         <button class="toolbar-btn" title="Redo" onclick="fmt('redo')">↪</button>
         <div class="toolbar-sep"></div>
         <button class="toolbar-btn" title="Remove formatting" onclick="fmt('removeFormat')">✕ fmt</button>
-        <div class="toolbar-sep"></div>
-        <button class="toolbar-btn" id="copyStyleBtn" title="Copy Style — select styled text, then click" onclick="copyStyle()" style="font-size:12px;font-weight:700;gap:3px">🖌 Copy</button>
-        <button class="toolbar-btn" id="pasteStyleBtn" title="Paste Style — select target text, then click" onclick="pasteStyle()" style="font-size:12px;font-weight:700;gap:3px;opacity:0.4;pointer-events:none">🖌 Paste</button>
       </div>
 
       <div class="editor-wrapper">
@@ -1446,10 +1443,34 @@ function formatBlock(tag) {
 }
 
 function insertBlockquote() {
-  document.getElementById('richEditor').focus();
-  const sel = window.getSelection();
-  const text = sel.toString() || 'Quote text';
-  document.execCommand('insertHTML', false, `<blockquote>${text}</blockquote><p><br></p>`);
+  var editor = document.getElementById('richEditor');
+  editor.focus();
+  var sel = window.getSelection();
+  var selectedText = sel ? sel.toString() : '';
+
+  // Build blockquote DOM node directly so we can place cursor inside it
+  var bq = document.createElement('blockquote');
+  bq.innerHTML = selectedText || '<br>';
+  var spacer = document.createElement('p');
+  spacer.innerHTML = '<br>';
+
+  if (sel && sel.rangeCount > 0) {
+    var range = sel.getRangeAt(0);
+    range.deleteContents();
+    range.insertNode(spacer);
+    range.insertNode(bq);
+  } else {
+    editor.appendChild(bq);
+    editor.appendChild(spacer);
+  }
+
+  // Place cursor inside the blockquote so user can type immediately
+  var r = document.createRange();
+  r.selectNodeContents(bq);
+  r.collapse(false);
+  sel.removeAllRanges();
+  sel.addRange(r);
+
   autoSave();
 }
 
@@ -1489,11 +1510,59 @@ function handleEditorKeydown(e) {
     return;
   }
 
-  // Enter inside pre = <br> (renders as newline in pre-wrap)
+  // Enter inside pre = newline
   if (e.key === 'Enter' && inPre) {
     e.preventDefault();
     document.execCommand('insertHTML', false, '<br>');
     return;
+  }
+
+  // Enter inside blockquote
+  if (e.key === 'Enter' && !e.shiftKey) {
+    var sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    var bq = sel.anchorNode && sel.anchorNode.closest ? sel.anchorNode.closest('blockquote') : null;
+    if (!bq) {
+      // anchorNode might be a text node
+      var node = sel.anchorNode;
+      if (node && node.nodeType === 3) node = node.parentElement;
+      if (node) bq = node.closest('blockquote');
+    }
+    if (!bq) return;
+
+    e.preventDefault();
+
+    var range = sel.getRangeAt(0);
+    // Check if current line inside blockquote is empty (cursor on blank line)
+    var atNode = sel.anchorNode;
+    var lineText = (atNode.nodeType === 3) ? atNode.textContent : atNode.innerText || '';
+    // Detect empty line: text node is empty or only a <br>
+    var isEmptyLine = lineText.trim() === '' || lineText === '\n';
+
+    if (isEmptyLine) {
+      // Escape blockquote — remove the trailing empty <br> and insert paragraph after bq
+      // Remove any trailing empty <br> inside the blockquote
+      var lastChild = bq.lastChild;
+      if (lastChild && lastChild.nodeName === 'BR') bq.removeChild(lastChild);
+      if (lastChild && lastChild.nodeName === '#text' && lastChild.textContent.trim() === '') bq.removeChild(lastChild);
+
+      // Insert a new <p> after the blockquote
+      var p = document.createElement('p');
+      p.innerHTML = '<br>';
+      bq.parentNode.insertBefore(p, bq.nextSibling);
+
+      // Move cursor into the new paragraph
+      var r = document.createRange();
+      r.setStart(p, 0);
+      r.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(r);
+    } else {
+      // Still inside blockquote — insert a <br> as a new line within the quote
+      document.execCommand('insertHTML', false, '<br>');
+    }
+
+    autoSave();
   }
 }
 
@@ -2495,84 +2564,6 @@ document.getElementById('codeTextarea') && document.getElementById('codeTextarea
     confirmCodeBlock();
   }
 });
-
-// ══════════════════════════════════════════════
-// COPY STYLE / PASTE STYLE
-// ══════════════════════════════════════════════
-var _copiedStyle = null;
-
-function copyStyle() {
-  var sel = window.getSelection();
-  if (!sel || sel.isCollapsed || sel.rangeCount === 0) {
-    showToast('Select some styled text first', 'error');
-    return;
-  }
-  // Get the deepest element at the start of the selection
-  var range = sel.getRangeAt(0);
-  var node = range.startContainer;
-  // Walk up to an element node
-  var el = (node.nodeType === 3) ? node.parentElement : node;
-
-  var computed = window.getComputedStyle(el);
-
-  _copiedStyle = {
-    bold:       computed.fontWeight >= 600 || computed.fontWeight === 'bold' || computed.fontWeight === 'bolder',
-    italic:     computed.fontStyle === 'italic',
-    underline:  el.closest('u') !== null,
-    strike:     el.closest('s') !== null || el.closest('strike') !== null,
-    color:      el.style.color || '',
-    background: el.style.backgroundColor || '',
-    fontSize:   el.style.fontSize || ''
-  };
-
-  // Activate paste button
-  var pasteBtn = document.getElementById('pasteStyleBtn');
-  pasteBtn.style.opacity = '1';
-  pasteBtn.style.pointerEvents = 'auto';
-  pasteBtn.style.background = 'var(--accent-dim)';
-  pasteBtn.style.color = 'var(--accent2)';
-  pasteBtn.style.border = '1px solid var(--accent)';
-  pasteBtn.style.borderRadius = '6px';
-
-  showToast('🖌 Style copied — now select text & click Paste', 'success');
-}
-
-function pasteStyle() {
-  if (!_copiedStyle) { showToast('Copy a style first', 'error'); return; }
-
-  var sel = window.getSelection();
-  if (!sel || sel.isCollapsed || sel.rangeCount === 0) {
-    showToast('Select text to apply style to', 'error');
-    return;
-  }
-
-  var editor = document.getElementById('richEditor');
-  editor.focus();
-
-  // Apply bold / italic / underline / strike via execCommand so undo works
-  var currentlyBold   = document.queryCommandState('bold');
-  var currentlyItalic = document.queryCommandState('italic');
-  var currentlyUnder  = document.queryCommandState('underline');
-  var currentlyStrike = document.queryCommandState('strikeThrough');
-
-  if (_copiedStyle.bold   !== currentlyBold)   document.execCommand('bold',          false, null);
-  if (_copiedStyle.italic !== currentlyItalic) document.execCommand('italic',        false, null);
-  if (_copiedStyle.underline !== currentlyUnder) document.execCommand('underline',   false, null);
-  if (_copiedStyle.strike !== currentlyStrike)  document.execCommand('strikeThrough',false, null);
-
-  // Apply color / highlight / fontSize by wrapping in a span
-  if (_copiedStyle.color || _copiedStyle.background || _copiedStyle.fontSize) {
-    var styleStr = '';
-    if (_copiedStyle.color)      styleStr += 'color:' + _copiedStyle.color + ';';
-    if (_copiedStyle.background) styleStr += 'background-color:' + _copiedStyle.background + ';';
-    if (_copiedStyle.fontSize)   styleStr += 'font-size:' + _copiedStyle.fontSize + ';';
-    document.execCommand('insertHTML', false,
-      '<span style="' + styleStr + '">' + sel.toString() + '</span>');
-  }
-
-  autoSave();
-  showToast('🖌 Style applied!', 'success');
-}
 
 let toastTimer;
 function showToast(msg, type = 'success') {
