@@ -235,6 +235,40 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
 
 .toolbar-color-wrap { position: relative; display: inline-flex; }
 .toolbar-color-btn { padding: 4px 8px !important; }
+
+/* ── COLOR PALETTE DROPDOWN ── */
+.color-palette-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 10px;
+  z-index: 500;
+  width: 200px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.color-palette-dropdown.show { display: block; }
+.color-palette-label { font-size: 10px; color: var(--text3); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 7px; }
+.color-swatches { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; margin-bottom: 8px; }
+.color-swatch {
+  width: 100%; aspect-ratio: 1; border-radius: 3px; cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.color-swatch:hover { transform: scale(1.2); box-shadow: 0 0 0 2px var(--accent); }
+.color-swatch.clear-swatch {
+  background: transparent !important;
+  border: 1px dashed var(--border2);
+  font-size: 9px; display: flex; align-items: center; justify-content: center;
+  color: var(--text3);
+}
+.color-picker-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; border-top: 1px solid var(--border); padding-top: 8px; }
+.color-picker-row label { font-size: 11px; color: var(--text3); flex: 1; cursor: pointer; }
+.color-picker-row input[type=color] { width: 28px; height: 22px; border: none; background: none; cursor: pointer; padding: 0; border-radius: 4px; }
 .toolbar-btn.active { background: var(--accent-dim); color: var(--accent2); border: 1px solid var(--accent); }
 .toolbar-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
 .toolbar-select { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); border-radius: 6px; padding: 4px 8px; font-family: 'Outfit', sans-serif; font-size: 13px; outline: none; cursor: pointer; }
@@ -254,9 +288,9 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
   color: var(--text3);
   pointer-events: none;
 }
-.rich-editor h2 { font-family: 'DM Serif Display', serif; font-size: 28px; color: white; margin: 32px 0 12px; font-weight: 400; }
-.rich-editor h3 { font-size: 20px; color: white; margin: 24px 0 10px; font-weight: 600; }
-.rich-editor h4 { font-size: 16px; color: white; margin: 20px 0 8px; font-weight: 600; }
+.rich-editor h2 { font-family: 'DM Serif Display', serif; font-size: 32px; color: white; margin: 32px 0 12px; font-weight: 400; }
+.rich-editor h3 { font-size: 24px; color: white; margin: 24px 0 10px; font-weight: 700; }
+.rich-editor h4 { font-size: 19px; color: white; margin: 20px 0 8px; font-weight: 600; }
 .rich-editor p { margin-bottom: 16px; color: #d1d5db; }
 .rich-editor strong { color: #f9fafb; font-weight: 700; }
 .rich-editor em { color: var(--text2); font-style: italic; }
@@ -264,14 +298,43 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
 .rich-editor ul, .rich-editor ol { margin: 16px 0 16px 28px; }
 .rich-editor li { margin-bottom: 6px; color: #d1d5db; }
 .rich-editor blockquote {
-  border-left: 3px solid var(--accent);
-  padding: 12px 20px;
+  border-left: 4px solid var(--accent);
+  padding: 14px 20px;
   margin: 20px 0;
   background: var(--accent-dim);
   border-radius: 0 8px 8px 0;
   color: var(--text2);
   font-style: italic;
 }
+
+/* ── QUOTE COLOR PICKER DROPDOWN ── */
+.quote-picker-wrap { position: relative; display: inline-flex; }
+.quote-palette {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 10px 12px;
+  z-index: 500;
+  width: 210px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.quote-palette.show { display: block; }
+.quote-palette-label { font-size: 10px; color: var(--text3); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.quote-themes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+.quote-theme-swatch {
+  height: 32px; border-radius: 5px; cursor: pointer;
+  border-left: 4px solid transparent;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-style: italic; color: rgba(255,255,255,0.7);
+  font-weight: 600; transition: transform 0.1s, box-shadow 0.1s;
+  overflow: hidden;
+}
+.quote-theme-swatch:hover { transform: scale(1.06); box-shadow: 0 0 0 2px var(--accent); }
 .rich-editor pre {
   background: #0d0d12;
   border: 1px solid var(--border2);
@@ -832,10 +895,16 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
         <div class="toolbar-sep"></div>
         <button class="toolbar-btn" title="Unordered List" onclick="fmt('insertUnorderedList')">≡</button>
         <button class="toolbar-btn" title="Ordered List" onclick="fmt('insertOrderedList')">⒈</button>
-        <button class="toolbar-btn" title="Blockquote" onclick="insertBlockquote()">❝</button>
+        <div class="quote-picker-wrap" id="quoteBtnWrap">
+          <button class="toolbar-btn" title="Blockquote" onmousedown="event.preventDefault()" onclick="toggleQuotePalette(event)">❝</button>
+          <div class="quote-palette" id="quotePalette">
+            <div class="quote-palette-label">Quote Style</div>
+            <div class="quote-themes" id="quoteThemes"></div>
+          </div>
+        </div>
         <button class="toolbar-btn" title="Horizontal Rule" onclick="fmt('insertHorizontalRule')">—</button>
         <div class="toolbar-sep"></div>
-        <button class="toolbar-btn" title="Link" onclick="insertLink()">🔗</button>
+        <button class="toolbar-btn" title="Link" onmousedown="event.preventDefault()" onclick="insertLink()">🔗</button>
         <button class="toolbar-btn" title="Insert Image" onclick="openImagePicker()">🖼</button>
         <button class="toolbar-btn" title="Inline Code" onclick="insertInlineCode()" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:-0.5px">&lt;/&gt;</button>
         <div class="toolbar-sep"></div>
@@ -858,19 +927,33 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
           <option value="6">32px</option>
           <option value="7">48px</option>
         </select>
-        <!-- Text color -->
-        <div class="toolbar-color-wrap" title="Text Color">
-          <input type="color" id="textColorPicker" value="#f0f0f8" onchange="setTextColor(this.value)" style="opacity:0;position:absolute;width:0;height:0">
-          <button class="toolbar-btn toolbar-color-btn" title="Text Color" onclick="document.getElementById('textColorPicker').click()" style="font-size:13px;font-weight:800;position:relative">
+        <!-- Text color palette -->
+        <div class="toolbar-color-wrap" id="textColorWrap">
+          <button class="toolbar-btn toolbar-color-btn" title="Text Color" onclick="togglePalette('textColorPalette', event)" style="font-size:13px;font-weight:800;position:relative">
             A<span id="textColorBar" style="position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:14px;height:3px;background:#f0f0f8;border-radius:2px"></span>
           </button>
+          <div class="color-palette-dropdown" id="textColorPalette">
+            <div class="color-palette-label">Text Color</div>
+            <div class="color-swatches" id="textColorSwatches"></div>
+            <div class="color-picker-row">
+              <label for="textColorPickerCustom">Custom…</label>
+              <input type="color" id="textColorPickerCustom" value="#f0f0f8" oninput="applyTextColor(this.value)">
+            </div>
+          </div>
         </div>
-        <!-- Highlight color -->
-        <div class="toolbar-color-wrap" title="Highlight">
-          <input type="color" id="bgColorPicker" value="#9080ff" onchange="setHighlight(this.value)" style="opacity:0;position:absolute;width:0;height:0">
-          <button class="toolbar-btn toolbar-color-btn" title="Highlight" onclick="document.getElementById('bgColorPicker').click()" style="font-size:13px;font-weight:800;position:relative">
+        <!-- Highlight color palette -->
+        <div class="toolbar-color-wrap" id="bgColorWrap">
+          <button class="toolbar-btn toolbar-color-btn" title="Highlight" onclick="togglePalette('bgColorPalette', event)" style="font-size:13px;font-weight:800;position:relative">
             H<span id="bgColorBar" style="position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:14px;height:3px;background:#9080ff;border-radius:2px"></span>
           </button>
+          <div class="color-palette-dropdown" id="bgColorPalette">
+            <div class="color-palette-label">Highlight</div>
+            <div class="color-swatches" id="bgColorSwatches"></div>
+            <div class="color-picker-row">
+              <label for="bgColorPickerCustom">Custom…</label>
+              <input type="color" id="bgColorPickerCustom" value="#9080ff" oninput="applyHighlight(this.value)">
+            </div>
+          </div>
         </div>
         <div class="toolbar-sep"></div>
         <!-- Indent -->
@@ -882,8 +965,8 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
         <div class="toolbar-sep"></div>
         <button class="toolbar-btn" title="Remove formatting" onclick="fmt('removeFormat')">✕ fmt</button>
         <div class="toolbar-sep"></div>
-        <button class="toolbar-btn" id="copyStyleBtn" title="Copy Style — select styled text, then click" onclick="copyStyle()" style="font-size:12px;font-weight:700;gap:3px">🖌 Copy</button>
-        <button class="toolbar-btn" id="pasteStyleBtn" title="Paste Style — select target text, then click" onclick="pasteStyle()" style="font-size:12px;font-weight:700;gap:3px;opacity:0.4;pointer-events:none">🖌 Paste</button>
+        <button class="toolbar-btn" id="copyStyleBtn" title="Copy Style: select styled text then click" onclick="copyStyle()" style="font-size:12px;font-weight:700">🖌 Copy</button>
+        <button class="toolbar-btn" id="pasteStyleBtn" title="Paste Style: select target text then click" onclick="pasteStyle()" style="font-size:12px;font-weight:700;opacity:0.4;pointer-events:none">🖌 Paste</button>
       </div>
 
       <div class="editor-wrapper">
@@ -1152,10 +1235,23 @@ let images = JSON.parse(localStorage.getItem('k66_images') || '[]');
 
 let currentPostId = null;
 let tags = [];
-let coverData = null; // { dataUrl, path }
+let coverData = null; // { dataUrl, path } — dataUrl kept in memory only, NOT in localStorage
 let selectedPickerImage = null;
 let autoSaveTimer = null;
 let currentFolder = 'all';
+
+// On load: re-save posts immediately to strip any previously stored dataUrls
+// This clears the quota error from old bloated saves
+(function cleanStorage() {
+  try {
+    var slim = posts.map(function(p) {
+      var coverDataSlim = p.coverData ? { path: p.coverData.path || '' } : null;
+      var imageRef = p.coverData ? (p.coverData.path || '') : (p.image || '');
+      return Object.assign({}, p, { image: imageRef, coverData: coverDataSlim });
+    });
+    localStorage.setItem('k66_posts', JSON.stringify(slim));
+  } catch(e) {}
+})();
 
 // Init
 init();
@@ -1266,6 +1362,13 @@ function getCurrentPostData() {
   };
 }
 
+// Returns a lean version safe for localStorage — no base64 dataUrls
+function getPostDataForStorage(post) {
+  var coverDataSlim = post.coverData ? { path: post.coverData.path || '' } : null;
+  var imageRef = post.coverData ? (post.coverData.path || '') : (post.image || '');
+  return Object.assign({}, post, { image: imageRef, coverData: coverDataSlim });
+}
+
 function publishPost() {
   if (!currentPostId) { showToast('No post to publish', 'error'); return; }
   const idx = posts.findIndex(p => p.id === currentPostId);
@@ -1318,7 +1421,15 @@ function deleteCurrentPost() {
 }
 
 function savePosts() {
-  localStorage.setItem('k66_posts', JSON.stringify(posts));
+  try {
+    // Strip base64 dataUrls from posts before saving — images live in k66_images
+    var slim = posts.map(getPostDataForStorage);
+    localStorage.setItem('k66_posts', JSON.stringify(slim));
+  } catch(e) {
+    if (e.name === 'QuotaExceededError') {
+      showToast('⚠ Storage full — post saved in memory. Export to keep it.', 'error');
+    }
+  }
 }
 
 function autoSave() {
@@ -1422,6 +1533,100 @@ function setHighlight(color) {
   autoSave();
 }
 
+// ── Color palette system ──
+var TEXT_COLORS = [
+  // Row 1: whites / grays
+  '#ffffff','#e0e0e0','#b0b0b0','#808080','#505050','#303030','#181818','#000000',
+  // Row 2: warm accent
+  '#ff6b6b','#ff9f43','#ffd060','#a8e063','#26de81','#45aaf2','#a29bfe','#fd79a8',
+  // Row 3: muted professional
+  '#e17055','#fdcb6e','#00b894','#0984e3','#6c5ce7','#e84393','#74b9ff','#55efc4',
+  // Row 4: dark rich tones
+  '#c0392b','#e67e22','#f1c40f','#27ae60','#2980b9','#8e44ad','#2c3e50','#7f8c8d'
+];
+
+var HIGHLIGHT_COLORS = [
+  // Row 1: transparent + light pastels
+  'transparent','#fff9c4','#fff3e0','#fce4ec','#e8f5e9','#e3f2fd','#ede7f6','#f3e5f5',
+  // Row 2: medium pastels
+  '#ffeb3b','#ffcc02','#ff9800','#f44336','#4caf50','#2196f3','#9c27b0','#e91e63',
+  // Row 3: dark editor-friendly
+  '#3d2b00','#1a3300','#00264d','#2d0048','#4a0010','#1a1a00','#002626','#26001a',
+  // Row 4: semi-transparent overlays
+  'rgba(144,128,255,0.35)','rgba(78,232,160,0.35)','rgba(255,208,96,0.35)','rgba(255,112,112,0.35)',
+  'rgba(69,170,242,0.35)','rgba(253,121,168,0.35)','rgba(85,239,196,0.35)','rgba(116,185,255,0.35)'
+];
+
+function buildPalettes() {
+  buildSwatches('textColorSwatches', TEXT_COLORS, function(c) { applyTextColor(c); });
+  buildSwatches('bgColorSwatches', HIGHLIGHT_COLORS, function(c) { applyHighlight(c); }, true);
+}
+
+function buildSwatches(containerId, colors, applyFn, addClear) {
+  var wrap = document.getElementById(containerId);
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  colors.forEach(function(c) {
+    var sw = document.createElement('div');
+    sw.className = 'color-swatch';
+    if (c === 'transparent') {
+      sw.className += ' clear-swatch';
+      sw.title = 'Remove highlight';
+      sw.textContent = '✕';
+    } else {
+      sw.style.background = c;
+      sw.title = c;
+    }
+    sw.addEventListener('mousedown', function(e) {
+      e.preventDefault(); // keep editor focus
+      applyFn(c === 'transparent' ? 'transparent' : c);
+      closeAllPalettes();
+    });
+    wrap.appendChild(sw);
+  });
+}
+
+function applyTextColor(color) {
+  var editor = document.getElementById('richEditor');
+  editor.focus();
+  document.execCommand('foreColor', false, color);
+  document.getElementById('textColorBar').style.background = color;
+  autoSave();
+}
+
+function applyHighlight(color) {
+  var editor = document.getElementById('richEditor');
+  editor.focus();
+  if (color === 'transparent') {
+    document.execCommand('hiliteColor', false, 'transparent');
+    document.getElementById('bgColorBar').style.background = 'var(--border2)';
+  } else {
+    document.execCommand('hiliteColor', false, color);
+    document.getElementById('bgColorBar').style.background = color;
+  }
+  autoSave();
+}
+
+function togglePalette(id, e) {
+  e.stopPropagation();
+  var palette = document.getElementById(id);
+  var isOpen = palette.classList.contains('show');
+  closeAllPalettes();
+  if (!isOpen) palette.classList.add('show');
+}
+
+function closeAllPalettes() {
+  document.querySelectorAll('.color-palette-dropdown').forEach(function(p) { p.classList.remove('show'); });
+}
+
+// Close palettes when clicking outside
+document.addEventListener('mousedown', function(e) {
+  if (!e.target.closest('.toolbar-color-wrap')) closeAllPalettes();
+});
+
+// Build palettes on load
+buildPalettes();
+
 function fmt(cmd, val) {
   document.getElementById('richEditor').focus();
   document.execCommand(cmd, false, val || null);
@@ -1434,22 +1639,125 @@ function formatBlock(tag) {
   var editor = document.getElementById('richEditor');
   editor.focus();
   if (tag === 'pre') {
-    // Open code modal — textarea handles multiline natively
     openCodeModal();
     return;
-  } else {
-    document.execCommand('formatBlock', false, tag);
   }
+  document.execCommand('formatBlock', false, tag);
+
+  // Strip any inline style/font overrides on the newly-formatted element
+  // so the CSS heading sizes actually apply
+  var sel = window.getSelection();
+  if (sel && sel.rangeCount > 0) {
+    var node = sel.anchorNode;
+    if (node && node.nodeType === 3) node = node.parentElement;
+    var block = node ? node.closest(tag) : null;
+    if (block) {
+      block.removeAttribute('style');
+      // Also strip inline styles from all child elements
+      block.querySelectorAll('[style]').forEach(function(el) {
+        // Keep color/background if intentionally set, but remove font-size/font-family
+        var s = el.style;
+        s.removeProperty('font-size');
+        s.removeProperty('font-family');
+        s.removeProperty('font-weight');
+        s.removeProperty('line-height');
+      });
+    }
+  }
+
   document.getElementById('blockFormatSelect').value = '';
   updateToolbarState();
   autoSave();
 }
 
+// ── Quote color themes ──
+var QUOTE_THEMES = [
+  { label: 'Purple',  border: '#9080ff', bg: 'rgba(144,128,255,0.15)', text: '#c0aaff' },
+  { label: 'Blue',    border: '#45aaf2', bg: 'rgba(69,170,242,0.15)',  text: '#74b9ff' },
+  { label: 'Green',   border: '#4ee8a0', bg: 'rgba(78,232,160,0.13)',  text: '#55efc4' },
+  { label: 'Yellow',  border: '#ffd060', bg: 'rgba(255,208,96,0.13)',  text: '#ffeaa7' },
+  { label: 'Red',     border: '#ff6b6b', bg: 'rgba(255,107,107,0.15)', text: '#ff9f9f' },
+  { label: 'Pink',    border: '#fd79a8', bg: 'rgba(253,121,168,0.15)', text: '#fdcfe8' },
+  { label: 'Teal',    border: '#00cec9', bg: 'rgba(0,206,201,0.13)',   text: '#81ecec' },
+  { label: 'Dark',    border: '#636e72', bg: 'rgba(45,45,55,0.8)',     text: '#b2bec3' },
+];
+
+var activeQuoteTheme = QUOTE_THEMES[0];
+
+function buildQuoteThemes() {
+  var wrap = document.getElementById('quoteThemes');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  QUOTE_THEMES.forEach(function(theme) {
+    var sw = document.createElement('div');
+    sw.className = 'quote-theme-swatch';
+    sw.title = theme.label;
+    sw.style.background = theme.bg;
+    sw.style.borderLeftColor = theme.border;
+    sw.style.color = theme.text;
+    sw.textContent = '❝';
+    sw.addEventListener('mousedown', function(e) {
+      e.preventDefault();
+      activeQuoteTheme = theme;
+      closeQuotePalette();
+      insertBlockquote();
+    });
+    wrap.appendChild(sw);
+  });
+}
+
+function toggleQuotePalette(e) {
+  e.stopPropagation();
+  var p = document.getElementById('quotePalette');
+  if (p.classList.contains('show')) {
+    closeQuotePalette();
+  } else {
+    p.classList.add('show');
+  }
+}
+
+function closeQuotePalette() {
+  var p = document.getElementById('quotePalette');
+  if (p) p.classList.remove('show');
+}
+
+document.addEventListener('mousedown', function(e) {
+  if (!e.target.closest('.quote-picker-wrap')) closeQuotePalette();
+});
+
+buildQuoteThemes();
+
 function insertBlockquote() {
-  document.getElementById('richEditor').focus();
-  const sel = window.getSelection();
-  const text = sel.toString() || 'Quote text';
-  document.execCommand('insertHTML', false, `<blockquote>${text}</blockquote><p><br></p>`);
+  var editor = document.getElementById('richEditor');
+  editor.focus();
+  var sel = window.getSelection();
+  var selectedText = sel ? sel.toString() : '';
+  var theme = activeQuoteTheme || QUOTE_THEMES[0];
+
+  var bq = document.createElement('blockquote');
+  bq.style.borderLeftColor = theme.border;
+  bq.style.background = theme.bg;
+  bq.style.color = theme.text;
+  bq.innerHTML = selectedText || '<br>';
+
+  var spacer = document.createElement('p');
+  spacer.innerHTML = '<br>';
+
+  if (sel && sel.rangeCount > 0) {
+    var range = sel.getRangeAt(0);
+    range.deleteContents();
+    range.insertNode(spacer);
+    range.insertNode(bq);
+  } else {
+    editor.appendChild(bq);
+    editor.appendChild(spacer);
+  }
+
+  var r = document.createRange();
+  r.selectNodeContents(bq);
+  r.collapse(false);
+  sel.removeAllRanges();
+  sel.addRange(r);
   autoSave();
 }
 
@@ -1461,9 +1769,17 @@ function insertInlineCode() {
   autoSave();
 }
 
+var linkSavedRange = null;
+
 function insertLink() {
-  const sel = window.getSelection();
-  document.getElementById('linkText').value = sel.toString() || '';
+  var editor = document.getElementById('richEditor');
+  var sel = window.getSelection();
+  // Save the range NOW before the modal steals focus
+  linkSavedRange = null;
+  if (sel && sel.rangeCount > 0) {
+    try { linkSavedRange = sel.getRangeAt(0).cloneRange(); } catch(e) {}
+  }
+  document.getElementById('linkText').value = sel ? sel.toString() : '';
   document.getElementById('linkUrl').value = '';
   openModal('linkModal');
   setTimeout(() => document.getElementById('linkUrl').focus(), 100);
@@ -1473,9 +1789,20 @@ function confirmLink() {
   const text = document.getElementById('linkText').value;
   const url = document.getElementById('linkUrl').value;
   if (!url) return;
-  document.getElementById('richEditor').focus();
+
+  var editor = document.getElementById('richEditor');
+  editor.focus();
+
+  // Restore the saved selection so link inserts at the right place
+  if (linkSavedRange) {
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(linkSavedRange);
+  }
+
   document.execCommand('insertHTML', false, `<a href="${url}" target="_blank">${text || url}</a>`);
   closeModal('linkModal');
+  linkSavedRange = null;
   autoSave();
 }
 
@@ -1489,11 +1816,61 @@ function handleEditorKeydown(e) {
     return;
   }
 
-  // Enter inside pre = <br> (renders as newline in pre-wrap)
+  // Enter inside pre: empty line = escape, otherwise new line
   if (e.key === 'Enter' && inPre) {
     e.preventDefault();
-    document.execCommand('insertHTML', false, '<br>');
+    var sel = window.getSelection();
+    var atNode = sel && sel.anchorNode;
+    var lineText = atNode ? (atNode.nodeType === 3 ? atNode.textContent : (atNode.innerText || '')) : '';
+
+    if (lineText.trim() === '') {
+      // Escape pre — remove trailing empty line and insert paragraph after
+      var pre = e.target.closest('pre');
+      var last = pre.lastChild;
+      if (last && last.nodeName === 'BR') pre.removeChild(last);
+      var p = document.createElement('p');
+      p.innerHTML = '<br>';
+      pre.parentNode.insertBefore(p, pre.nextSibling);
+      var r = document.createRange();
+      r.setStart(p, 0);
+      r.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(r);
+    } else {
+      document.execCommand('insertHTML', false, '\n');
+    }
+    autoSave();
     return;
+  }
+
+  // Enter inside blockquote: empty line = escape, otherwise new line
+  if (e.key === 'Enter' && !e.shiftKey) {
+    var sel2 = window.getSelection();
+    if (!sel2 || sel2.rangeCount === 0) return;
+    var node = sel2.anchorNode;
+    if (node && node.nodeType === 3) node = node.parentElement;
+    var bq = node ? node.closest('blockquote') : null;
+    if (!bq) return;
+
+    e.preventDefault();
+    var atNode2 = sel2.anchorNode;
+    var lineText2 = (atNode2.nodeType === 3) ? atNode2.textContent : (atNode2.innerText || '');
+
+    if (lineText2.trim() === '') {
+      var last2 = bq.lastChild;
+      if (last2 && last2.nodeName === 'BR') bq.removeChild(last2);
+      var p2 = document.createElement('p');
+      p2.innerHTML = '<br>';
+      bq.parentNode.insertBefore(p2, bq.nextSibling);
+      var r2 = document.createRange();
+      r2.setStart(p2, 0);
+      r2.collapse(true);
+      sel2.removeAllRanges();
+      sel2.addRange(r2);
+    } else {
+      document.execCommand('insertHTML', false, '<br>');
+    }
+    autoSave();
   }
 }
 
@@ -1644,27 +2021,85 @@ function insertImageFromLibrary(id) {
       sel.addRange(r);
     }
     document.execCommand('insertHTML', false,
-      '<img src="' + img.dataUrl + '" alt="' + img.name + '" data-path="' + path + '"><p><br></p>');
+      '<img src="' + path + '" alt="' + img.name + '" data-path="' + path + '"><p><br></p>');
     autoSave();
     showToast('Inserted — path: ' + path, 'success');
   }, 50);
 }
 
 function handlePaste(e) {
-  // Try table paste first (from Word / Excel)
   if (handleTablePaste(e)) return;
 
-  var items = (e.clipboardData || e.originalEvent.clipboardData).items;
+  var clipData = e.clipboardData || e.originalEvent.clipboardData;
+
+  // Pasting an image file
+  var items = clipData.items;
   for (var i = 0; i < items.length; i++) {
     if (items[i].type.startsWith('image/')) {
       e.preventDefault();
       var file = items[i].getAsFile();
       addImageToLibrary(file).then(function(imgObj) {
         document.execCommand('insertHTML', false,
-          '<img src="' + imgObj.dataUrl + '" alt="' + imgObj.name + '" data-path="' + imgObj.path + '"><p><br></p>');
+          '<img src="' + imgObj.path + '" alt="' + imgObj.name + '" data-path="' + imgObj.path + '"><p><br></p>');
         autoSave();
       });
+      return;
     }
+  }
+
+  // Strip all Word / external inline styles on HTML paste
+  var html = clipData.getData('text/html');
+  if (html) {
+    e.preventDefault();
+    var tmp = document.createElement('div');
+    tmp.innerHTML = html;
+
+    // Strip every attribute from every element
+    tmp.querySelectorAll('*').forEach(function(el) {
+      var keep = {};
+      // For anchors keep href; for images keep src/alt
+      if (el.tagName === 'A')   keep.href = el.getAttribute('href');
+      if (el.tagName === 'IMG') { keep.src = el.getAttribute('src'); keep.alt = el.getAttribute('alt') || ''; }
+      // Remove all
+      while (el.attributes.length > 0) el.removeAttribute(el.attributes[0].name);
+      // Restore safe attrs
+      if (keep.href) el.setAttribute('href', keep.href);
+      if (keep.src)  { el.setAttribute('src', keep.src); el.setAttribute('alt', keep.alt); }
+    });
+
+    // Unwrap meaningless spans/fonts/divs
+    tmp.querySelectorAll('span, font, div').forEach(function(el) {
+      if (!el.attributes.length) {
+        var frag = document.createDocumentFragment();
+        while (el.firstChild) frag.appendChild(el.firstChild);
+        if (el.parentNode) el.parentNode.replaceChild(frag, el);
+      }
+    });
+
+    // Strip disallowed tags but keep their text content
+    var allowed = new Set(['P','BR','B','STRONG','I','EM','U','S','STRIKE','A',
+      'H1','H2','H3','H4','H5','H6','UL','OL','LI','BLOCKQUOTE','PRE','CODE',
+      'TABLE','THEAD','TBODY','TR','TH','TD','IMG','HR']);
+    // Iterate bottom-up
+    Array.from(tmp.querySelectorAll('*')).reverse().forEach(function(el) {
+      if (!allowed.has(el.tagName)) {
+        var frag = document.createDocumentFragment();
+        while (el.firstChild) frag.appendChild(el.firstChild);
+        if (el.parentNode) el.parentNode.replaceChild(frag, el);
+      }
+    });
+
+    document.execCommand('insertHTML', false, tmp.innerHTML);
+    autoSave();
+    return;
+  }
+
+  // Fallback: plain text
+  var text = clipData.getData('text/plain');
+  if (text) {
+    e.preventDefault();
+    document.execCommand('insertText', false, text);
+    autoSave();
   }
 }
 
@@ -1726,7 +2161,7 @@ function confirmImagePicker() {
     if (!img) return;
     closeModal('imagePickerModal');
     var path = img.path || ('/images/' + img.name);
-    insertAtSavedRange('<img src="' + img.dataUrl + '" alt="' + img.name + '" data-path="' + path + '"><p><br></p>');
+    insertAtSavedRange('<img src="' + path + '" alt="' + img.name + '" data-path="' + path + '"><p><br></p>');
     showToast('Image inserted — path: ' + path, 'success');
   } else {
     insertImageFromUrl();
@@ -1745,7 +2180,7 @@ function uploadAndInsert(e) {
   if (!file) return;
   addImageToLibrary(file).then(function(img) {
     closeModal('imagePickerModal');
-    insertAtSavedRange('<img src="' + img.dataUrl + '" alt="' + img.name + '" data-path="' + img.path + '"><p><br></p>');
+    insertAtSavedRange('<img src="' + img.path + '" alt="' + img.name + '" data-path="' + img.path + '"><p><br></p>');
     showToast('Inserted — path: ' + img.path, 'success');
   });
   e.target.value = '';
@@ -2465,15 +2900,22 @@ function confirmCodeBlock() {
     codeSavedRange.insertNode(spacer);
     codeSavedRange.insertNode(pre);
 
-    // Move cursor after the block
+    // Move cursor to END of code content inside pre
     var r = document.createRange();
-    r.setStartAfter(spacer);
-    r.collapse(true);
+    r.selectNodeContents(codeEl);
+    r.collapse(false);
     sel.removeAllRanges();
     sel.addRange(r);
   } else {
     editor.appendChild(pre);
     editor.appendChild(spacer);
+    // Place cursor inside
+    var sel2 = window.getSelection();
+    var r2 = document.createRange();
+    r2.selectNodeContents(codeEl);
+    r2.collapse(false);
+    sel2.removeAllRanges();
+    sel2.addRange(r2);
   }
 
   closeModal('codeModal');
@@ -2504,28 +2946,20 @@ var _copiedStyle = null;
 function copyStyle() {
   var sel = window.getSelection();
   if (!sel || sel.isCollapsed || sel.rangeCount === 0) {
-    showToast('Select some styled text first', 'error');
-    return;
+    showToast('Select some styled text first', 'error'); return;
   }
-  // Get the deepest element at the start of the selection
-  var range = sel.getRangeAt(0);
-  var node = range.startContainer;
-  // Walk up to an element node
+  var node = sel.anchorNode;
   var el = (node.nodeType === 3) ? node.parentElement : node;
-
   var computed = window.getComputedStyle(el);
-
   _copiedStyle = {
-    bold:       computed.fontWeight >= 600 || computed.fontWeight === 'bold' || computed.fontWeight === 'bolder',
+    bold:       parseInt(computed.fontWeight) >= 600,
     italic:     computed.fontStyle === 'italic',
-    underline:  el.closest('u') !== null,
-    strike:     el.closest('s') !== null || el.closest('strike') !== null,
+    underline:  !!el.closest('u'),
+    strike:     !!el.closest('s') || !!el.closest('strike'),
     color:      el.style.color || '',
     background: el.style.backgroundColor || '',
     fontSize:   el.style.fontSize || ''
   };
-
-  // Activate paste button
   var pasteBtn = document.getElementById('pasteStyleBtn');
   pasteBtn.style.opacity = '1';
   pasteBtn.style.pointerEvents = 'auto';
@@ -2533,43 +2967,27 @@ function copyStyle() {
   pasteBtn.style.color = 'var(--accent2)';
   pasteBtn.style.border = '1px solid var(--accent)';
   pasteBtn.style.borderRadius = '6px';
-
-  showToast('🖌 Style copied — now select text & click Paste', 'success');
+  showToast('🖌 Style copied — select text & click Paste', 'success');
 }
 
 function pasteStyle() {
   if (!_copiedStyle) { showToast('Copy a style first', 'error'); return; }
-
   var sel = window.getSelection();
   if (!sel || sel.isCollapsed || sel.rangeCount === 0) {
-    showToast('Select text to apply style to', 'error');
-    return;
+    showToast('Select text to apply style to', 'error'); return;
   }
-
-  var editor = document.getElementById('richEditor');
-  editor.focus();
-
-  // Apply bold / italic / underline / strike via execCommand so undo works
-  var currentlyBold   = document.queryCommandState('bold');
-  var currentlyItalic = document.queryCommandState('italic');
-  var currentlyUnder  = document.queryCommandState('underline');
-  var currentlyStrike = document.queryCommandState('strikeThrough');
-
-  if (_copiedStyle.bold   !== currentlyBold)   document.execCommand('bold',          false, null);
-  if (_copiedStyle.italic !== currentlyItalic) document.execCommand('italic',        false, null);
-  if (_copiedStyle.underline !== currentlyUnder) document.execCommand('underline',   false, null);
-  if (_copiedStyle.strike !== currentlyStrike)  document.execCommand('strikeThrough',false, null);
-
-  // Apply color / highlight / fontSize by wrapping in a span
+  document.getElementById('richEditor').focus();
+  if (_copiedStyle.bold   !== document.queryCommandState('bold'))          document.execCommand('bold',          false, null);
+  if (_copiedStyle.italic !== document.queryCommandState('italic'))        document.execCommand('italic',        false, null);
+  if (_copiedStyle.underline !== document.queryCommandState('underline'))  document.execCommand('underline',     false, null);
+  if (_copiedStyle.strike !== document.queryCommandState('strikeThrough')) document.execCommand('strikeThrough', false, null);
   if (_copiedStyle.color || _copiedStyle.background || _copiedStyle.fontSize) {
-    var styleStr = '';
-    if (_copiedStyle.color)      styleStr += 'color:' + _copiedStyle.color + ';';
-    if (_copiedStyle.background) styleStr += 'background-color:' + _copiedStyle.background + ';';
-    if (_copiedStyle.fontSize)   styleStr += 'font-size:' + _copiedStyle.fontSize + ';';
-    document.execCommand('insertHTML', false,
-      '<span style="' + styleStr + '">' + sel.toString() + '</span>');
+    var s = '';
+    if (_copiedStyle.color)      s += 'color:' + _copiedStyle.color + ';';
+    if (_copiedStyle.background) s += 'background-color:' + _copiedStyle.background + ';';
+    if (_copiedStyle.fontSize)   s += 'font-size:' + _copiedStyle.fontSize + ';';
+    document.execCommand('insertHTML', false, '<span style="' + s + '">' + sel.toString() + '</span>');
   }
-
   autoSave();
   showToast('🖌 Style applied!', 'success');
 }
