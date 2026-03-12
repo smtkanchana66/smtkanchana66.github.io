@@ -1,5 +1,18 @@
 [
   {
+    "slug": "python-for-everyone-post-01",
+    "title": "Python for Everyone #Post 01",
+    "excerpt": "Hi there! Welcome to Python for Everyone a blog series where we learn Python from\nscratch, step by step, all the way up to Artificial Intelligence and Machine Learning. Whether you have never written a single line of code before, or you have tried Python once and felt confused, this series is for you.",
+    "date": "2026-03-09",
+    "category": "python",
+    "tags": [
+      "Python for Everyone a blog series",
+      "python",
+      "post 01"
+    ],
+    "image": "/images/python.png"
+  },
+  {
     "slug": "the-complete-guide-to-gitignore",
     "title": "The Complete Guide to .gitignore",
     "excerpt": "A comprehensive beginner-to-advanced guide to Git’s .gitignore file. Learn how .gitignore works, how to create and configure it, understand pattern syntax, avoid common mistakes, and keep sensitive files like API keys and environment variables out of your repository.",
