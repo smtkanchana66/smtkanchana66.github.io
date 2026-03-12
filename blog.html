@@ -363,6 +363,48 @@
             padding: 40px;
         }
 
+        /* ── PAGINATION ── */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #1a1a1a;
+            gap: 12px;
+        }
+
+        .pagination-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .pagination-btn:hover {
+            color: #fff;
+        }
+
+        .pagination-btn:disabled,
+        .pagination-btn.hidden {
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .pagination-info {
+            color: #555;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
         @media (max-width: 1024px) {
             .main-layout {
                 grid-template-columns: 1fr;
@@ -410,6 +452,17 @@
             <div id="noResults" class="no-results" style="display: none;">
                 No posts found matching your search.
             </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination" style="display:none;">
+                <button class="pagination-btn" id="prevBtn" onclick="changePage(-1)">
+                    ← Back to Blog
+                </button>
+                <span class="pagination-info" id="pageInfo"></span>
+                <button class="pagination-btn" id="nextBtn" onclick="changePage(1)">
+                    Next Page →
+                </button>
+            </div>
         </div>
 
         <!-- Sidebar -->
@@ -452,43 +505,70 @@
     </footer>
 
     <script>
+        const POSTS_PER_PAGE = 5;
+
         let allPosts = [];
+        let filteredPosts = [];  // current active set (all, search, category, tag)
+        let currentPage = 1;
         let currentSlide = 0;
         let sliderInterval;
 
+        // ── Load ──────────────────────────────────────
         async function loadPosts() {
             try {
                 const response = await fetch('json/index.json');
                 const posts = await response.json();
-                
                 allPosts = posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-                
-                displayPosts(allPosts);
+                setFilteredPosts(allPosts, 1);
                 setupFeaturedSlider(allPosts);
                 setupCategories(allPosts);
                 setupTags(allPosts);
-                
             } catch (error) {
                 console.error('Error loading posts:', error);
-                document.getElementById('postList').innerHTML = 
+                document.getElementById('postList').innerHTML =
                     '<li class="loading">Error loading posts. Check console.</li>';
             }
         }
 
-        function displayPosts(posts) {
-            const postList = document.getElementById('postList');
-            const noResults = document.getElementById('noResults');
-            
-            if (posts.length === 0) {
-                postList.style.display = 'none';
+        // ── Core: set the active post list and go to a page ──
+        function setFilteredPosts(posts, page) {
+            filteredPosts = posts;
+            currentPage = page;
+            renderPage();
+        }
+
+        function changePage(direction) {
+            const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+            const newPage = currentPage + direction;
+            if (newPage < 1 || newPage > totalPages) return;
+            currentPage = newPage;
+            renderPage();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderPage() {
+            const postList   = document.getElementById('postList');
+            const noResults  = document.getElementById('noResults');
+            const pagination = document.getElementById('pagination');
+            const prevBtn    = document.getElementById('prevBtn');
+            const nextBtn    = document.getElementById('nextBtn');
+            const pageInfo   = document.getElementById('pageInfo');
+
+            if (filteredPosts.length === 0) {
+                postList.style.display  = 'none';
                 noResults.style.display = 'block';
+                pagination.style.display = 'none';
                 return;
             }
 
-            postList.style.display = 'block';
+            const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+            const start = (currentPage - 1) * POSTS_PER_PAGE;
+            const pagePosts = filteredPosts.slice(start, start + POSTS_PER_PAGE);
+
+            // Render posts
+            postList.style.display  = 'block';
             noResults.style.display = 'none';
-            
-            postList.innerHTML = posts.map(post => `
+            postList.innerHTML = pagePosts.map(post => `
                 <li class="post-item">
                     <div class="post-date">${formatDate(post.date)}</div>
                     <h2 class="post-title">
@@ -497,7 +577,7 @@
                     <p class="post-excerpt">${post.excerpt}</p>
                     <div class="post-meta">
                         <span class="post-category">${post.category}</span>
-                        ${post.tags.length > 0 ? `
+                        ${post.tags && post.tags.length > 0 ? `
                             <div class="post-tags">
                                 ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
                             </div>
@@ -505,15 +585,37 @@
                     </div>
                 </li>
             `).join('');
+
+            // Pagination bar — only show if more than one page
+            if (totalPages <= 1) {
+                pagination.style.display = 'none';
+                return;
+            }
+
+            pagination.style.display = 'flex';
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+
+            // Previous button — hidden on page 1
+            if (currentPage <= 1) {
+                prevBtn.classList.add('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+            }
+
+            // Next button — hidden on last page
+            if (currentPage >= totalPages) {
+                nextBtn.classList.add('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+            }
         }
 
+        // ── Featured slider ────────────────────────────
         function setupFeaturedSlider(posts) {
             const slider = document.getElementById('featuredSlider');
             const dots = document.getElementById('sliderDots');
-            
-            // Take first 3 posts for featured
             const featured = posts.slice(0, 3);
-            
+
             slider.innerHTML = featured.map((post, index) => `
                 <div class="featured-post ${index === 0 ? 'active' : ''}">
                     <div class="featured-image">
@@ -526,11 +628,10 @@
                 </div>
             `).join('');
 
-            dots.innerHTML = featured.map((_, index) => 
+            dots.innerHTML = featured.map((_, index) =>
                 `<span class="dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></span>`
             ).join('');
 
-            // Auto-slide every 4 seconds
             sliderInterval = setInterval(() => {
                 currentSlide = (currentSlide + 1) % featured.length;
                 updateSlider();
@@ -540,130 +641,99 @@
         function goToSlide(index) {
             currentSlide = index;
             updateSlider();
-            // Reset auto-slide timer
             clearInterval(sliderInterval);
             sliderInterval = setInterval(() => {
-                currentSlide = (currentSlide + 1) % 3;
+                currentSlide = (currentSlide + 1) % document.querySelectorAll('.featured-post').length;
                 updateSlider();
             }, 4000);
         }
 
         function updateSlider() {
-            const slides = document.querySelectorAll('.featured-post');
-            const dots = document.querySelectorAll('.dot');
-            
-            slides.forEach((slide, index) => {
-                slide.classList.toggle('active', index === currentSlide);
-            });
-            
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentSlide);
-            });
+            document.querySelectorAll('.featured-post').forEach((slide, i) =>
+                slide.classList.toggle('active', i === currentSlide));
+            document.querySelectorAll('.dot').forEach((dot, i) =>
+                dot.classList.toggle('active', i === currentSlide));
         }
 
+        // ── Sidebar ────────────────────────────────────
         function setupCategories(posts) {
             const categories = {};
             posts.forEach(post => {
                 categories[post.category] = (categories[post.category] || 0) + 1;
             });
 
-            const categoryList = document.getElementById('categoryList');
-            
-            // Add 'All' category first
-            let categoryHTML = `
+            let html = `
                 <li class="category-item">
-                    <a href="#" class="category-link" onclick="showAllPosts(); return false;">
-                        All
-                    </a>
+                    <a href="#" class="category-link" onclick="showAllPosts(); return false;">All</a>
                     <span class="category-count">${posts.length}</span>
-                </li>
-            `;
-            
-            // Add other categories
-            categoryHTML += Object.entries(categories)
+                </li>`;
+
+            html += Object.entries(categories)
                 .sort((a, b) => b[1] - a[1])
-                .map(([category, count]) => `
+                .map(([cat, count]) => `
                     <li class="category-item">
-                        <a href="#" class="category-link" onclick="filterByCategory('${category}'); return false;">
-                            ${category}
-                        </a>
+                        <a href="#" class="category-link" onclick="filterByCategory('${cat}'); return false;">${cat}</a>
                         <span class="category-count">${count}</span>
-                    </li>
-                `).join('');
-            
-            categoryList.innerHTML = categoryHTML;
+                    </li>`).join('');
+
+            document.getElementById('categoryList').innerHTML = html;
         }
 
         function setupTags(posts) {
             const tags = {};
-            posts.forEach(post => {
-                post.tags.forEach(tag => {
-                    tags[tag] = (tags[tag] || 0) + 1;
-                });
-            });
+            posts.forEach(post => post.tags.forEach(tag => {
+                tags[tag] = (tags[tag] || 0) + 1;
+            }));
 
-            const tagsCloud = document.getElementById('tagsCloud');
-            tagsCloud.innerHTML = Object.entries(tags)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 10)
-                .map(([tag, count]) => `
-                    <a href="#" class="tag-link" onclick="filterByTag('${tag}'); return false;">
-                        ${tag}
-                    </a>
+            document.getElementById('tagsCloud').innerHTML = Object.entries(tags)
+                .sort((a, b) => b[1] - a[1]).slice(0, 10)
+                .map(([tag]) => `
+                    <a href="#" class="tag-link" onclick="filterByTag('${tag}'); return false;">${tag}</a>
                 `).join('');
         }
 
-        function filterByCategory(category) {
-            const filtered = allPosts.filter(post => post.category === category);
-            displayPosts(filtered);
+        // ── Filters — always reset to page 1 ──────────
+        function showAllPosts() {
             document.getElementById('searchInput').value = '';
+            setFilteredPosts(allPosts, 1);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function showAllPosts() {
-            displayPosts(allPosts);
+        function filterByCategory(category) {
             document.getElementById('searchInput').value = '';
+            setFilteredPosts(allPosts.filter(p => p.category === category), 1);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function filterByTag(tag) {
-            const filtered = allPosts.filter(post => post.tags.includes(tag));
-            displayPosts(filtered);
             document.getElementById('searchInput').value = '';
+            setFilteredPosts(allPosts.filter(p => p.tags.includes(tag)), 1);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Search functionality
+        // ── Search — resets to page 1 on every keystroke ──
         document.getElementById('searchInput').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const searchIcon = document.getElementById('searchIcon');
-            
-            // Fade icon when typing
-            if (searchTerm !== '') {
-                searchIcon.classList.add('fade');
-            } else {
-                searchIcon.classList.remove('fade');
-            }
-            
-            if (searchTerm === '') {
-                displayPosts(allPosts);
+            const term = e.target.value.toLowerCase().trim();
+            document.getElementById('searchIcon').classList.toggle('fade', term !== '');
+
+            if (term === '') {
+                setFilteredPosts(allPosts, 1);
                 return;
             }
 
-            const filtered = allPosts.filter(post => 
-                post.title.toLowerCase().includes(searchTerm) ||
-                post.excerpt.toLowerCase().includes(searchTerm) ||
-                post.category.toLowerCase().includes(searchTerm) ||
-                post.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+            const results = allPosts.filter(post =>
+                post.title.toLowerCase().includes(term) ||
+                post.excerpt.toLowerCase().includes(term) ||
+                post.category.toLowerCase().includes(term) ||
+                post.tags.some(tag => tag.toLowerCase().includes(term))
             );
-
-            displayPosts(filtered);
+            setFilteredPosts(results, 1);
         });
 
+        // ── Helpers ────────────────────────────────────
         function formatDate(dateString) {
             const date = new Date(dateString);
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
         }
 
