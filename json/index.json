@@ -1,5 +1,23 @@
 [
   {
+    "slug": "linux-desktop-environments-a-personal-journey-through-gnome-kde-and-xfce",
+    "title": "Linux Desktop Environments: A Personal Journey Through GNOME, KDE, and XFCE",
+    "excerpt": "After spending years hopping between Linux desktop environments living inside GNOME's polished ecosystem, wrestling with KDE's endless customization, and ultimately settling into the quiet efficiency of XFCE  I've come to appreciate what each one offers and why, for me, XFCE wins every single time.",
+    "date": "2026-03-12",
+    "category": "Linux",
+    "tags": [
+      "Linux",
+      "Desktop Environment",
+      "DE",
+      "Unix",
+      "Gnome",
+      "KDE",
+      "Xfce",
+      "Personal thought"
+    ],
+    "image": "/images/kde-gnome-xfce.png"
+  },
+  {
     "slug": "python-for-everyone-post-01",
     "title": "Python for Everyone #Post 01",
     "excerpt": "Hi there! Welcome to Python for Everyone a blog series where we learn Python from\nscratch, step by step, all the way up to Artificial Intelligence and Machine Learning. Whether you have never written a single line of code before, or you have tried Python once and felt confused, this series is for you.",
