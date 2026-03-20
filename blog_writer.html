@@ -930,14 +930,14 @@ input[type="date"].meta-input::-webkit-calendar-picker-indicator { filter: inver
         <!-- Text color palette -->
         <div class="toolbar-color-wrap" id="textColorWrap">
           <button class="toolbar-btn toolbar-color-btn" title="Text Color" onclick="togglePalette('textColorPalette', event)" style="font-size:13px;font-weight:800;position:relative">
-            A<span id="textColorBar" style="position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:14px;height:3px;background:#f0f0f8;border-radius:2px"></span>
+            A<span id="textColorBar" style="position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:14px;height:3px;background:#ffffff;border-radius:2px"></span>
           </button>
           <div class="color-palette-dropdown" id="textColorPalette">
             <div class="color-palette-label">Text Color</div>
             <div class="color-swatches" id="textColorSwatches"></div>
             <div class="color-picker-row">
               <label for="textColorPickerCustom">Custom…</label>
-              <input type="color" id="textColorPickerCustom" value="#f0f0f8" oninput="applyTextColor(this.value)">
+              <input type="color" id="textColorPickerCustom" value="#ffffff" oninput="applyTextColor(this.value)">
             </div>
           </div>
         </div>
@@ -1560,6 +1560,8 @@ var HIGHLIGHT_COLORS = [
 function buildPalettes() {
   buildSwatches('textColorSwatches', TEXT_COLORS, function(c) { applyTextColor(c); });
   buildSwatches('bgColorSwatches', HIGHLIGHT_COLORS, function(c) { applyHighlight(c); }, true);
+  // Set white as the default active text colour
+  document.getElementById('textColorBar').style.background = '#ffffff';
 }
 
 function buildSwatches(containerId, colors, applyFn, addClear) {
@@ -1576,6 +1578,11 @@ function buildSwatches(containerId, colors, applyFn, addClear) {
     } else {
       sw.style.background = c;
       sw.title = c;
+      // Make very light swatches visible against the dark palette background
+      var light = ['#ffffff','#f0f0f8','#e0e0e0','#f3e5f5','#ede7f6','#e3f2fd','#e8f5e9','#fce4ec','#fff3e0','#fff9c4'];
+      if (light.includes(c.toLowerCase())) {
+        sw.style.boxShadow = 'inset 0 0 0 1.5px rgba(0,0,0,0.3)';
+      }
     }
     sw.addEventListener('mousedown', function(e) {
       e.preventDefault(); // keep editor focus
