@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>church_of_molt.blog</title>
+    <title>blog.sh</title>
 
 <!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-B0QVHK527M"></script>
@@ -15,7 +15,7 @@
 	  gtag('config', 'G-B0QVHK527M');
 	</script>
 
-    <link rel="icon" href="crab.png" type="image/x-icon">
+    <link rel="icon" href="k66.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -84,11 +84,23 @@
         }
 
         header {
-            max-width: 720px;
-            margin: 0 auto 40px auto;
-            padding: 24px 26px;
+            margin: 0 0 24px 0;
+            padding: 22px 30px;
             border: 1px solid var(--border);
             background: var(--bg-panel);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .header-left {
+            flex: 1 1 320px;
+            min-width: 260px;
         }
 
         .term-line {
@@ -99,11 +111,16 @@
         }
         .term-line .prompt { color: var(--green); }
 
+        .title-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
         .logo {
-            width: 46px;
-            height: 46px;
-            float: left;
-            margin-right: 16px;
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
             filter: grayscale(1) brightness(0.9) contrast(1.2) sepia(1) hue-rotate(65deg) saturate(4);
             opacity: 0.9;
         }
@@ -124,25 +141,58 @@
         }
 
         .tagline {
-            clear: both;
             padding-top: 14px;
             color: var(--text-dim);
             font-size: 0.85rem;
         }
         .tagline::before { content: '// '; color: var(--green-dim); }
 
-        /* Search Section */
+        /* Right-side logo — fills the empty top-right corner,
+           scaled to match the header's own height */
+        .header-right {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .k66-logo {
+            height: 100%;
+            min-height: 78px;
+            width: 130px;
+            background-color: var(--green);
+            opacity: 0.92;
+            -webkit-mask-image: url('k66.png');
+            mask-image: url('k66.png');
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            mask-position: center;
+            -webkit-mask-size: contain;
+            mask-size: contain;
+        }
+
+        /* Search Section — right-aligned under the header */
         .search-section {
-            max-width: 720px;
-            margin: 0 auto 40px auto;
+            margin: 0 0 40px 0;
+            display: flex;
+            justify-content: flex-end;
         }
 
         .search-box {
             display: flex;
             align-items: center;
-            border: 1px solid var(--border);
-            background: var(--bg-input);
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid var(--green-dim);
+            background: var(--bg-panel);
             padding: 0 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--green);
+            box-shadow: 0 0 0 1px var(--green);
         }
 
         .search-box .prompt-label {
@@ -524,6 +574,12 @@
             }
         }
 
+        @media (max-width: 700px) {
+            .header-right { display: none; }
+            .search-section { justify-content: stretch; }
+            .search-box { max-width: 100%; }
+        }
+
         @media (max-width: 600px) {
             header { padding: 18px 18px; }
             .site-title { font-size: 1.15rem; }
@@ -534,10 +590,19 @@
 <body>
     <div class="top-container">
         <header>
-            <div class="term-line"><span class="prompt">guest@linux-desktop-m32</span>:~$ whoami</div>
-            <div class="logo"><img src="k66.png" alt="Cancer Crab"></div>
-            <!--<h1 class="site-title">K66<span class="cursor"></span></h1>-->
-            <div class="tagline">linux · security — field notes from the shell<span class="cursor"></span></div>
+            <div class="header-inner">
+                <div class="header-left">
+                    <div class="term-line"><span class="prompt">guest@church-of-molt</span>:~$ whoami</div>
+                    <div class="title-row">
+                        <div class="logo"><img src="crab.png" alt="Cancer Crab"></div>
+                        <h1 class="site-title">0xRoot<span class="cursor"></span></h1>
+                    </div>
+                    <div class="tagline">linux · security · ai — field notes from the shell</div>
+                </div>
+                <div class="header-right">
+                    <div class="k66-logo" role="img" aria-label="K66 logo"></div>
+                </div>
+            </div>
         </header>
 
         <!-- Search Section -->
@@ -606,7 +671,7 @@
     </div>
 
     <footer>
-        <p class="prompt-out">[k66@linux-desktop-m32 ~]$ whoami</p>
+        <p class="prompt-out">[kanchana@church-of-molt ~]$ whoami</p>
         <p>Kanchana Samarakoon</p>
         <div class="social-links">
             <a href="https://github.com/smtkanchana66">github</a>
