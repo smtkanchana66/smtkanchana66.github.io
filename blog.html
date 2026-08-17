@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>blog.sh</title>
+    <title>0xRoot</title>
 
 <!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-B0QVHK527M"></script>
@@ -15,684 +15,402 @@
 	  gtag('config', 'G-B0QVHK527M');
 	</script>
 
-    <link rel="icon" href="k66.png" type="image/x-icon">
+    <link rel="icon" href="terminal.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #060a06;
-            --bg-panel: #0a100a;
-            --bg-input: #081008;
-            --green: #3dff8f;
-            --green-bright: #a8ffce;
-            --green-dim: #5e8f70;
-            --border: #1d3324;
-            --text: #a9dab8;
-            --text-dim: #557a63;
-            --font: 'JetBrains Mono', 'Fira Code', Consolas, 'Courier New', monospace;
+            --bg: #0b0c0e;
+            --bg-panel: #131417;
+            --bg-elev: #1a1c20;
+            --border: #24262b;
+            --text: #eef0f2;
+            --text-muted: #9ba0a8;
+            --text-faint: #5c6169;
+            --accent: #2ecc71;
+            --accent-strong: #4ade80;
+            --accent-soft: rgba(46, 204, 113, 0.12);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --mono: 'JetBrains Mono', Consolas, 'Courier New', monospace;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: var(--font);
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
-            position: relative;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* CRT scanline + vignette overlay */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 999;
-            background:
-                repeating-linear-gradient(180deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px, rgba(61,255,143,0.025) 3px, rgba(61,255,143,0.025) 4px),
-                radial-gradient(ellipse at center, rgba(0,0,0,0) 60%, rgba(0,0,0,0.35) 100%);
-        }
-
-        ::selection { background: var(--green); color: #04140a; }
-
+        ::selection { background: var(--accent); color: #06210f; }
         a { color: inherit; }
 
-        .cursor {
-            display: inline-block;
-            width: 0.62ch;
-            height: 0.94em;
-            background: var(--green);
-            vertical-align: baseline;
-            position: relative;
-            top: 0.12em;
-            margin-left: 0.15ch;
-            animation: blink 1.1s steps(1) infinite;
-        }
-        @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
-        @media (prefers-reduced-motion: reduce) {
-            .cursor { animation: none; }
-        }
-
-        .top-container {
+        .wrap {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 40px 20px 0 20px;
+            padding: 0 32px;
         }
 
+        /* ── Header ─────────────────────────────── */
         header {
-            margin: 0 0 24px 0;
-            padding: 22px 30px;
-            border: 1px solid var(--border);
-            background: var(--bg-panel);
+            padding: 28px 0;
+            border-bottom: 1px solid var(--border);
         }
 
-        .header-inner {
+        .header-row {
             display: flex;
-            align-items: stretch;
+            align-items: center;
             justify-content: space-between;
-            gap: 30px;
+            gap: 24px;
             flex-wrap: wrap;
         }
 
-        .header-left {
-            flex: 1 1 320px;
-            min-width: 260px;
-        }
-
-        .term-line {
-            color: var(--green-dim);
-            font-size: 0.85rem;
-            margin-bottom: 14px;
-            letter-spacing: 0.02em;
-        }
-        .term-line .prompt { color: var(--green); }
-
-        .title-row {
+        .brand {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
-        .logo {
-            width: 44px;
-            height: 44px;
-            flex-shrink: 0;
-            filter: grayscale(1) brightness(0.9) contrast(1.2) sepia(1) hue-rotate(65deg) saturate(4);
-            opacity: 0.9;
-        }
-
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .site-title {
-            font-size: 1.5rem;
-            color: var(--green-bright);
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            line-height: 1.2;
-        }
-
-        .tagline {
-            padding-top: 14px;
-            color: var(--text-dim);
-            font-size: 0.85rem;
-        }
-        .tagline::before { content: '// '; color: var(--green-dim); }
-
-        /* Right-side logo — fills the empty top-right corner,
-           scaled to match the header's own height */
-        .header-right {
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            background: var(--accent-soft);
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
+            overflow: hidden;
         }
 
-        .k66-logo {
-            height: 100%;
-            min-height: 78px;
-            width: 130px;
-            background-color: var(--green);
-            opacity: 0.92;
-            -webkit-mask-image: url('k66.png');
-            mask-image: url('k66.png');
-            -webkit-mask-repeat: no-repeat;
-            mask-repeat: no-repeat;
-            -webkit-mask-position: center;
-            mask-position: center;
-            -webkit-mask-size: contain;
-            mask-size: contain;
+        .brand-mark img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
         }
 
-        /* Search Section — right-aligned under the header */
-        .search-section {
-            margin: 0 0 40px 0;
-            display: flex;
-            justify-content: flex-end;
+        .brand-name {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
         }
 
-        .search-box {
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--accent-strong);
+            background: var(--accent-soft);
+            border: 1px solid rgba(46, 204, 113, 0.25);
+            border-radius: 999px;
+            padding: 5px 12px;
+        }
+
+        .header-search {
             display: flex;
             align-items: center;
             width: 100%;
-            max-width: 420px;
-            border: 1px solid var(--green-dim);
+            max-width: 340px;
             background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 10px;
             padding: 0 14px;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.15s;
         }
+        .header-search:focus-within { border-color: var(--accent); }
 
-        .search-box:focus-within {
-            border-color: var(--green);
-            box-shadow: 0 0 0 1px var(--green);
-        }
-
-        .search-box .prompt-label {
-            color: var(--green-dim);
-            font-size: 0.9rem;
-            white-space: nowrap;
-            padding-right: 10px;
-            border-right: 1px solid var(--border);
-        }
+        .header-search svg { flex-shrink: 0; color: var(--text-faint); }
 
         .search-input {
             flex: 1;
             width: 100%;
-            padding: 13px 14px;
+            padding: 11px 10px;
             background: transparent;
             border: none;
-            color: var(--green-bright);
+            color: var(--text);
             font-family: var(--font);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+        }
+        .search-input:focus { outline: none; }
+        .search-input::placeholder { color: var(--text-faint); }
+        #searchIcon { display: none; }
+
+        /* ── Hero ───────────────────────────────── */
+        .hero {
+            padding: 56px 0 40px 0;
         }
 
-        .search-input:focus {
-            outline: none;
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin: 16px 0 14px 0;
         }
 
-        .search-input::placeholder {
-            color: var(--text-dim);
+        .hero h1 .accent { color: var(--accent-strong); }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 560px;
+            line-height: 1.65;
         }
 
-        #searchIcon {
-            color: var(--green);
-            font-weight: 700;
-            animation: blink 1.1s steps(1) infinite;
-            transition: opacity 0.2s;
-        }
-        #searchIcon.fade { animation: none; opacity: 0.25; }
-
-        /* Main Layout */
-        .main-layout {
+        /* ── Layout ─────────────────────────────── */
+        .layout {
             display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 30px;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px 40px 20px;
+            grid-template-columns: 1fr 320px;
+            gap: 28px;
+            padding-bottom: 60px;
         }
 
-        .main-content {
-            border: 1px solid var(--border);
-            background: var(--bg-panel);
-            padding: 22px 26px;
-        }
-
-        .list-header {
-            color: var(--green-dim);
-            font-size: 0.85rem;
-            padding-bottom: 16px;
-            margin-bottom: 16px;
-            border-bottom: 1px dashed var(--border);
-        }
-        .list-header .prompt { color: var(--green); }
-
-        /* Posts List */
-        .post-list {
-            list-style: none;
-        }
+        /* ── Post cards ─────────────────────────── */
+        .post-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
 
         .post-item {
-            margin-bottom: 28px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid var(--border);
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px 26px;
+            transition: border-color 0.15s, background 0.15s;
         }
+        .post-item:hover { border-color: rgba(46,204,113,0.35); background: var(--bg-elev); }
 
-        .post-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
+        .post-row { text-decoration: none; color: inherit; display: block; }
 
-        .post-row {
-            display: block;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .post-row:hover .post-title { color: var(--green-bright); }
-        .post-row:hover .post-perm { color: var(--green); }
-
-        .post-perm {
-            display: block;
-            color: var(--text-dim);
-            font-size: 0.78rem;
-            margin-bottom: 6px;
-            white-space: pre-wrap;
-        }
-        .post-perm .arrow { color: var(--green); }
-
-        .post-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--green);
-            margin-bottom: 8px;
-            text-decoration: none;
-        }
-
-        .post-excerpt {
-            color: var(--text);
-            font-size: 0.92rem;
-            line-height: 1.6;
-            margin-bottom: 10px;
-            opacity: 0.9;
-        }
-
-        .post-meta {
+        .post-meta-top {
             display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
             align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
             font-size: 0.8rem;
+            color: var(--text-faint);
         }
 
         .post-category {
-            color: var(--green-dim);
+            display: inline-flex;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            color: var(--accent-strong);
+            background: var(--accent-soft);
+            border-radius: 999px;
+            padding: 3px 10px;
         }
-        .post-category::before { content: '['; }
-        .post-category::after { content: ']'; }
 
-        .post-tags {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+        .post-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 8px;
         }
+        .post-item:hover .post-title { color: var(--accent-strong); }
+
+        .post-excerpt {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+
+        .post-tags { display: flex; gap: 8px; flex-wrap: wrap; }
 
         .tag {
-            color: var(--text-dim);
+            font-size: 0.78rem;
+            color: var(--text-faint);
+            background: var(--bg-elev);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 3px 10px;
         }
 
-        /* Sidebar */
-        .sidebar {
-            position: sticky;
-            top: 20px;
-            height: fit-content;
-        }
+        /* ── Sidebar ────────────────────────────── */
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
 
-        .sidebar-section {
+        .sidebar-card {
             background: var(--bg-panel);
             border: 1px solid var(--border);
-            padding: 18px 20px;
-            margin-bottom: 20px;
+            border-radius: 14px;
+            padding: 20px 22px;
         }
 
         .sidebar-title {
-            font-size: 0.8rem;
-            color: var(--green-dim);
-            margin-bottom: 14px;
-            letter-spacing: 0.03em;
-        }
-        .sidebar-title .prompt { color: var(--green); }
-
-        /* Featured Post Slider */
-        .featured-slider {
-            position: relative;
-            overflow: hidden;
-            height: 250px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-faint);
+            margin-bottom: 16px;
         }
 
-        .featured-post {
-            position: absolute;
-            width: 100%;
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
+        /* Featured slider */
+        .featured-slider { position: relative; overflow: hidden; height: 220px; }
+        .featured-post { position: absolute; inset: 0; opacity: 0; transition: opacity 0.4s; }
+        .featured-post.active { opacity: 1; }
+        .featured-image { width: 100%; height: 110px; border-radius: 10px; overflow: hidden; margin-bottom: 12px; background: var(--bg-elev); }
+        .featured-image img { width: 100%; height: 100%; object-fit: cover; }
+        .featured-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; }
+        .featured-title a { color: var(--text); text-decoration: none; }
+        .featured-title a:hover { color: var(--accent-strong); }
+        .featured-excerpt { color: var(--text-faint); font-size: 0.82rem; line-height: 1.5; }
 
-        .featured-post.active {
-            opacity: 1;
-        }
-
-        .featured-image {
-            width: 100%;
-            height: 120px;
-            margin-bottom: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-        }
-
-        .featured-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: grayscale(0.6) contrast(1.1) brightness(0.85) sepia(0.3) hue-rotate(65deg) saturate(2.2);
-        }
-
-        .featured-title {
-            font-size: 0.95rem;
-            margin-bottom: 6px;
-        }
-
-        .featured-title a {
-            color: var(--green);
-            text-decoration: none;
-        }
-        .featured-title a:hover { color: var(--green-bright); }
-
-        .featured-excerpt {
-            color: var(--text-dim);
-            font-size: 0.8rem;
-            line-height: 1.5;
-        }
-
-        .slider-dots {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 12px;
-        }
-
-        .dot {
-            width: 6px;
-            height: 6px;
-            background: var(--border);
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .dot.active {
-            background: var(--green);
-        }
+        .slider-dots { display: flex; gap: 6px; justify-content: center; margin-top: 12px; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); cursor: pointer; transition: background 0.2s; }
+        .dot.active { background: var(--accent); }
 
         /* Categories */
-        .category-list {
-            list-style: none;
-        }
-
+        .category-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
         .category-item {
-            padding: 7px 0;
-            border-bottom: 1px dashed var(--border);
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.88rem;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem;
         }
-
-        .category-item:last-child {
-            border-bottom: none;
-        }
-
-        .category-link {
-            color: var(--text);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .category-link::before { content: './'; color: var(--green-dim); }
-
-        .category-link:hover {
-            color: var(--green-bright);
-        }
-
+        .category-item:last-child { border-bottom: none; }
+        .category-link { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+        .category-link:hover { color: var(--accent-strong); }
         .category-count {
-            color: var(--text-dim);
-            font-size: 0.8rem;
+            font-size: 0.75rem; color: var(--text-faint);
+            background: var(--bg-elev); border-radius: 999px; padding: 2px 8px;
         }
 
-        /* Tags Cloud */
-        .tags-cloud {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px 14px;
-        }
-
+        /* Tags cloud */
+        .tags-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
         .tag-link {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: color 0.2s;
+            font-size: 0.82rem; color: var(--text-muted); text-decoration: none;
+            background: var(--bg-elev); border: 1px solid var(--border);
+            border-radius: 999px; padding: 4px 12px; transition: color 0.15s, border-color 0.15s;
         }
+        .tag-link:hover { color: var(--accent-strong); border-color: rgba(46,204,113,0.35); }
 
-        .tag-link:hover {
-            color: var(--green-bright);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            padding: 30px 20px 50px 20px;
-            color: var(--text-dim);
-            font-size: 0.85rem;
-        }
-
-        footer .prompt-out {
-            color: var(--green-dim);
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-        }
-
-        footer a {
-            color: var(--text-dim);
-            text-decoration: none;
-            margin: 0 10px;
-        }
-
-        footer a:hover {
-            color: var(--green);
-        }
-
-        footer p.copy {
-            margin-top: 16px;
-            color: #2e4437;
-        }
-
-        .loading {
-            text-align: center;
-            color: var(--text-dim);
-            padding: 40px;
-        }
-
-        .no-results {
-            text-align: center;
-            color: var(--text-dim);
-            padding: 40px;
-        }
-        .no-results::before { content: '404 :: '; color: var(--green-dim); }
-
-        /* Pagination */
+        /* ── Pagination ─────────────────────────── */
         .pagination {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px dashed var(--border);
-            gap: 12px;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 30px; gap: 12px;
         }
-
         .pagination-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--green-dim);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-family: var(--font);
-            padding: 0;
-            background: none;
-            border: none;
-            cursor: pointer;
-            transition: color 0.2s;
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--bg-panel); border: 1px solid var(--border);
+            color: var(--text); font-family: var(--font); font-size: 0.85rem; font-weight: 500;
+            padding: 9px 16px; border-radius: 999px; cursor: pointer; transition: border-color 0.15s, color 0.15s;
         }
+        .pagination-btn:hover { border-color: var(--accent); color: var(--accent-strong); }
+        .pagination-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .pagination-btn.hidden { visibility: hidden; pointer-events: none; }
+        .pagination-info { color: var(--text-faint); font-size: 0.82rem; }
 
-        .pagination-btn:hover {
-            color: var(--green-bright);
-        }
+        .no-results { text-align: center; color: var(--text-faint); padding: 60px 20px; }
+        .loading { text-align: center; color: var(--text-faint); padding: 60px 20px; }
 
-        .pagination-btn:focus-visible,
-        a:focus-visible,
-        input:focus-visible {
-            outline: 1px solid var(--green);
-            outline-offset: 2px;
-        }
-
-        .pagination-btn:disabled,
-        .pagination-btn.hidden {
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .pagination-info {
-            color: var(--text-dim);
-            font-size: 0.8rem;
+        /* ── Footer ─────────────────────────────── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 32px 0 48px 0;
             text-align: center;
+            color: var(--text-faint);
+            font-size: 0.85rem;
         }
+        footer .social-links { display: flex; gap: 18px; justify-content: center; margin: 12px 0; }
+        footer a { color: var(--text-muted); text-decoration: none; }
+        footer a:hover { color: var(--accent-strong); }
+        footer .copy { margin-top: 10px; color: var(--text-faint); opacity: 0.7; }
 
-        @media (max-width: 1024px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                position: static;
-            }
-        }
-
-        @media (max-width: 700px) {
-            .header-right { display: none; }
-            .search-section { justify-content: stretch; }
-            .search-box { max-width: 100%; }
+        @media (max-width: 960px) {
+            .layout { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 600px) {
-            header { padding: 18px 18px; }
-            .site-title { font-size: 1.15rem; }
-            .main-content, .sidebar-section { padding: 16px 18px; }
+            .hero { padding: 40px 0 28px 0; }
+            .post-item { padding: 20px; }
         }
     </style>
 </head>
 <body>
-    <div class="top-container">
+    <div class="wrap">
         <header>
-            <div class="header-inner">
-                <div class="header-left">
-                    <div class="term-line"><span class="prompt">guest@church-of-molt</span>:~$ whoami</div>
-                    <div class="title-row">
-                        <div class="logo"><img src="crab.png" alt="Cancer Crab"></div>
-                        <h1 class="site-title">0xRoot<span class="cursor"></span></h1>
-                    </div>
-                    <div class="tagline">linux · security · ai — field notes from the shell</div>
+            <div class="header-row">
+                <div class="brand">
+                    <div class="brand-mark"><img src="terminal.ico" alt="logo"></div>
+                    <span class="brand-name">0xRoot</span>
                 </div>
-                <div class="header-right">
-                    <div class="k66-logo" role="img" aria-label="K66 logo"></div>
+                <div class="header-search">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search posts...">
+                    <span id="searchIcon"></span>
                 </div>
             </div>
         </header>
 
-        <!-- Search Section -->
-        <div class="search-section">
-            <div class="search-box">
-                <span class="prompt-label">grep -i</span>
-                <input type="text"
-                       id="searchInput"
-                       class="search-input"
-                       placeholder="search posts...">
-                <span id="searchIcon">_</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="main-layout">
-        <!-- Main Content -->
-        <div class="main-content">
-            <div class="list-header"><span class="prompt">$</span> ls -la /posts/</div>
-            <ul class="post-list" id="postList">
-                <li class="loading">loading posts...</li>
-            </ul>
-            <div id="noResults" class="no-results" style="display: none;">
-                no posts found matching your query.
-            </div>
-
-            <!-- Pagination -->
-            <div class="pagination" id="pagination" style="display:none;">
-                <button class="pagination-btn" id="prevBtn" onclick="changePage(-1)">
-                    &lt;&lt; prev
-                </button>
-                <span class="pagination-info" id="pageInfo"></span>
-                <button class="pagination-btn" id="nextBtn" onclick="changePage(1)">
-                    next &gt;&gt;
-                </button>
-            </div>
+        <div class="hero">
+            <!--<span class="badge">0xRoot</span>-->
+            <h1>Notes on <span class="accent">Linux</span>, security, and building things.</h1>
+            <p>Field notes and write-ups on Linux systems, cybersecurity, and applied AI — from someone learning in public.</p>
         </div>
 
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <!-- Featured Posts Slider -->
-            <div class="sidebar-section">
-                <h3 class="sidebar-title"><span class="prompt">$</span> cat featured.log</h3>
-                <div class="featured-slider" id="featuredSlider">
-                    <!-- Featured posts will be inserted here -->
-                </div>
-                <div class="slider-dots" id="sliderDots"></div>
-            </div>
-
-            <!-- Categories -->
-            <div class="sidebar-section">
-                <h3 class="sidebar-title"><span class="prompt">$</span> ls categories/</h3>
-                <ul class="category-list" id="categoryList">
-                    <!-- Categories will be inserted here -->
+        <div class="layout">
+            <div class="main-content">
+                <ul class="post-list" id="postList">
+                    <li class="loading">Loading posts...</li>
                 </ul>
-            </div>
+                <div id="noResults" class="no-results" style="display: none;">
+                    No posts found matching your search.
+                </div>
 
-            <!-- Tags -->
-            <div class="sidebar-section">
-                <h3 class="sidebar-title"><span class="prompt">$</span> grep -r "#tag"</h3>
-                <div class="tags-cloud" id="tagsCloud">
-                    <!-- Tags will be inserted here -->
+                <div class="pagination" id="pagination" style="display:none;">
+                    <button class="pagination-btn" id="prevBtn" onclick="changePage(-1)">← Prev</button>
+                    <span class="pagination-info" id="pageInfo"></span>
+                    <button class="pagination-btn" id="nextBtn" onclick="changePage(1)">Next →</button>
                 </div>
             </div>
-        </aside>
+
+            <aside class="sidebar">
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Featured</h3>
+                    <div class="featured-slider" id="featuredSlider"></div>
+                    <div class="slider-dots" id="sliderDots"></div>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Categories</h3>
+                    <ul class="category-list" id="categoryList"></ul>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Tags</h3>
+                    <div class="tags-cloud" id="tagsCloud"></div>
+                </div>
+            </aside>
+        </div>
     </div>
 
     <footer>
-        <p class="prompt-out">[kanchana@church-of-molt ~]$ whoami</p>
         <p>Kanchana Samarakoon</p>
         <div class="social-links">
-            <a href="https://github.com/smtkanchana66">github</a>
-            <a href="https://www.linkedin.com/in/smtkanchana66/">linkedin</a>
-            <a href="index.html">portfolio</a>
+            <a href="https://github.com/smtkanchana66">GitHub</a>
+            <a href="https://www.linkedin.com/in/smtkanchana66/">LinkedIn</a>
+            <a href="index.html">Portfolio</a>
         </div>
-        <p class="copy">© 2026 // K66 // EOF</p>
+        <p class="copy">© 2026 0xRoot</p>
     </footer>
 
     <script>
         const POSTS_PER_PAGE = 5;
 
         let allPosts = [];
-        let filteredPosts = [];  // current active set (all, search, category, tag)
+        let filteredPosts = [];
         let currentPage = 1;
         let currentSlide = 0;
         let sliderInterval;
 
-        // ── Load ──────────────────────────────────────
         async function loadPosts() {
             try {
                 const response = await fetch('json/index.json');
@@ -705,11 +423,10 @@
             } catch (error) {
                 console.error('Error loading posts:', error);
                 document.getElementById('postList').innerHTML =
-                    '<li class="loading">error loading posts. check console.</li>';
+                    '<li class="loading">Error loading posts.</li>';
             }
         }
 
-        // ── Core: set the active post list and go to a page ──
         function setFilteredPosts(posts, page) {
             filteredPosts = posts;
             currentPage = page;
@@ -723,11 +440,6 @@
             currentPage = newPage;
             renderPage();
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function permString(post) {
-            const d = formatDate(post.date);
-            return `-rw-r--r--  kanchana  ${d}`;
         }
 
         function renderPage() {
@@ -749,52 +461,37 @@
             const start = (currentPage - 1) * POSTS_PER_PAGE;
             const pagePosts = filteredPosts.slice(start, start + POSTS_PER_PAGE);
 
-            // Render posts
-            postList.style.display  = 'block';
+            postList.style.display  = 'flex';
             noResults.style.display = 'none';
             postList.innerHTML = pagePosts.map(post => `
                 <li class="post-item">
                     <a href="post.html?slug=${post.slug}" class="post-row">
-                        <span class="post-perm"><span class="arrow">&gt;</span> ${permString(post)}</span>
+                        <div class="post-meta-top">
+                            <span class="post-category">${post.category}</span>
+                            <span>${formatDate(post.date)}</span>
+                        </div>
                         <div class="post-title">${post.title}</div>
-                    </a>
-                    <p class="post-excerpt">${post.excerpt}</p>
-                    <div class="post-meta">
-                        <span class="post-category">${post.category}</span>
+                        <p class="post-excerpt">${post.excerpt}</p>
                         ${post.tags && post.tags.length > 0 ? `
                             <div class="post-tags">
-                                ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
+                                ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
                             </div>
                         ` : ''}
-                    </div>
+                    </a>
                 </li>
             `).join('');
 
-            // Pagination bar — only show if more than one page
             if (totalPages <= 1) {
                 pagination.style.display = 'none';
                 return;
             }
 
             pagination.style.display = 'flex';
-            pageInfo.textContent = `page ${currentPage}/${totalPages}`;
-
-            // Previous button — hidden on page 1
-            if (currentPage <= 1) {
-                prevBtn.classList.add('hidden');
-            } else {
-                prevBtn.classList.remove('hidden');
-            }
-
-            // Next button — hidden on last page
-            if (currentPage >= totalPages) {
-                nextBtn.classList.add('hidden');
-            } else {
-                nextBtn.classList.remove('hidden');
-            }
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            prevBtn.classList.toggle('hidden', currentPage <= 1);
+            nextBtn.classList.toggle('hidden', currentPage >= totalPages);
         }
 
-        // ── Featured slider ────────────────────────────
         function setupFeaturedSlider(posts) {
             const slider = document.getElementById('featuredSlider');
             const dots = document.getElementById('sliderDots');
@@ -808,7 +505,7 @@
                     <h4 class="featured-title">
                         <a href="post.html?slug=${post.slug}">${post.title}</a>
                     </h4>
-                    <p class="featured-excerpt">${post.excerpt.substring(0, 100)}...</p>
+                    <p class="featured-excerpt">${post.excerpt.substring(0, 90)}...</p>
                 </div>
             `).join('');
 
@@ -839,7 +536,6 @@
                 dot.classList.toggle('active', i === currentSlide));
         }
 
-        // ── Sidebar ────────────────────────────────────
         function setupCategories(posts) {
             const categories = {};
             posts.forEach(post => {
@@ -848,7 +544,7 @@
 
             let html = `
                 <li class="category-item">
-                    <a href="#" class="category-link" onclick="showAllPosts(); return false;">all</a>
+                    <a href="#" class="category-link" onclick="showAllPosts(); return false;">All</a>
                     <span class="category-count">${posts.length}</span>
                 </li>`;
 
@@ -876,7 +572,6 @@
                 `).join('');
         }
 
-        // ── Filters — always reset to page 1 ──────────
         function showAllPosts() {
             document.getElementById('searchInput').value = '';
             setFilteredPosts(allPosts, 1);
@@ -895,10 +590,8 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ── Search — resets to page 1 on every keystroke ──
         document.getElementById('searchInput').addEventListener('input', function(e) {
             const term = e.target.value.toLowerCase().trim();
-            document.getElementById('searchIcon').classList.toggle('fade', term !== '');
 
             if (term === '') {
                 setFilteredPosts(allPosts, 1);
@@ -914,7 +607,6 @@
             setFilteredPosts(results, 1);
         });
 
-        // ── Helpers ────────────────────────────────────
         function formatDate(dateString) {
             const date = new Date(dateString);
             const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
