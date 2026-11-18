@@ -1,411 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">Blog Post</title>
-
-    <!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-B0QVHK527M"></script>
-	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
-
-	  gtag('config', 'G-B0QVHK527M');
-	</script>
-
-    <link rel="icon" href="terminal.ico" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <style>
-        :root {
-            --bg: #0b0c0e;
-            --bg-panel: #131417;
-            --bg-elev: #1a1c20;
-            --border: #24262b;
-            --text: #eef0f2;
-            --text-muted: #9ba0a8;
-            --text-faint: #5c6169;
-            --accent: #2ecc71;
-            --accent-strong: #4ade80;
-            --accent-soft: rgba(46, 204, 113, 0.12);
-            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --mono: 'JetBrains Mono', Consolas, 'Courier New', monospace;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.7;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        ::selection { background: var(--accent); color: #06210f; }
-        a { color: inherit; }
-
-        .container {
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 40px 32px 70px 32px;
-        }
-
-        header {
-            margin-bottom: 36px;
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.15s;
-        }
-        .back-link:hover { color: var(--accent-strong); }
-
-        .post-meta-top {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 16px;
-            font-size: 0.82rem;
-            color: var(--text-faint);
-        }
-
-        .post-category {
-            display: inline-flex;
-            font-size: 0.72rem;
-            font-weight: 600;
-            letter-spacing: 0.03em;
-            text-transform: uppercase;
-            color: var(--accent-strong);
-            background: var(--accent-soft);
-            border-radius: 999px;
-            padding: 3px 10px;
-        }
-
-        h1 {
-            font-size: clamp(1.8rem, 4vw, 2.4rem);
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            line-height: 1.2;
-            margin-bottom: 14px;
-        }
-
-        .post-excerpt {
-            color: var(--text-muted);
-            font-size: 1.08rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .post-tags {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            padding-bottom: 24px;
-            margin-bottom: 8px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .tag {
-            font-size: 0.78rem;
-            color: var(--text-faint);
-            background: var(--bg-panel);
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            padding: 3px 10px;
-        }
-
-        .post-content {
-            font-size: 1.02rem;
-            line-height: 1.85;
-            color: var(--text);
-        }
-
-        .post-content h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            margin: 42px 0 16px 0;
-        }
-
-        .post-content h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin: 30px 0 12px 0;
-        }
-
-        .post-content p { margin-bottom: 20px; color: var(--text-muted); }
-
-        .post-content a {
-            color: var(--accent-strong);
-            text-decoration: underline;
-            text-decoration-color: rgba(74, 222, 128, 0.35);
-            text-underline-offset: 3px;
-        }
-        .post-content a:hover { text-decoration-color: var(--accent-strong); }
-
-        .post-content ul, .post-content ol {
-            margin: 18px 0 20px 0;
-            padding-left: 22px;
-            color: var(--text-muted);
-        }
-        .post-content li { margin-bottom: 8px; }
-
-        .post-content blockquote {
-            margin: 26px 0;
-            padding: 16px 20px;
-            border-left: 3px solid var(--accent);
-            background: var(--bg-panel);
-            border-radius: 0 8px 8px 0;
-            color: var(--text-muted);
-        }
-
-        .post-content img {
-            max-width: 100%;
-            height: auto;
-            margin: 26px 0;
-            border-radius: 12px;
-            display: block;
-        }
-
-        .post-content img.img-small { max-width: 300px; margin: 20px auto; }
-        .post-content img.img-medium { max-width: 600px; margin: 26px auto; }
-        .post-content img.img-large { max-width: 100%; margin: 26px 0; }
-        .post-content img.img-full { width: 100%; max-width: 100%; margin: 26px 0; }
-
-        .post-content img.img-left { float: left; margin: 8px 20px 8px 0; max-width: 380px; }
-        .post-content img.img-right { float: right; margin: 8px 0 8px 20px; max-width: 380px; }
-        .post-content img.img-center { display: block; margin-left: auto; margin-right: auto; }
-
-        .post-content img.img-rounded { border-radius: 16px; }
-        .post-content img.img-circle { border-radius: 50%; aspect-ratio: 1/1; object-fit: cover; }
-        .post-content img.img-shadow { box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
-        .post-content img.img-border { border: 1px solid var(--border); padding: 6px; background: var(--bg-panel); }
-
-        @media (max-width: 768px) {
-            .post-content img.img-left,
-            .post-content img.img-right {
-                float: none;
-                max-width: 100%;
-                margin: 20px 0;
-            }
-        }
-
-        .post-content code {
-            font-family: var(--mono);
-            background: var(--bg-panel);
-            border: 1px solid var(--border);
-            padding: 2px 6px;
-            border-radius: 5px;
-            font-size: 0.88em;
-            color: var(--accent-strong);
-        }
-
-        .post-content pre {
-            margin: 24px 0;
-            padding: 18px 20px;
-            background: #0e0f11;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            overflow-x: auto;
-        }
-
-        .post-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 26px 0;
-            font-size: 0.92rem;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .post-content table th {
-            background: var(--bg-panel);
-            color: var(--text);
-            font-weight: 700;
-            text-align: left;
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.8rem;
-            letter-spacing: 0.02em;
-            text-transform: uppercase;
-        }
-        .post-content table td {
-            padding: 11px 16px;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-muted);
-            vertical-align: top;
-        }
-        .post-content table tbody tr:last-child td { border-bottom: none; }
-        .post-content table tbody tr td { background: var(--bg); }
-        .post-content table tbody tr:hover td { background: var(--bg-panel); }
-
-        .post-content pre code {
-            background: transparent;
-            border: none;
-            padding: 0;
-            color: inherit;
-            font-size: 0.92rem;
-            line-height: 1.6;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 50px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
-            color: var(--text-faint);
-            font-size: 0.85rem;
-        }
-
-        .author-box {
-            margin-top: 44px;
-            padding: 24px 26px;
-            background: var(--bg-panel);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .author-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--accent-soft);
-            flex-shrink: 0;
-            object-fit: cover;
-        }
-
-        .author-box h3 {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .author-box p {
-            color: var(--text-faint);
-            font-size: 0.88rem;
-        }
-
-        a:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-        }
-
-        @media (max-width: 600px) {
-            .container { padding: 30px 18px; }
-        }
-
-        .loading {
-            text-align: center;
-            color: var(--text-faint);
-            padding: 60px 20px;
-        }
-        .loading h2 { color: var(--text); margin-bottom: 10px; font-size: 1.3rem; }
-        .loading a { color: var(--accent-strong); text-decoration: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Blog Post</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B0QVHK527M"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-B0QVHK527M');
+</script>
+<link rel="icon" href="terminal.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+:root{color-scheme:dark;--bg:#0d1117;--sub:#151b23;--bd:#3d444d;--fg:#f0f6fc;--mu:#9198a1;--ln:#4493f7;--ac:#1f6feb;--ct:rgba(101,108,118,.2);--sys:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;--mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font:14px/1.5 var(--sys);background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased}
+a{color:var(--ln);text-decoration:none}a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+::selection{background:rgba(56,139,253,.4)}
+.gh-header{background:var(--sub);border-bottom:1px solid var(--bd);padding:16px 0}
+.header-row,.container{max-width:1012px;margin:0 auto;padding:0 32px}
+.brand{display:inline-flex;align-items:center;gap:8px;color:var(--fg);font-size:16px;font-weight:600}
+.brand:hover{text-decoration:none}.brand img{width:20px;height:20px;object-fit:contain}
+.container{padding-top:24px;padding-bottom:48px}
+.back-link{display:inline-block;margin-bottom:16px}
+.post-meta-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;color:var(--mu)}
+.post-category{padding:0 7px;line-height:18px;font-weight:500;border:1px solid var(--bd);border-radius:2em}
+h1{font-size:32px;font-weight:600;line-height:1.25;margin-bottom:8px}
+.post-excerpt{color:var(--mu);font-size:16px;margin-bottom:16px}
+.post-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tag{padding:0 10px;line-height:22px;font-size:12px;font-weight:500;border-radius:2em;color:var(--ln);background:rgba(56,139,253,.1)}
+.post-cover{display:block;width:100%;margin-bottom:16px;border:1px solid var(--bd);border-radius:6px}
+.post-content{padding:32px;border:1px solid var(--bd);border-radius:6px;font-size:16px;line-height:1.5;word-wrap:break-word}
+.post-content::after{content:"";display:table;clear:both}
+.post-content>:first-child{margin-top:0!important}.post-content>:last-child{margin-bottom:0!important}
+.post-content :is(p,blockquote,ul,ol,table,pre){margin:0 0 16px}
+.post-content :is(h1,h2,h3,h4,h5,h6){margin:24px 0 16px;font-weight:600;line-height:1.25}
+.post-content :is(h1,h2){padding-bottom:.3em;border-bottom:1px solid var(--bd)}
+.post-content h1{font-size:2em}.post-content h2{font-size:1.5em}.post-content h3{font-size:1.25em}.post-content h4{font-size:1em}
+.post-content :is(h5,h6){font-size:.875em}
+.post-content a:hover{text-decoration:underline}
+.post-content :is(ul,ol){padding-left:2em}.post-content li+li{margin-top:.25em}
+.post-content :is(ul,ol) :is(ul,ol){margin:0}
+.post-content blockquote{padding:0 1em;color:var(--mu);border-left:.25em solid var(--bd)}
+.post-content hr{height:.25em;margin:24px 0;background:var(--bd);border:0}
+.post-content img{display:block;max-width:100%;height:auto;margin:16px 0;border-radius:6px}
+.post-content img.img-small{max-width:300px;margin:16px auto}
+.post-content img.img-medium{max-width:600px;margin:16px auto}
+.post-content img.img-large{max-width:100%}
+.post-content img.img-full{width:100%;max-width:100%}
+.post-content img.img-left{float:left;margin:8px 20px 8px 0;max-width:380px}
+.post-content img.img-right{float:right;margin:8px 0 8px 20px;max-width:380px}
+.post-content img.img-center{margin-left:auto;margin-right:auto}
+.post-content img.img-rounded{border-radius:16px}
+.post-content img.img-circle{border-radius:50%;aspect-ratio:1/1;object-fit:cover}
+.post-content img.img-shadow{box-shadow:0 8px 24px rgba(1,4,9,.6)}
+.post-content img.img-border{border:1px solid var(--bd);padding:6px;background:var(--sub)}
+.post-content code{font-family:var(--mono);font-size:85%;padding:.2em .4em;background:var(--ct);border-radius:6px}
+.post-content pre{padding:16px;background:var(--sub);border-radius:6px;overflow:auto;font-size:85%;line-height:1.45}
+.post-content pre code.hljs,.post-content pre code{display:block;padding:0;background:transparent;font-size:100%;white-space:pre}
+.post-content table{display:block;width:max-content;max-width:100%;overflow:auto;border-collapse:collapse}
+.post-content :is(th,td){padding:6px 13px;border:1px solid var(--bd)}
+.post-content th{font-weight:600}
+.post-content tr:nth-child(2n){background:var(--sub)}
+.author-box{display:flex;align-items:center;gap:16px;margin-top:24px;padding:16px;border:1px solid var(--bd);border-radius:6px;background:var(--sub)}
+.author-avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.author-box h3{font-size:14px;font-weight:600}.author-box p{color:var(--mu);font-size:12px}
+.loading{padding:48px 16px;text-align:center;color:var(--mu);border:1px solid var(--bd);border-radius:6px}
+.loading h2{color:var(--fg);font-size:20px;margin-bottom:8px}
+footer{max-width:1012px;margin:0 auto;padding:24px 32px 48px;border-top:1px solid var(--bd);text-align:center;color:var(--mu);font-size:12px}
+@media(max-width:768px){.post-content img.img-left,.post-content img.img-right{float:none;max-width:100%;margin:16px 0}}
+@media(max-width:544px){.header-row,.container,footer{padding-left:16px;padding-right:16px}.post-content{padding:16px}h1{font-size:26px}}
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <a href="blog.html" class="back-link">← Back to Blog</a>
-        </header>
+<header class="gh-header"><div class="header-row">
+  <a class="brand" href="blog.html"><img src="terminal.ico" alt="" onerror="this.style.display='none'">0xRoot</a>
+</div></header>
 
-        <article id="postContent">
-            <div class="loading">Loading post...</div>
-        </article>
+<main class="container">
+  <a href="blog.html" class="back-link">← Back to Blog</a>
+  <article id="postContent"><div class="loading">Loading post...</div></article>
+</main>
+<footer><p>© 2026 0xRoot</p></footer>
 
-        <footer>
-            <p>© 2026 0xRoot</p>
-        </footer>
-    </div>
+<script>
+const slug = new URLSearchParams(window.location.search).get('slug');
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const postSlug = urlParams.get('slug');
+function showMessage(title, text) {
+  document.getElementById('postContent').innerHTML =
+    `<div class="loading"><h2>${title}</h2><p>${text}</p><br><a href="blog.html">← Back to Blog</a></div>`;
+}
 
-        async function loadPost() {
-            try {
-                const response = await fetch(`json/posts/${postSlug}.json`);
-                const post = await response.json();
+function formatDate(d) {
+  const date = new Date(d);
+  if (isNaN(date)) return '';
+  const utc = /^\d{4}-\d{2}-\d{2}$/.test(String(d).trim());
+  const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${m[utc ? date.getUTCMonth() : date.getMonth()]} ${utc ? date.getUTCDate() : date.getDate()}, ${utc ? date.getUTCFullYear() : date.getFullYear()}`;
+}
 
-                if (!response.ok || !post) {
-                    document.getElementById('postContent').innerHTML = `
-                        <div class="loading">
-                            <h2>Post not found</h2>
-                            <p>The post you're looking for doesn't exist.</p>
-                            <br>
-                            <a href="blog.html">← Back to Blog</a>
-                        </div>
-                    `;
-                    return;
-                }
+async function loadPost() {
+  if (!slug) { showMessage('Post not found', "The post you're looking for doesn't exist."); return; }
+  try {
+    const response = await fetch(`json/posts/${encodeURIComponent(slug)}.json`);
+    if (!response.ok) { showMessage('Post not found', "The post you're looking for doesn't exist."); return; }
+    const post = await response.json();
+    if (!post) { showMessage('Post not found', "The post you're looking for doesn't exist."); return; }
 
-                document.getElementById('pageTitle').textContent = post.title;
+    const tags = Array.isArray(post.tags) ? post.tags : [];
+    document.getElementById('pageTitle').textContent = post.title;
+    document.getElementById('postContent').innerHTML = `
+      <div class="post-meta-top">
+        ${post.category ? `<span class="post-category">${post.category}</span>` : ''}
+        <span>${formatDate(post.date)}</span>
+      </div>
+      <h1>${post.title}</h1>
+      <p class="post-excerpt">${post.excerpt || ''}</p>
+      ${tags.length ? `<div class="post-tags">${tags.map(t => `<span class="tag">#${t}</span>`).join('')}</div>` : ''}
+      ${post.image ? `<img class="post-cover" src="${esc(post.image)}" alt="${esc(post.title)}" onerror="this.style.display='none'">` : ''}
+      <div class="post-content">${post.content || ''}</div>
+      <div class="author-box">
+        <img class="author-avatar" src="avatar.jpeg" alt="Kanchana Samarakoon" onerror="this.style.display='none'">
+        <div>
+          <h3><a href="https://github.com/smtkanchana66">Kanchana Samarakoon</a></h3>
+          <p>ICT Graduate | Linux & AI Enthusiast | Technology-Driven Innovator</p>
+        </div>
+      </div>`;
 
-                document.getElementById('postContent').innerHTML = `
-                    <div class="post-meta-top">
-                        <span class="post-category">${post.category}</span>
-                        <span>${formatDate(post.date)}</span>
-                    </div>
-                    <h1>${post.title}</h1>
-                    <p class="post-excerpt">${post.excerpt}</p>
-                    ${post.tags.length > 0 ? `
-                        <div class="post-tags">
-                            ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
-                        </div>
-                    ` : ''}
-                    ${post.image ? `<img src="${post.image}" alt="${post.title}" onerror="this.style.display='none'" style="width:100%;margin:30px 0;border-radius:12px;">` : ''}
-                    <div class="post-content">
-                        ${post.content}
-                    </div>
-                    <div class="author-box">
-                        <img class="author-avatar" src="avatar.jpeg" alt="Kanchana Samarakoon">
-                        <div>
-                            <h3>Kanchana Samarakoon</h3>
-                            <p>ICT Graduate | Linux & AI Enthusiast | Technology-Driven Innovator</p>
-                        </div>
-                    </div>
-                `;
+    if (typeof hljs !== 'undefined') {
+      document.querySelectorAll('pre code').forEach(b => hljs.highlightElement(b));
+    }
+  } catch (error) {
+    console.error('Error loading post:', error);
+    showMessage('Error loading post', 'There was an error loading this post.');
+  }
+}
 
-                document.querySelectorAll('pre code').forEach((block) => {
-                    hljs.highlightElement(block);
-                });
-
-            } catch (error) {
-                console.error('Error loading post:', error);
-                document.getElementById('postContent').innerHTML = `
-                    <div class="loading">
-                        <h2>Error loading post</h2>
-                        <p>There was an error loading this post.</p>
-                        <br>
-                        <a href="blog.html">← Back to Blog</a>
-                    </div>
-                `;
-            }
-        }
-
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-        }
-
-        loadPost();
-    </script>
+loadPost();
+</script>
 </body>
 </html>

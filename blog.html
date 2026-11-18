@@ -1,619 +1,319 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>0xRoot</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>0xRoot</title>
 <!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-B0QVHK527M"></script>
-	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
-
-	  gtag('config', 'G-B0QVHK527M');
-	</script>
-
-    <link rel="icon" href="terminal.ico" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0b0c0e;
-            --bg-panel: #131417;
-            --bg-elev: #1a1c20;
-            --border: #24262b;
-            --text: #eef0f2;
-            --text-muted: #9ba0a8;
-            --text-faint: #5c6169;
-            --accent: #2ecc71;
-            --accent-strong: #4ade80;
-            --accent-soft: rgba(46, 204, 113, 0.12);
-            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --mono: 'JetBrains Mono', Consolas, 'Courier New', monospace;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        ::selection { background: var(--accent); color: #06210f; }
-        a { color: inherit; }
-
-        .wrap {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 32px;
-        }
-
-        /* ── Header ─────────────────────────────── */
-        header {
-            padding: 28px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .header-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .brand-mark {
-            width: 34px;
-            height: 34px;
-            border-radius: 9px;
-            background: var(--accent-soft);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .brand-mark img {
-            width: 22px;
-            height: 22px;
-            object-fit: contain;
-        }
-
-        .brand-name {
-            font-size: 1.15rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: var(--accent-strong);
-            background: var(--accent-soft);
-            border: 1px solid rgba(46, 204, 113, 0.25);
-            border-radius: 999px;
-            padding: 5px 12px;
-        }
-
-        .header-search {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            max-width: 340px;
-            background: var(--bg-panel);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 0 14px;
-            transition: border-color 0.15s;
-        }
-        .header-search:focus-within { border-color: var(--accent); }
-
-        .header-search svg { flex-shrink: 0; color: var(--text-faint); }
-
-        .search-input {
-            flex: 1;
-            width: 100%;
-            padding: 11px 10px;
-            background: transparent;
-            border: none;
-            color: var(--text);
-            font-family: var(--font);
-            font-size: 0.9rem;
-        }
-        .search-input:focus { outline: none; }
-        .search-input::placeholder { color: var(--text-faint); }
-        #searchIcon { display: none; }
-
-        /* ── Hero ───────────────────────────────── */
-        .hero {
-            padding: 56px 0 40px 0;
-        }
-
-        .hero h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            line-height: 1.1;
-            margin: 16px 0 14px 0;
-        }
-
-        .hero h1 .accent { color: var(--accent-strong); }
-
-        .hero p {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            max-width: 560px;
-            line-height: 1.65;
-        }
-
-        /* ── Layout ─────────────────────────────── */
-        .layout {
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 28px;
-            padding-bottom: 60px;
-        }
-
-        /* ── Post cards ─────────────────────────── */
-        .post-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
-
-        .post-item {
-            background: var(--bg-panel);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 24px 26px;
-            transition: border-color 0.15s, background 0.15s;
-        }
-        .post-item:hover { border-color: rgba(46,204,113,0.35); background: var(--bg-elev); }
-
-        .post-row { text-decoration: none; color: inherit; display: block; }
-
-        .post-meta-top {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 0.8rem;
-            color: var(--text-faint);
-        }
-
-        .post-category {
-            display: inline-flex;
-            font-size: 0.72rem;
-            font-weight: 600;
-            letter-spacing: 0.03em;
-            text-transform: uppercase;
-            color: var(--accent-strong);
-            background: var(--accent-soft);
-            border-radius: 999px;
-            padding: 3px 10px;
-        }
-
-        .post-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            margin-bottom: 8px;
-        }
-        .post-item:hover .post-title { color: var(--accent-strong); }
-
-        .post-excerpt {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 14px;
-        }
-
-        .post-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-
-        .tag {
-            font-size: 0.78rem;
-            color: var(--text-faint);
-            background: var(--bg-elev);
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            padding: 3px 10px;
-        }
-
-        /* ── Sidebar ────────────────────────────── */
-        .sidebar { display: flex; flex-direction: column; gap: 20px; }
-
-        .sidebar-card {
-            background: var(--bg-panel);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 20px 22px;
-        }
-
-        .sidebar-title {
-            font-size: 0.82rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            color: var(--text-faint);
-            margin-bottom: 16px;
-        }
-
-        /* Featured slider */
-        .featured-slider { position: relative; overflow: hidden; height: 220px; }
-        .featured-post { position: absolute; inset: 0; opacity: 0; transition: opacity 0.4s; }
-        .featured-post.active { opacity: 1; }
-        .featured-image { width: 100%; height: 110px; border-radius: 10px; overflow: hidden; margin-bottom: 12px; background: var(--bg-elev); }
-        .featured-image img { width: 100%; height: 100%; object-fit: cover; }
-        .featured-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; }
-        .featured-title a { color: var(--text); text-decoration: none; }
-        .featured-title a:hover { color: var(--accent-strong); }
-        .featured-excerpt { color: var(--text-faint); font-size: 0.82rem; line-height: 1.5; }
-
-        .slider-dots { display: flex; gap: 6px; justify-content: center; margin-top: 12px; }
-        .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); cursor: pointer; transition: background 0.2s; }
-        .dot.active { background: var(--accent); }
-
-        /* Categories */
-        .category-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
-        .category-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem;
-        }
-        .category-item:last-child { border-bottom: none; }
-        .category-link { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
-        .category-link:hover { color: var(--accent-strong); }
-        .category-count {
-            font-size: 0.75rem; color: var(--text-faint);
-            background: var(--bg-elev); border-radius: 999px; padding: 2px 8px;
-        }
-
-        /* Tags cloud */
-        .tags-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
-        .tag-link {
-            font-size: 0.82rem; color: var(--text-muted); text-decoration: none;
-            background: var(--bg-elev); border: 1px solid var(--border);
-            border-radius: 999px; padding: 4px 12px; transition: color 0.15s, border-color 0.15s;
-        }
-        .tag-link:hover { color: var(--accent-strong); border-color: rgba(46,204,113,0.35); }
-
-        /* ── Pagination ─────────────────────────── */
-        .pagination {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-top: 30px; gap: 12px;
-        }
-        .pagination-btn {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: var(--bg-panel); border: 1px solid var(--border);
-            color: var(--text); font-family: var(--font); font-size: 0.85rem; font-weight: 500;
-            padding: 9px 16px; border-radius: 999px; cursor: pointer; transition: border-color 0.15s, color 0.15s;
-        }
-        .pagination-btn:hover { border-color: var(--accent); color: var(--accent-strong); }
-        .pagination-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-        .pagination-btn.hidden { visibility: hidden; pointer-events: none; }
-        .pagination-info { color: var(--text-faint); font-size: 0.82rem; }
-
-        .no-results { text-align: center; color: var(--text-faint); padding: 60px 20px; }
-        .loading { text-align: center; color: var(--text-faint); padding: 60px 20px; }
-
-        /* ── Footer ─────────────────────────────── */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 32px 0 48px 0;
-            text-align: center;
-            color: var(--text-faint);
-            font-size: 0.85rem;
-        }
-        footer .social-links { display: flex; gap: 18px; justify-content: center; margin: 12px 0; }
-        footer a { color: var(--text-muted); text-decoration: none; }
-        footer a:hover { color: var(--accent-strong); }
-        footer .copy { margin-top: 10px; color: var(--text-faint); opacity: 0.7; }
-
-        @media (max-width: 960px) {
-            .layout { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 600px) {
-            .hero { padding: 40px 0 28px 0; }
-            .post-item { padding: 20px; }
-        }
-    </style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B0QVHK527M"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-B0QVHK527M');
+</script>
+<link rel="icon" href="terminal.ico" type="image/x-icon">
+<style>
+:root{color-scheme:dark;--bg:#0d1117;--sub:#151b23;--bd:#3d444d;--fg:#f0f6fc;--mu:#9198a1;--ln:#4493f7;--ac:#1f6feb;--ct:rgba(101,108,118,.2);--sys:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+[hidden]{display:none!important}
+body{font:14px/1.5 var(--sys);background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased}
+a{color:var(--ln);text-decoration:none}a:hover{text-decoration:underline}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+::selection{background:rgba(56,139,253,.4)}
+.wrap{max-width:1280px;margin:0 auto;padding:0 32px}
+.gh-header{background:var(--sub);border-bottom:1px solid var(--bd);padding:16px 0}
+.header-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;margin-right:auto;color:var(--fg);font-size:16px;font-weight:600}
+.brand:hover{text-decoration:none}.brand img{width:20px;height:20px;object-fit:contain}
+.header-search{display:flex;align-items:center;gap:8px;width:272px;max-width:100%;height:32px;padding:0 10px;background:var(--bg);border:1px solid var(--bd);border-radius:6px;color:var(--mu)}
+.header-search:focus-within{border-color:var(--ac);box-shadow:inset 0 0 0 1px var(--ac)}
+.search-input{flex:1;min-width:0;height:100%;background:none;border:0;color:var(--fg);font:inherit}
+.search-input:focus-visible{outline:0}.search-input::placeholder{color:var(--mu)}
+.page-head{padding:32px 0 24px}
+.page-head h1{font-size:24px;font-weight:600;line-height:1.25}
+.page-head p{color:var(--mu);margin-top:4px;max-width:640px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 296px;gap:24px;padding-bottom:48px}
+.box{border:1px solid var(--bd);border-radius:6px;overflow:hidden}
+.box-header{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:16px;background:var(--sub);border-bottom:1px solid var(--bd)}
+.post-list{list-style:none}
+.post-item{padding:16px}.post-item+.post-item{border-top:1px solid var(--bd)}
+.post-head{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.post-title{font-size:16px;font-weight:600}
+.post-excerpt{color:var(--mu);margin-top:4px}
+.post-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:8px;font-size:12px;color:var(--mu)}
+.label{padding:0 7px;line-height:18px;font-size:12px;font-weight:500;border:1px solid var(--bd);border-radius:2em;color:var(--mu)}
+.label:hover{border-color:var(--mu);color:var(--fg)}
+.topic{padding:0 10px;line-height:22px;font-size:12px;font-weight:500;border-radius:2em;color:var(--ln);background:rgba(56,139,253,.1)}
+.topic:hover,.topic.on{background:var(--ac);color:#fff}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:0 4px 0 10px;line-height:22px;font-size:12px;border:1px solid var(--bd);border-radius:2em}
+.chip button{width:18px;height:18px;line-height:16px;border-radius:50%;color:var(--mu)}.chip button:hover{background:var(--ct);color:var(--fg)}
+.state-msg{list-style:none;padding:32px 16px;text-align:center;color:var(--mu)}
+.pagination{display:flex;justify-content:center;flex-wrap:wrap;gap:4px;margin-top:16px}
+.pg{min-width:32px;height:32px;padding:0 10px;border:1px solid transparent;border-radius:6px}
+.pg:hover:not(:disabled){border-color:var(--bd);background:var(--sub)}
+.pg[aria-current]{background:var(--ac);color:#fff}
+.pg:disabled{color:var(--mu);cursor:default}
+.pg-gap{line-height:32px;color:var(--mu);padding:0 4px}
+.side-section{padding:16px 0;border-bottom:1px solid var(--bd)}
+.side-section:first-child{padding-top:0}.side-section:last-child{border:0}
+.side-title{font-size:16px;font-weight:600;margin-bottom:8px}
+.featured-slider{display:grid}
+.featured-post{grid-area:1/1;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.featured-post.active{opacity:1;visibility:visible}
+.featured-image{height:110px;margin-bottom:8px;border:1px solid var(--bd);border-radius:6px;overflow:hidden;background:var(--sub)}
+.featured-image img{width:100%;height:100%;object-fit:cover;display:block}
+.featured-title{font-size:14px;font-weight:600}
+.featured-excerpt{color:var(--mu);font-size:12px}
+.slider-dots{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.dot{width:8px;height:8px;padding:0;border-radius:50%;background:var(--bd)}.dot.active{background:var(--ln)}
+.category-list{list-style:none}
+.cat-btn{display:flex;justify-content:space-between;align-items:center;width:100%;padding:4px 8px;border-radius:6px;text-align:left}
+.cat-btn:hover{background:rgba(101,108,118,.15)}.cat-btn.on{font-weight:600;background:var(--ct)}
+.ct{padding:0 6px;border-radius:2em;background:var(--ct);font-size:12px;font-weight:500;line-height:18px}
+.tags-cloud{display:flex;flex-wrap:wrap;gap:8px}
+footer{border-top:1px solid var(--bd);padding:32px 0 48px;text-align:center;color:var(--mu);font-size:12px}
+footer .social-links{display:flex;gap:16px;justify-content:center;margin:8px 0}
+@media(max-width:960px){.layout{grid-template-columns:1fr}}
+@media(max-width:544px){.wrap{padding:0 16px}.header-search{width:100%;order:3}}
+</style>
 </head>
 <body>
-    <div class="wrap">
-        <header>
-            <div class="header-row">
-                <div class="brand">
-                    <div class="brand-mark"><img src="terminal.ico" alt="logo"></div>
-                    <span class="brand-name">0xRoot</span>
-                </div>
-                <div class="header-search">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <input type="text" id="searchInput" class="search-input" placeholder="Search posts...">
-                    <span id="searchIcon"></span>
-                </div>
-            </div>
-        </header>
+<header class="gh-header"><div class="wrap header-row">
+  <a class="brand" href="blog.html"><img src="terminal.ico" alt="" onerror="this.style.display='none'">0xRoot</a>
+  <label class="header-search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="searchInput" class="search-input" placeholder="Search posts..." aria-label="Search posts" autocomplete="off">
+  </label>
+</div></header>
 
-        <div class="hero">
-            <!--<span class="badge">0xRoot</span>-->
-            <h1>Notes on <span class="accent">Linux</span>, security, and building things.</h1>
-            <p>Field notes and write-ups on Linux systems, cybersecurity, and applied AI — from someone learning in public.</p>
-        </div>
+<main class="wrap">
+  <div class="page-head">
+    <h1>Notes on Linux, security, and building things.</h1>
+    <p>Field notes and write-ups on Linux systems, cybersecurity, and applied AI — from someone learning in public.</p>
+  </div>
+  <div class="layout">
+    <section aria-label="Posts">
+      <div class="box">
+        <div class="box-header" id="listHeader"></div>
+        <ul class="post-list" id="postList"><li class="state-msg">Loading posts...</li></ul>
+        <div id="noResults" class="state-msg" hidden>No posts found matching your search.</div>
+      </div>
+      <nav class="pagination" id="pagination" aria-label="Pagination" hidden></nav>
+    </section>
+    <aside>
+      <section class="side-section" id="featuredSection">
+        <h2 class="side-title">Featured</h2>
+        <div class="featured-slider" id="featuredSlider"></div>
+        <div class="slider-dots" id="sliderDots"></div>
+      </section>
+      <section class="side-section"><h2 class="side-title">Categories</h2><ul class="category-list" id="categoryList"></ul></section>
+      <section class="side-section"><h2 class="side-title">Tags</h2><div class="tags-cloud" id="tagsCloud"></div></section>
+    </aside>
+  </div>
+</main>
 
-        <div class="layout">
-            <div class="main-content">
-                <ul class="post-list" id="postList">
-                    <li class="loading">Loading posts...</li>
-                </ul>
-                <div id="noResults" class="no-results" style="display: none;">
-                    No posts found matching your search.
-                </div>
+<footer>
+  <p>Kanchana Samarakoon</p>
+  <div class="social-links">
+    <a href="https://github.com/smtkanchana66">GitHub</a>
+    <a href="https://www.linkedin.com/in/smtkanchana66/">LinkedIn</a>
+    <a href="index.html">Portfolio</a>
+  </div>
+  <p>© 2026 0xRoot</p>
+</footer>
 
-                <div class="pagination" id="pagination" style="display:none;">
-                    <button class="pagination-btn" id="prevBtn" onclick="changePage(-1)">← Prev</button>
-                    <span class="pagination-info" id="pageInfo"></span>
-                    <button class="pagination-btn" id="nextBtn" onclick="changePage(1)">Next →</button>
-                </div>
-            </div>
+<script>
+const POSTS_PER_PAGE = 5;
+let allPosts = [], filteredPosts = [], currentPage = 1, currentSlide = 0, sliderInterval = null;
+let filter = { type: '', value: '' }, query = '';
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const tagsOf = p => Array.isArray(p.tags) ? p.tags : [];
 
-            <aside class="sidebar">
-                <div class="sidebar-card">
-                    <h3 class="sidebar-title">Featured</h3>
-                    <div class="featured-slider" id="featuredSlider"></div>
-                    <div class="slider-dots" id="sliderDots"></div>
-                </div>
+function formatDate(d) {
+  const date = new Date(d);
+  if (isNaN(date)) return '';
+  const utc = /^\d{4}-\d{2}-\d{2}$/.test(String(d).trim());
+  const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${m[utc ? date.getUTCMonth() : date.getMonth()]} ${utc ? date.getUTCDate() : date.getDate()}, ${utc ? date.getUTCFullYear() : date.getFullYear()}`;
+}
 
-                <div class="sidebar-card">
-                    <h3 class="sidebar-title">Categories</h3>
-                    <ul class="category-list" id="categoryList"></ul>
-                </div>
+async function loadPosts() {
+  try {
+    const response = await fetch('json/index.json');
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const posts = await response.json();
+    if (!Array.isArray(posts)) throw new Error('Invalid index');
+    allPosts = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+    applyView(1);
+    setupFeaturedSlider(allPosts);
+    setupCategories(allPosts);
+    setupTags(allPosts);
+    syncActive();
+  } catch (error) {
+    console.error('Error loading posts:', error);
+    $('postList').innerHTML = '<li class="state-msg">Error loading posts.</li>';
+  }
+}
 
-                <div class="sidebar-card">
-                    <h3 class="sidebar-title">Tags</h3>
-                    <div class="tags-cloud" id="tagsCloud"></div>
-                </div>
-            </aside>
-        </div>
-    </div>
+function computeFiltered() {
+  if (query) {
+    const t = query.toLowerCase();
+    return allPosts.filter(p =>
+      [p.title, p.excerpt, p.category].some(s => String(s || '').toLowerCase().includes(t)) ||
+      tagsOf(p).some(tag => String(tag).toLowerCase().includes(t)));
+  }
+  if (filter.type === 'category') return allPosts.filter(p => p.category === filter.value);
+  if (filter.type === 'tag') return allPosts.filter(p => tagsOf(p).includes(filter.value));
+  return allPosts;
+}
 
-    <footer>
-        <p>Kanchana Samarakoon</p>
-        <div class="social-links">
-            <a href="https://github.com/smtkanchana66">GitHub</a>
-            <a href="https://www.linkedin.com/in/smtkanchana66/">LinkedIn</a>
-            <a href="index.html">Portfolio</a>
-        </div>
-        <p class="copy">© 2026 0xRoot</p>
-    </footer>
+function applyView(page) {
+  filteredPosts = computeFiltered();
+  currentPage = page;
+  renderPage();
+  syncActive();
+}
 
-    <script>
-        const POSTS_PER_PAGE = 5;
+function setFilter(type, value) {
+  filter = type ? { type, value } : { type: '', value: '' };
+  query = '';
+  $('searchInput').value = '';
+  applyView(1);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-        let allPosts = [];
-        let filteredPosts = [];
-        let currentPage = 1;
-        let currentSlide = 0;
-        let sliderInterval;
+function goToPage(n) {
+  const total = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+  if (!(n >= 1 && n <= total) || n === currentPage) return;
+  currentPage = n;
+  renderPage();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-        async function loadPosts() {
-            try {
-                const response = await fetch('json/index.json');
-                const posts = await response.json();
-                allPosts = posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-                setFilteredPosts(allPosts, 1);
-                setupFeaturedSlider(allPosts);
-                setupCategories(allPosts);
-                setupTags(allPosts);
-            } catch (error) {
-                console.error('Error loading posts:', error);
-                document.getElementById('postList').innerHTML =
-                    '<li class="loading">Error loading posts.</li>';
-            }
-        }
+function pageItems(cur, total) {
+  const s = new Set([1, total, cur - 1, cur, cur + 1]);
+  if (cur <= 3) [2, 3, 4].forEach(n => s.add(n));
+  if (cur >= total - 2) [total - 1, total - 2, total - 3].forEach(n => s.add(n));
+  const nums = [...s].filter(n => n >= 1 && n <= total).sort((a, b) => a - b);
+  const out = [];
+  nums.forEach((n, i) => { if (i && n - nums[i - 1] > 1) out.push('…'); out.push(n); });
+  return out;
+}
 
-        function setFilteredPosts(posts, page) {
-            filteredPosts = posts;
-            currentPage = page;
-            renderPage();
-        }
+function renderPage() {
+  const n = filteredPosts.length;
+  const totalPages = Math.ceil(n / POSTS_PER_PAGE);
+  let head = `<strong>${n}</strong>&nbsp;${n === 1 ? 'post' : 'posts'}`;
+  if (query) head += `&nbsp;matching “${esc(query)}”`;
+  if (filter.type) head += `<span class="chip">${filter.type}: ${esc(filter.value)}<button type="button" data-filter-type="" aria-label="Clear filter">×</button></span>`;
+  $('listHeader').innerHTML = head;
 
-        function changePage(direction) {
-            const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
-            const newPage = currentPage + direction;
-            if (newPage < 1 || newPage > totalPages) return;
-            currentPage = newPage;
-            renderPage();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+  if (n === 0) {
+    $('postList').hidden = true; $('noResults').hidden = false; $('pagination').hidden = true;
+    return;
+  }
+  $('postList').hidden = false; $('noResults').hidden = true;
 
-        function renderPage() {
-            const postList   = document.getElementById('postList');
-            const noResults  = document.getElementById('noResults');
-            const pagination = document.getElementById('pagination');
-            const prevBtn    = document.getElementById('prevBtn');
-            const nextBtn    = document.getElementById('nextBtn');
-            const pageInfo   = document.getElementById('pageInfo');
+  const start = (currentPage - 1) * POSTS_PER_PAGE;
+  $('postList').innerHTML = filteredPosts.slice(start, start + POSTS_PER_PAGE).map(post => `
+    <li class="post-item">
+      <div class="post-head">
+        <a class="post-title" href="post.html?slug=${encodeURIComponent(post.slug)}">${post.title}</a>
+        ${post.category ? `<button type="button" class="label" data-filter-type="category" data-filter-value="${esc(post.category)}">${post.category}</button>` : ''}
+      </div>
+      <p class="post-excerpt">${post.excerpt || ''}</p>
+      <div class="post-meta">
+        <span>${formatDate(post.date)}</span>
+        ${tagsOf(post).map(t => `<button type="button" class="topic" data-filter-type="tag" data-filter-value="${esc(t)}">#${t}</button>`).join('')}
+      </div>
+    </li>`).join('');
 
-            if (filteredPosts.length === 0) {
-                postList.style.display  = 'none';
-                noResults.style.display = 'block';
-                pagination.style.display = 'none';
-                return;
-            }
+  const pager = $('pagination');
+  if (totalPages <= 1) { pager.hidden = true; return; }
+  pager.hidden = false;
+  pager.innerHTML =
+    `<button type="button" class="pg" data-page="${currentPage - 1}" ${currentPage <= 1 ? 'disabled' : ''}>‹ Previous</button>` +
+    pageItems(currentPage, totalPages).map(i => i === '…' ? '<span class="pg-gap">…</span>' :
+      `<button type="button" class="pg" data-page="${i}" ${i === currentPage ? 'aria-current="page"' : ''}>${i}</button>`).join('') +
+    `<button type="button" class="pg" data-page="${currentPage + 1}" ${currentPage >= totalPages ? 'disabled' : ''}>Next ›</button>`;
+}
 
-            const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
-            const start = (currentPage - 1) * POSTS_PER_PAGE;
-            const pagePosts = filteredPosts.slice(start, start + POSTS_PER_PAGE);
+function setupFeaturedSlider(posts) {
+  const featured = posts.slice(0, 3);
+  clearInterval(sliderInterval);
+  $('featuredSection').hidden = featured.length === 0;
+  $('featuredSlider').innerHTML = featured.map((post, i) => {
+    const ex = String(post.excerpt || '');
+    return `<div class="featured-post ${i === 0 ? 'active' : ''}">
+      <div class="featured-image"><img src="${esc(post.image || 'ai.webp')}" alt="${esc(post.title)}" onerror="if(this.dataset.f){this.style.display='none'}else{this.dataset.f=1;this.src='ai.webp'}"></div>
+      <h3 class="featured-title"><a href="post.html?slug=${encodeURIComponent(post.slug)}">${post.title}</a></h3>
+      <p class="featured-excerpt">${esc(ex.length > 90 ? ex.substring(0, 90) + '...' : ex)}</p>
+    </div>`;
+  }).join('');
+  $('sliderDots').innerHTML = featured.length > 1 ? featured.map((_, i) =>
+    `<button type="button" class="dot ${i === 0 ? 'active' : ''}" data-slide="${i}" aria-label="Show featured post ${i + 1}"></button>`).join('') : '';
+  currentSlide = 0;
+  startSlider();
+}
 
-            postList.style.display  = 'flex';
-            noResults.style.display = 'none';
-            postList.innerHTML = pagePosts.map(post => `
-                <li class="post-item">
-                    <a href="post.html?slug=${post.slug}" class="post-row">
-                        <div class="post-meta-top">
-                            <span class="post-category">${post.category}</span>
-                            <span>${formatDate(post.date)}</span>
-                        </div>
-                        <div class="post-title">${post.title}</div>
-                        <p class="post-excerpt">${post.excerpt}</p>
-                        ${post.tags && post.tags.length > 0 ? `
-                            <div class="post-tags">
-                                ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
-                            </div>
-                        ` : ''}
-                    </a>
-                </li>
-            `).join('');
+function startSlider() {
+  clearInterval(sliderInterval);
+  const count = document.querySelectorAll('.featured-post').length;
+  if (count < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  sliderInterval = setInterval(() => { currentSlide = (currentSlide + 1) % count; updateSlider(); }, 4000);
+}
 
-            if (totalPages <= 1) {
-                pagination.style.display = 'none';
-                return;
-            }
+function goToSlide(i) { currentSlide = i; updateSlider(); startSlider(); }
 
-            pagination.style.display = 'flex';
-            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-            prevBtn.classList.toggle('hidden', currentPage <= 1);
-            nextBtn.classList.toggle('hidden', currentPage >= totalPages);
-        }
+function updateSlider() {
+  document.querySelectorAll('.featured-post').forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+}
 
-        function setupFeaturedSlider(posts) {
-            const slider = document.getElementById('featuredSlider');
-            const dots = document.getElementById('sliderDots');
-            const featured = posts.slice(0, 3);
+function setupCategories(posts) {
+  const cats = {};
+  posts.forEach(p => { if (p.category) cats[p.category] = (cats[p.category] || 0) + 1; });
+  $('categoryList').innerHTML =
+    `<li><button type="button" class="cat-btn" data-filter-type=""><span>All</span><span class="ct">${posts.length}</span></button></li>` +
+    Object.entries(cats).sort((a, b) => b[1] - a[1]).map(([c, n]) =>
+      `<li><button type="button" class="cat-btn" data-filter-type="category" data-filter-value="${esc(c)}"><span>${c}</span><span class="ct">${n}</span></button></li>`).join('');
+}
 
-            slider.innerHTML = featured.map((post, index) => `
-                <div class="featured-post ${index === 0 ? 'active' : ''}">
-                    <div class="featured-image">
-                        <img src="${post.image || 'ai.webp'}" alt="${post.title}" onerror="this.src='ai.webp'">
-                    </div>
-                    <h4 class="featured-title">
-                        <a href="post.html?slug=${post.slug}">${post.title}</a>
-                    </h4>
-                    <p class="featured-excerpt">${post.excerpt.substring(0, 90)}...</p>
-                </div>
-            `).join('');
+function setupTags(posts) {
+  const tags = {};
+  posts.forEach(p => tagsOf(p).forEach(t => { tags[t] = (tags[t] || 0) + 1; }));
+  $('tagsCloud').innerHTML = Object.entries(tags).sort((a, b) => b[1] - a[1]).slice(0, 10)
+    .map(([t]) => `<button type="button" class="topic" data-filter-type="tag" data-filter-value="${esc(t)}">#${t}</button>`).join('');
+}
 
-            dots.innerHTML = featured.map((_, index) =>
-                `<span class="dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></span>`
-            ).join('');
+function syncActive() {
+  document.querySelectorAll('#categoryList [data-filter-type], #tagsCloud [data-filter-type]').forEach(el => {
+    const t = el.dataset.filterType, v = el.dataset.filterValue;
+    const on = t === '' ? (!filter.type && !query) : (!query && filter.type === t && filter.value === v);
+    el.classList.toggle('on', on);
+    el.setAttribute('aria-pressed', on);
+  });
+}
 
-            sliderInterval = setInterval(() => {
-                currentSlide = (currentSlide + 1) % featured.length;
-                updateSlider();
-            }, 4000);
-        }
+document.addEventListener('click', e => {
+  const f = e.target.closest('[data-filter-type]');
+  if (f) { setFilter(f.dataset.filterType, f.dataset.filterValue || ''); return; }
+  const p = e.target.closest('[data-page]');
+  if (p && !p.disabled) { goToPage(Number(p.dataset.page)); return; }
+  const s = e.target.closest('[data-slide]');
+  if (s) goToSlide(Number(s.dataset.slide));
+});
 
-        function goToSlide(index) {
-            currentSlide = index;
-            updateSlider();
-            clearInterval(sliderInterval);
-            sliderInterval = setInterval(() => {
-                currentSlide = (currentSlide + 1) % document.querySelectorAll('.featured-post').length;
-                updateSlider();
-            }, 4000);
-        }
+$('searchInput').addEventListener('input', e => {
+  query = e.target.value.trim();
+  filter = { type: '', value: '' };
+  applyView(1);
+});
 
-        function updateSlider() {
-            document.querySelectorAll('.featured-post').forEach((slide, i) =>
-                slide.classList.toggle('active', i === currentSlide));
-            document.querySelectorAll('.dot').forEach((dot, i) =>
-                dot.classList.toggle('active', i === currentSlide));
-        }
-
-        function setupCategories(posts) {
-            const categories = {};
-            posts.forEach(post => {
-                categories[post.category] = (categories[post.category] || 0) + 1;
-            });
-
-            let html = `
-                <li class="category-item">
-                    <a href="#" class="category-link" onclick="showAllPosts(); return false;">All</a>
-                    <span class="category-count">${posts.length}</span>
-                </li>`;
-
-            html += Object.entries(categories)
-                .sort((a, b) => b[1] - a[1])
-                .map(([cat, count]) => `
-                    <li class="category-item">
-                        <a href="#" class="category-link" onclick="filterByCategory('${cat}'); return false;">${cat}</a>
-                        <span class="category-count">${count}</span>
-                    </li>`).join('');
-
-            document.getElementById('categoryList').innerHTML = html;
-        }
-
-        function setupTags(posts) {
-            const tags = {};
-            posts.forEach(post => post.tags.forEach(tag => {
-                tags[tag] = (tags[tag] || 0) + 1;
-            }));
-
-            document.getElementById('tagsCloud').innerHTML = Object.entries(tags)
-                .sort((a, b) => b[1] - a[1]).slice(0, 10)
-                .map(([tag]) => `
-                    <a href="#" class="tag-link" onclick="filterByTag('${tag}'); return false;">#${tag}</a>
-                `).join('');
-        }
-
-        function showAllPosts() {
-            document.getElementById('searchInput').value = '';
-            setFilteredPosts(allPosts, 1);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function filterByCategory(category) {
-            document.getElementById('searchInput').value = '';
-            setFilteredPosts(allPosts.filter(p => p.category === category), 1);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function filterByTag(tag) {
-            document.getElementById('searchInput').value = '';
-            setFilteredPosts(allPosts.filter(p => p.tags.includes(tag)), 1);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const term = e.target.value.toLowerCase().trim();
-
-            if (term === '') {
-                setFilteredPosts(allPosts, 1);
-                return;
-            }
-
-            const results = allPosts.filter(post =>
-                post.title.toLowerCase().includes(term) ||
-                post.excerpt.toLowerCase().includes(term) ||
-                post.category.toLowerCase().includes(term) ||
-                post.tags.some(tag => tag.toLowerCase().includes(term))
-            );
-            setFilteredPosts(results, 1);
-        });
-
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-        }
-
-        loadPosts();
-    </script>
+loadPosts();
+</script>
 </body>
 </html>
